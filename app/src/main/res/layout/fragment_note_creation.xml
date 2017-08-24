@@ -1,0 +1,81 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	tools:context="com.zkl.ZKLRussian.ui.NoteCreationFragment">
+	
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="16dp"
+		android:text="@string/CreateQuestionNote_colon"
+		android:textAppearance="@style/TextAppearance.AppCompat.Large"
+		android:textSize="25sp"/>
+	
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="8dp"
+		android:text="@string/question_colon"
+		android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+	
+	<EditText
+		android:id="@+id/et_question"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="8dp"
+		android:inputType="textPersonName"
+		android:nextFocusForward="@+id/et_answer"
+		tools:text="слово">
+		<requestFocus/>
+	</EditText>
+	
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="8dp"
+		android:text="@string/answer_colon"
+		android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+	
+	<EditText
+		android:id="@+id/et_answer"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="8dp"
+		android:inputType="textPersonName"
+		android:nextFocusForward="@+id/b_ok"
+		tools:text="单词"/>
+	
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="horizontal">
+		
+		<Button
+			android:id="@+id/b_cancel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="8dp"
+			android:layout_weight="0"
+			android:text="@android:string/cancel"/>
+		
+		<Space
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_margin="8dp"
+			android:layout_weight="1"
+			/>
+		
+		<Button
+			android:id="@+id/b_ok"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="8dp"
+			android:layout_weight="0"
+			android:text="@android:string/ok"/>
+	</LinearLayout>
+
+</LinearLayout>
+

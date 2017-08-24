@@ -1,0 +1,15 @@
+<resources>
+	
+	<style name="AppTheme" parent="Theme.AppCompat.DayNight">
+		<item name="buttonStyle">@style/style_borderlessButton</item>
+		<item name="imageButtonStyle">@style/style_borderlessButton</item>
+	</style>
+	
+	
+	
+	
+	<style name="style_borderlessButton">
+		<item name="android:background">#0000</item>
+	</style>
+
+</resources>

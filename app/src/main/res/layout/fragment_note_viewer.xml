@@ -1,0 +1,39 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context="com.zkl.ZKLRussian.ui.NoteViewerFragment"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	
+	
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="0"
+		android:gravity="end"
+		android:orientation="horizontal">
+		
+		<Button
+			android:id="@+id/b_edit"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:text="Edit"/>
+		
+		<Button
+			android:id="@+id/b_delete"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Delete"/>
+	</LinearLayout>
+	
+	<FrameLayout
+		android:id="@+id/fl_noteView"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_weight="1">
+	
+	</FrameLayout>
+
+</LinearLayout>
