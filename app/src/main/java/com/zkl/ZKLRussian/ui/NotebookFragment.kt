@@ -84,7 +84,7 @@ class NotebookFragment() : Fragment() {
 		lv_notes.setOnItemClickListener { _, view, _, _ ->
 			view as NoteItemView
 			activity.supportFragmentManager.beginTransaction()
-				.replace(NoteViewerFragment(notebookKey, view.note!!.id))
+				.replace(NoteFragment(notebookKey, view.note!!.id,ViewMode.view))
 				.addToBackStack(null)
 				.commit()
 		}

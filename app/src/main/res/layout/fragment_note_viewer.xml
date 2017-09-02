@@ -1,13 +1,14 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	tools:context="com.zkl.ZKLRussian.ui.NoteViewerFragment"
+	tools:context="com.zkl.ZKLRussian.ui.NoteFragment"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 	
 	
 	<LinearLayout
+		android:id="@+id/ll_topBar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="0"
@@ -18,7 +19,6 @@
 			android:id="@+id/b_edit"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_weight="0"
 			android:text="Edit"/>
 		
 		<Button
@@ -29,11 +29,44 @@
 	</LinearLayout>
 	
 	<FrameLayout
-		android:id="@+id/fl_noteView"
+		android:id="@+id/fl_noteContent_container"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_weight="1">
 	
 	</FrameLayout>
+	
+	<LinearLayout
+		android:id="@+id/ll_footBar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="0"
+		android:orientation="horizontal"
+		android:visibility="gone"
+		tools:visibility="visible">
+		
+		<Button
+			android:id="@+id/b_cancel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="8dp"
+			android:layout_weight="0"
+			android:text="@android:string/cancel"/>
+		
+		<Space
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_margin="8dp"
+			android:layout_weight="1"
+			/>
+		
+		<Button
+			android:id="@+id/b_ok"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="8dp"
+			android:layout_weight="0"
+			android:text="@android:string/ok"/>
+	</LinearLayout>
 
 </LinearLayout>

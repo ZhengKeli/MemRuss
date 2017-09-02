@@ -6,7 +6,7 @@ object AppVersion {
 	
 	var versionString = "alpha-22"
 	
-	val updateLogs = arrayListOf(
+	private val updateLogs = arrayListOf(
 		"version:alpha-22:\n2016-10-10\n" +
 			"小更新，改了新词添加的机制，晚加入的新词会被优先加入计划\n" +
 			"大改还有好久啊，没时间写这个啊……",

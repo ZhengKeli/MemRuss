@@ -5,7 +5,7 @@
 	<application
 		android:name=".control.MyApplication"
 		android:allowBackup="true"
-		android:label="@string/app_name"
+		android:label="@string/ZKLRussian"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
 		<activity android:name=".ui.NotebookActivity">

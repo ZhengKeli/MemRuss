@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="ZKLRussian">ZKLRussian</string>
+	<string name="confirm">确认</string>
+	<string name="delete">删除</string>
+	<string name="newBook">新笔记本</string>
+	<string name="answer_colon">答案：</string>
+	<string name="question_colon">问题：</string>
+	<string name="Notebook">笔记本</string>
+	<string name="CreateQuestionNote_colon">创建新的问答词条</string>
+</resources>
