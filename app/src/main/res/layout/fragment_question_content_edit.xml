@@ -10,12 +10,14 @@
 		
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		
 		android:gravity="top|start"
 		android:padding="16dp"
 		
+		android:nextFocusForward="@+id/et_answer"
+		
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		android:textSize="40sp"
+		android:maxLines="1"
 		
 		android:hint="@string/question"
 		tools:text="слово"/>
