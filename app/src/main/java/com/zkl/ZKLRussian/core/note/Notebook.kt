@@ -51,27 +51,27 @@ interface Notebook:Closeable {
 	
 	/**
 	 * 搜索需要复习的词条
-	 * 此搜索结果按照[Note.reviewTime]排序而非
+	 * 此搜索结果按照[NoteMemory.reviewTime]排序而非
 	 * @param nowTime 现在的时间（为了避免因为时区变化而引起的错误，使用GMT+0毫秒时间)
 	 * @param asc 按照复习时间排序方式，`true`表示升序，`false`表示降序
 	 * @param count 获取的最大词条数
 	 * @param offset 可以跳过最开始的几个词条，返回后面的几个
-	 * @return 需要复习的词条,按照[Note.reviewTime]排序而非
+	 * @return 需要复习的词条,按照[NoteMemory.reviewTime]排序而非
 	 */
 	fun selectNeedReviewNotes(nowTime: Long, asc: Boolean = false, count: Int = 1, offset: Int = 0): List<Note>
 	
 	/**
 	 * 搜索是否存在某个 uniqueTag
 	 */
-	fun checkUniqueTag(tag: String): Long
+	fun checkUniqueTag(tag: String,exceptId:Long=-1L): Long
 	
 	/**
 	 * 批量搜索是否存在某些 uniqueTag
 	 */
 	@Throws(DuplicateException::class)
-	fun throwIfDuplicated(uniqueTags: Collection<String>){
+	fun throwIfDuplicated(uniqueTags: Collection<String>,exceptId: Long=-1L){
 		uniqueTags.forEach { uniqueTag ->
-			val id = checkUniqueTag(uniqueTag)
+			val id = checkUniqueTag(uniqueTag,exceptId)
 			if (id != -1L) throw DuplicateException(uniqueTag,id)
 		}
 	}
@@ -86,7 +86,7 @@ interface MutableNotebook : Notebook {
 	 * 执行一个批量操作。若操作中抛出任何错误则会回滚。
 	 * @return 操作是否无误地成功了。
 	 */
-	fun withTransaction(action: () -> Unit): Unit
+	fun withTransaction(action: () -> Unit)
 	
 	
 	//setters

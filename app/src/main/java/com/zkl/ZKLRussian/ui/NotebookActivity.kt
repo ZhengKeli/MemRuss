@@ -51,5 +51,5 @@ class NotebookActivity : AppCompatActivity() {
 }
 
 val Fragment.notebookActivity get() = activity as NotebookActivity
-fun FragmentTransaction.replace(fragment: Fragment) = replace(R.id.fragment_container,fragment)
+fun FragmentTransaction.replace(fragment: Fragment) = replace(R.id.fragment_container,fragment)!!
 

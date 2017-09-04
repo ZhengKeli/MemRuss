@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+	
+	<EditText
+		android:id="@+id/et_question"
+		
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		
+		android:gravity="top|start"
+		android:padding="16dp"
+		
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:textSize="40sp"
+		
+		android:hint="@string/question"
+		tools:text="слово"/>
+	
+	<EditText
+		android:id="@+id/et_answer"
+		
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		
+		android:gravity="top|start"
+		android:padding="16dp"
+		
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:textSize="20sp"
+		
+		android:hint="@string/answer"
+		tools:text="tv_answer"/>
+
+</LinearLayout>

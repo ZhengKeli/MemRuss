@@ -1,31 +1,35 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	tools:context="com.zkl.ZKLRussian.ui.NoteFragment"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:animateLayoutChanges="true"
 	android:orientation="vertical">
 	
 	
 	<LinearLayout
-		android:id="@+id/ll_topBar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="0"
-		android:gravity="end"
+		android:gravity="center_vertical|end"
 		android:orientation="horizontal">
 		
-		<Button
-			android:id="@+id/b_edit"
+		<TextView
+			android:id="@+id/tv_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Edit"/>
+			android:layout_weight="1"
+			android:padding="16dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Large"
+			tools:text="Editing Note@99"/>
 		
 		<Button
 			android:id="@+id/b_delete"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Delete"/>
+			android:layout_weight="0"
+			android:text="@string/delete"/>
+		
 	</LinearLayout>
 	
 	<FrameLayout
@@ -37,12 +41,10 @@
 	</FrameLayout>
 	
 	<LinearLayout
-		android:id="@+id/ll_footBar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="0"
 		android:orientation="horizontal"
-		android:visibility="gone"
 		tools:visibility="visible">
 		
 		<Button

@@ -176,10 +176,10 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
-	override fun checkUniqueTag(tag: String): Long {
+	override fun checkUniqueTag(tag: String,exceptId:Long): Long {
 		return uniqueTagTable.run {
 			database.select(_name, noteId)
-				.whereArgs("$uniqueTag = '$tag' ")
+				.whereArgs("$uniqueTag = '$tag' and $noteId != $exceptId")
 				.limit(1)
 				.exec {
 					moveToFirst()
@@ -264,7 +264,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		val write_noteContentString = contentEncoder.encode(content)
 		val write_memory = memory ?: NoteMemory()
 		
-		var newNoteId: Long = -1
+		var newNoteId: Long = -1L
 		database.beginTransaction()
 		database.endTransaction()
 		database.transaction {
@@ -315,7 +315,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	
 	override fun modifyNoteContent(noteId: Long, noteContent: NoteContent) {
 		//检查改动后是否会产生冲突
-		throwIfDuplicated(noteContent.uniqueTags)
+		throwIfDuplicated(noteContent.uniqueTags,noteId)
 		
 		database.transaction {
 			//删除原有的 uniqueTags 和 searchTags

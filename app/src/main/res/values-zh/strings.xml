@@ -8,4 +8,10 @@
 	<string name="question_colon">问题：</string>
 	<string name="Notebook">笔记本</string>
 	<string name="CreateQuestionNote_colon">创建新的问答词条</string>
+	<string name="edit">编辑</string>
+	<string name="Note_create">新词条</string>
+	<string name="Note_edit_id">正在编辑 词条@%1$d</string>
+	<string name="Note_view_id">词条@%1$d</string>
+	<string name="question">问题</string>
+	<string name="answer">答案</string>
 </resources>

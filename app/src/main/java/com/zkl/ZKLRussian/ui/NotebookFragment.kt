@@ -2,19 +2,18 @@ package com.zkl.ZKLRussian.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.zkl.ZKLRussian.R
-import com.zkl.ZKLRussian.control.myApp
 import com.zkl.ZKLRussian.core.note.MutableNotebook
 import com.zkl.ZKLRussian.core.note.Note
-import com.zkl.ZKLRussian.core.note.Notebook
 import com.zkl.ZKLRussian.core.note.QuestionContent
 
-class NotebookFragment() : Fragment() {
+class NotebookFragment : NotebookHoldingFragment {
+	constructor() : super()
+	constructor(notebookKey: Int) : super(notebookKey)
 	
 	//views
 	private lateinit var tv_bookName: TextView
@@ -53,7 +52,7 @@ class NotebookFragment() : Fragment() {
 			b_addNote.visibility = View.GONE
 		else
 			b_addNote.setOnClickListener {
-				notebookActivity.jumpToFragment(NoteCreationFragment(notebookKey),true)
+				notebookActivity.jumpToFragment(NoteEditFragment(notebookKey, -1),true)
 			}
 		
 		
@@ -84,33 +83,11 @@ class NotebookFragment() : Fragment() {
 		lv_notes.setOnItemClickListener { _, view, _, _ ->
 			view as NoteItemView
 			activity.supportFragmentManager.beginTransaction()
-				.replace(NoteFragment(notebookKey, view.note!!.id,ViewMode.view))
+				.replace(NoteViewFragment(notebookKey, view.note!!.id))
 				.addToBackStack(null)
 				.commit()
 		}
 	}
-	
-	
-	//key
-	private var notebookKey:Int = -1
-	constructor(notebookKey:Int):this(){
-		this.notebookKey = notebookKey
-	}
-	override fun onViewStateRestored(savedInstanceState: Bundle?) {
-		super.onViewStateRestored(savedInstanceState)
-		notebookKey = savedInstanceState?.getInt(this::notebookKey.name) ?: notebookKey
-	}
-	
-	override fun onSaveInstanceState(outState: Bundle) {
-		super.onSaveInstanceState(outState)
-		outState.putInt(this::notebookKey.name, notebookKey)
-	}
-	
-	
-	//notebook
-	private val _notebook: Notebook by lazy { myApp.noteManager.getRegisterNotebook(notebookKey)!! }
-	val notebook: Notebook get() = _notebook
-	val mutableNotebook: MutableNotebook get() = notebook as MutableNotebook
 	
 	
 	//notes
@@ -119,7 +96,7 @@ class NotebookFragment() : Fragment() {
 		showingNotes = object :SectionBufferList<Note>(){
 			override fun getSection(startFrom: Int): List<Note>
 				= notebook.selectLatestNotes(sectionSize, startFrom)
-			override val size: Int = _notebook.noteCount
+			override val size: Int = notebook.noteCount
 		}
 	}
 	
