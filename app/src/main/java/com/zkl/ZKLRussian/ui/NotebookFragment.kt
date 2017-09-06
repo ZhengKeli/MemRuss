@@ -10,6 +10,7 @@ import com.zkl.ZKLRussian.R
 import com.zkl.ZKLRussian.core.note.MutableNotebook
 import com.zkl.ZKLRussian.core.note.Note
 import com.zkl.ZKLRussian.core.note.QuestionContent
+import java.util.*
 
 class NotebookFragment : NotebookHoldingFragment {
 	constructor() : super()
@@ -93,7 +94,7 @@ class NotebookFragment : NotebookHoldingFragment {
 	//notes
 	var showingNotes:List<Note>? = null
 	private fun showNotes(){
-		showingNotes = object :SectionBufferList<Note>(){
+		showingNotes = object : SectionBufferList<Note>(){
 			override fun getSection(startFrom: Int): List<Note>
 				= notebook.selectLatestNotes(sectionSize, startFrom)
 			override val size: Int = notebook.noteCount
@@ -133,3 +134,32 @@ class NoteItemView(context:Context):LinearLayout(context){
 		}
 }
 
+abstract class SectionBufferList<T>
+constructor(val sectionSize:Int = 50,val sectionCount:Int = 10)
+	: AbstractList<T>() {
+	
+	private val sections = LinkedList<List<T>>()
+	private var bufferFrom:Int = 0
+	private val bufferSize:Int get()= sectionSize*sections.size
+	@Synchronized override fun get(index: Int): T {
+		val relative = index - bufferFrom
+		while (relative < 0) appendFirst()
+		while (relative>= bufferSize) appendLast()
+		return sections[relative / sectionSize][relative % sectionSize]
+	}
+	@Synchronized private fun appendFirst(){
+		bufferFrom -= sectionSize
+		sections.addFirst(getSection(bufferFrom))
+		if (sections.size > sectionCount) sections.removeLast()
+	}
+	@Synchronized private fun appendLast(){
+		sections.addLast(getSection(bufferFrom + bufferSize))
+		if (sections.size > sectionCount) {
+			sections.removeFirst()
+			bufferFrom += sectionSize
+		}
+	}
+	
+	abstract fun getSection(startFrom:Int):List<T>
+	
+}

@@ -109,7 +109,6 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	}
 	
 	
-	
 	//info
 	override val name: String by lazy {
 		confTable.run {
