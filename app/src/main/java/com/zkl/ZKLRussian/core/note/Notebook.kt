@@ -5,19 +5,38 @@ import java.io.Closeable
 interface Notebook:Closeable {
 	
 	//info
+	/**
+	 * 该单词本版本
+	 */
+	val version:Int
 	
 	/**
 	 * 该单词本的名字
 	 */
 	val name: String
 	
+	
+	
+	//memory
+	
 	/**
-	 * 词条的总工作量
+	 * 该笔记本的复习计划
 	 */
-	val workLoad:Float
+	val memoryPlan: MemoryPlan?
+	
+	/**
+	 * 该笔记本的复习状态汇总信息
+	 */
+	val memorySummary: MemorySummary
+	
+	/**
+	 * 该笔记本的复习状态
+	 */
+	val memory: NotebookMemory
 	
 	
-	//getters
+	
+	//notes
 	
 	/**
 	 * 词条总数量
@@ -38,7 +57,13 @@ interface Notebook:Closeable {
 	 * @param offset 可以跳过最开始的几个词条，返回后面的几个
 	 * @return 最新的一些词条，按照修改日期倒序排序
 	 */
-	fun selectLatestNotes(count: Int=100, offset: Int = 0): List<Note>
+	fun selectLatestNotes(count: Int = 100, offset: Int = 0): List<Note>
+	
+	/**
+	 * 根据需要复习的时间检索词条
+	 * （只有处于正在复习状态的词条会被检索出来）
+	 */
+	fun selectNeedReviewNotes(nowTime:Long, asc: Boolean = false, count: Int = 1, offset: Int = 0): List<Note>
 	
 	/**
 	 * 根据关键词搜索一些词条
@@ -48,17 +73,6 @@ interface Notebook:Closeable {
 	 * @return 返回搜索结果，按照修改日期倒序排序
 	 */
 	fun selectByKeyword(keyword: String, count: Int=100, offset: Int=0): List<Note>
-	
-	/**
-	 * 搜索需要复习的词条
-	 * 此搜索结果按照[NoteMemory.reviewTime]排序而非
-	 * @param nowTime 现在的时间（为了避免因为时区变化而引起的错误，使用GMT+0毫秒时间)
-	 * @param asc 按照复习时间排序方式，`true`表示升序，`false`表示降序
-	 * @param count 获取的最大词条数
-	 * @param offset 可以跳过最开始的几个词条，返回后面的几个
-	 * @return 需要复习的词条,按照[NoteMemory.reviewTime]排序而非
-	 */
-	fun selectNeedReviewNotes(nowTime: Long, asc: Boolean = false, count: Int = 1, offset: Int = 0): List<Note>
 	
 	/**
 	 * 搜索是否存在某个 uniqueTag
@@ -89,14 +103,23 @@ interface MutableNotebook : Notebook {
 	fun withTransaction(action: () -> Unit)
 	
 	
-	//setters
+	//info
+	override var name:String
+	
+	
+	//memory
+	override var memoryPlan: MemoryPlan?
+	override var memory: NotebookMemory
+	
+	
+	//notes
 	
 	/**
 	 * 添加一个词条
 	 * @return 返回刚加入的词条的 noteId
 	 */
 	@Throws(DuplicateException::class)
-	fun addNote(content: NoteContent,memory:NoteMemory? = null): Long
+	fun addNote(content: NoteContent, memory: NoteMemory? = null): Long
 	
 	/**
 	 * 添加一堆词条
@@ -114,14 +137,12 @@ interface MutableNotebook : Notebook {
 	/**
 	 * 修改 note 的内容
 	 */
-	fun modifyNoteContent(noteId: Long, noteContent: NoteContent)
+	fun modifyNoteContent(noteId: Long, content: NoteContent)
 	
 	/**
 	 * 修改 note 的复习进度
 	 */
-	fun modifyNoteMemory(noteId: Long,noteMemory: NoteMemory)
-	
-	
+	fun modifyNoteMemory(noteId: Long, memory: NoteMemory)
 	
 }
 

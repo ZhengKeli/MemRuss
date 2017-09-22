@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.zkl.ZKLRussian.R
-import com.zkl.ZKLRussian.core.note.MemoryState
 import com.zkl.ZKLRussian.core.note.MutableNotebook
 import com.zkl.ZKLRussian.core.note.NoteContent
+import com.zkl.ZKLRussian.core.note.NoteMemoryState
 import com.zkl.ZKLRussian.core.note.QuestionContent
 
 
@@ -35,10 +35,10 @@ class NoteViewFragment : NoteHoldingFragment {
 		super.onStart()
 		
 		tv_title.text = getString(R.string.Note_view_id, noteId)
-		if (note.memory.state != MemoryState.infant) {
+		if (note.memory.state != NoteMemoryState.infant) {
 			tv_info.text =
 				"""memoryProgress:${note.memory.progress}
-				memoryLoad:${note.memory.load}
+				sumLoad:${note.memory.load}
 				reviewTime:${note.memory.reviewTime}
 			""".trimMargin()
 		} else {

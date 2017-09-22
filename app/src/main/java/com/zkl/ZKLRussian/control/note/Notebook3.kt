@@ -5,21 +5,24 @@ import android.database.sqlite.SQLiteDatabase
 import com.zkl.ZKLRussian.control.tools.createIndex
 import com.zkl.ZKLRussian.core.note.*
 import org.jetbrains.anko.db.*
-import kotlin.reflect.jvm.internal.impl.utils.StringsKt
 
 
-private object confTable {
-	val _name = "conf"
+private object confsTable {
+	val tableName = "confs"
 	
-	val item = "item"
-	val value = "value"
+	val confName = "confName"
+	val confValue = "confValue"
+	val confCreateTime = "confCreateTime"
+	val confModifyTime = "confModifyTime"
 	
 	val item_version = "version"
 	val item_bookName = "bookName"
+	val item_memory = "memory"
+	val item_memoryPlan = "memoryPlan"
 	
 }
 private object notesTable {
-	val _name = "notes"
+	val tableName = "notes"
 	
 	val noteId = "noteId"
 	val createTime = "createTime"
@@ -35,15 +38,14 @@ private object notesTable {
 	val memoryUpdateTime = "memoryUpdateTime"
 	
 	
-	val standardColumns= arrayOf(
-		noteId, createTime,
+	val standardColumns= arrayOf(noteId, createTime,
 		contentType, contentString, contentUpdateTime,
 		memoryState, memoryProgress, memoryLoad, reviewTime, memoryUpdateTime)
 	
 	
 }
 private object uniqueTagTable {
-	val _name = "uniqueTags"
+	val tableName = "uniqueTags"
 	
 	val noteId = "noteId"
 	val uniqueTag = "uniqueTag"
@@ -63,21 +65,28 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	override fun close() {
 		database.close()
 	}
-	fun createTables(bookName:String="newBook") {
+	fun createTables(bookName:String) {
 		database.transaction {
-			confTable.run {
-				createTable(_name, true,
-					item to TEXT + PRIMARY_KEY,
-					value to TEXT)
-				insert(_name,
-					item to item_version,
-					value to 3)
-				insert(_name,
-					item to item_bookName,
-					value to bookName)
+			val nowTime = System.currentTimeMillis()
+			confsTable.run {
+				createTable(tableName, true,
+					confName to TEXT + PRIMARY_KEY,
+					confValue to TEXT,
+					confCreateTime to INTEGER,
+					confModifyTime to INTEGER)
+				insert(tableName,
+					confName to item_version,
+					confValue to 3,
+					confCreateTime to nowTime,
+					confModifyTime to nowTime)
+				insert(tableName,
+					confName to item_bookName,
+					confValue to bookName,
+					confCreateTime to nowTime,
+					confModifyTime to nowTime)
 			}
 			notesTable.run {
-				createTable(_name, true,
+				createTable(tableName, true,
 					noteId to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
 					createTime to INTEGER,
 					
@@ -91,14 +100,16 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					reviewTime to INTEGER,
 					memoryUpdateTime to INTEGER
 				)
-				createIndex("${createTime}Index",_name,true, createTime)
-				createIndex("${contentUpdateTime}Index", _name,true,contentUpdateTime)
-				createIndex("${reviewTime}Index", _name,true,reviewTime)
+				createIndex("${createTime}Index", tableName, false, true, createTime)
+                createIndex("${contentUpdateTime}Index", tableName, false, true, contentUpdateTime)
+                createIndex("${reviewTime}Index", tableName, false, true, reviewTime)
+				Unit
 			}
 			uniqueTagTable.run {
-				createTable(_name,true,
+				createTable(tableName,true,
 					noteId to INTEGER + PRIMARY_KEY,
 					uniqueTag to TEXT + UNIQUE)
+				createIndex("${uniqueTag}Index", tableName, true, true, uniqueTag)
 			}
 			searchTagTable.run {
 				createTable(_name, true,
@@ -110,27 +121,117 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	
 	
 	//info
-	override val name: String by lazy {
-		confTable.run {
-			database.select(_name, value)
-				.whereArgs("$item = '$item_bookName' ")
+	override val version: Int = 3
+	override var name: String
+		get() = confsTable.run {
+			database.select(tableName, confValue)
+				.whereArgs("$confName = '$item_bookName' ")
 				.exec {
 					moveToFirst()
 					getString(0)
 				}
 		}
-	}
-	override val workLoad: Float
-		get() = notesTable.run {
-			database.select(_name,"sum($workLoad)")
-				.exec { getFloat(0) }
+		set(value) {
+			confsTable.run {
+				database.update(tableName, item_bookName to value)
+					.whereArgs("$confName = '$item_bookName' ")
+					.exec()
+			}
 		}
+	
+	
+	
+	//memory
+	override var memoryPlan: MemoryPlan?
+		get() = confsTable.run {
+			database.select(tableName, confValue)
+				.whereArgs("$confName = '$item_memoryPlan' ")
+				.exec {
+					moveToFirst()
+					return@exec if (isAfterLast) null
+					else MemoryPlanCoder.decode(getString(0))
+				}
+		}
+		set(value) = confsTable.run {
+			if (value == null) {
+				database.delete(tableName,"$confName = '$item_memoryPlan' ")
+			} else {
+				val encoded = MemoryPlanCoder.encode(value)
+				val nowTime = System.currentTimeMillis()
+				
+				val updated = database.update(tableName,
+					confValue to encoded,
+					confModifyTime to nowTime)
+					.whereArgs("$confName = '$item_memoryPlan' ")
+					.exec() == 1
+				if (!updated) database.insert(tableName,
+					confName to item_memoryPlan,
+					confValue to encoded,
+					confCreateTime to nowTime,
+					confModifyTime to nowTime)
+			}
+		}
+			
+	override var memory: NotebookMemory
+		get() = confsTable.run {
+			database.select(tableName, confValue, confModifyTime)
+				.whereArgs("$confName = '$item_memory' ")
+				.exec {
+					//check data existence
+					moveToFirst()
+					if (isAfterLast) return@exec NotebookMemory.infantInstance
+					
+					//read data
+					val oldMemory = NotebookMemoryCoder.decode(getString(0))
+					val modifyTime = getLong(1)
+					
+					//check isInvalid
+					val nowTime = System.currentTimeMillis()
+					val isInvalid = Math.abs(nowTime - modifyTime) > 1000 * 3600 * 24
+					
+					return@exec when (isInvalid) {
+						true -> recomputeMemoryLoad(oldMemory, true)
+						false -> oldMemory
+					}
+				}
+		}
+		set(value) = confsTable.run {
+				val nowTime = System.currentTimeMillis()
+				val encoded = NotebookMemoryCoder.encode(value)
+				database.update(tableName,
+					confValue to encoded,
+					confModifyTime to nowTime)
+					.whereArgs("$confName = '$item_memory' ")
+					.exec()
+				Unit
+			}
+	
+	override val memorySummary: MemorySummary
+		get() {
+			val sumMemoryLoad = notesTable.run {
+				database.select(tableName, columns = "sum($memoryLoad)")
+					.exec { this.getFloat(0) }
+			}
+			return MemorySummary(sumMemoryLoad)
+		}
+	
+	//private memory
+	private fun recomputeMemoryLoad(oldMemory: NotebookMemory,writeIn:Boolean = true): NotebookMemory {
+		val recomputedSumLoad = notesTable.run {
+			database.select(tableName, columns = "sum($memoryLoad)")
+				.exec { this.getDouble(0) }
+		}
+		val newMemory = oldMemory.copy(sumLoad = recomputedSumLoad)
+		if(writeIn) this.memory = newMemory
+		return newMemory
+	}
+	
 	
 	
 	//getters
 	
 	override val noteCount: Int get() {
-		return database.select(notesTable._name, "count(*)").exec {
+		return database.select(notesTable.tableName, "count(*)").exec {
 			moveToFirst()
 			getInt(0)
 		}
@@ -143,26 +244,26 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			.getOrNull(0) ?: throw NoteIdNotFoundException(noteId)
 	}
 	
-	override fun selectLatestNotes(count: Int, offset: Int): List<Note> {
-		return database.selectNotes()
-			.orderBy(notesTable.contentUpdateTime,SqlOrderDirection.DESC)
-			.limit(offset, count)
-			.exec { decodeNotes() }
-	}
-	
 	override fun selectByKeyword(keyword: String, count: Int, offset: Int): List<Note> {
 		return notesTable.run {
 			val sql = """
-			SELECT DISTINCT ${StringsKt.join(standardColumns.asIterable(), ",")}
-			FROM $_name
+			SELECT DISTINCT ${standardColumns.joinToString(",")}
+			FROM $tableName
 			INNER JOIN ${searchTagTable._name}
-			ON $_name.$noteId = ${searchTagTable._name}.${searchTagTable.noteId}
+			ON $tableName.$noteId = ${searchTagTable._name}.${searchTagTable.noteId}
 			WHERE ${searchTagTable._name}.${searchTagTable.searchTag}
 			LIKE '%$keyword%'
-			ORDER BY $_name.$contentUpdateTime DESC """
+			ORDER BY $tableName.$contentUpdateTime DESC """
 			
 			database.rawQuery(sql, null).use { cursor -> cursor.decodeNotes() }
 		}
+	}
+	
+	override fun selectLatestNotes(count: Int, offset: Int): List<Note> {
+		return database.selectNotes()
+			.orderBy(notesTable.contentUpdateTime, SqlOrderDirection.DESC)
+			.limit(offset, count)
+			.exec { decodeNotes() }
 	}
 	
 	override fun selectNeedReviewNotes(nowTime: Long, asc: Boolean, count: Int, offset: Int): List<Note> {
@@ -177,7 +278,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	
 	override fun checkUniqueTag(tag: String,exceptId:Long): Long {
 		return uniqueTagTable.run {
-			database.select(_name, noteId)
+			database.select(tableName, noteId)
 				.whereArgs("$uniqueTag = '$tag' and $noteId != $exceptId")
 				.limit(1)
 				.exec {
@@ -188,11 +289,10 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
-	
 	//private getters
 	private fun SQLiteDatabase.selectNotes(): SelectQueryBuilder {
 		return notesTable.run {
-			this@selectNotes.select(_name, *standardColumns)
+			this@selectNotes.select(tableName, *standardColumns)
 		}
 	}
 	private fun Cursor.decodeNotes():List<Note>{
@@ -220,7 +320,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			val read_noteContentString = getString(index_noteContent)
 			val read_contentUpdateTime = getLong(index_contentUpdateTime)
 			
-			val read_memoryState = MemoryState.values()[getInt(index_memoryState)]
+			val read_memoryState = NoteMemoryState.values()[getInt(index_memoryState)]
 			val read_memoryProgress = getFloat(index_memoryProgress)
 			val read_memoryLoad = getFloat(index_memoryLoad)
 			val read_reviewTime = getLong(index_reviewTime)
@@ -249,7 +349,9 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	}
 	
 	
+	
 	//setters
+	
 	override fun withTransaction(action: () -> Unit) = database.transaction { action() }
 	
 	override fun addNote(content: NoteContent, memory: NoteMemory?): Long {
@@ -268,7 +370,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		database.endTransaction()
 		database.transaction {
 			notesTable.run {
-				newNoteId = insert(_name,
+				newNoteId = insert(tableName,
 					//noteId不用管
 					createTime to write_nowTime,
 					
@@ -286,7 +388,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			}
 			uniqueTagTable.run {
 				content.uniqueTags.forEach { tag ->
-					insert(_name,
+					insert(tableName,
 						uniqueTagTable.noteId to newNoteId,
 						uniqueTagTable.uniqueTag to tag
 					)
@@ -306,30 +408,30 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	
 	override fun deleteNote(noteId: Long) {
 		return database.transaction {
-			delete(notesTable._name, notesTable.noteId + "=" + noteId, null)
-			delete(uniqueTagTable._name, uniqueTagTable.noteId + "=" + noteId, null)
+			delete(notesTable.tableName, notesTable.noteId + "=" + noteId, null)
+			delete(uniqueTagTable.tableName, uniqueTagTable.noteId + "=" + noteId, null)
 			delete(searchTagTable._name, searchTagTable.noteId + "=" + noteId, null)
 		}
 	}
 	
-	override fun modifyNoteContent(noteId: Long, noteContent: NoteContent) {
+	override fun modifyNoteContent(noteId: Long, content: NoteContent) {
 		//检查改动后是否会产生冲突
-		throwIfDuplicated(noteContent.uniqueTags,noteId)
+		throwIfDuplicated(content.uniqueTags,noteId)
 		
 		database.transaction {
 			//删除原有的 uniqueTags 和 searchTags
-			uniqueTagTable.run { delete(_name,"${uniqueTagTable.noteId} = $noteId") }
+			uniqueTagTable.run { delete(tableName,"${uniqueTagTable.noteId} = $noteId") }
 			searchTagTable.run { delete(_name,"${searchTagTable.noteId} = $noteId") }
 			
 			//添加note
 			notesTable.run {
-				val newContentCoder = noteContentCoders[noteContent.typeTag] ?:
-					throw NoteTypeNotSupportedException(noteContent.typeTag)
+				val newContentCoder = noteContentCoders[content.typeTag] ?:
+					throw NoteTypeNotSupportedException(content.typeTag)
 				val nowTime = System.currentTimeMillis()
 				
-				update(_name,
-					contentType to noteContent.typeTag,
-					contentString to newContentCoder.encode(noteContent),
+				update(tableName,
+					contentType to content.typeTag,
+					contentString to newContentCoder.encode(content),
 					contentUpdateTime to nowTime)
 					.whereArgs("${notesTable.noteId} = $noteId")
 					.exec()
@@ -337,15 +439,15 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			
 			//添加新的 uniqueTags 和 searchTags
 			uniqueTagTable.run {
-				noteContent.uniqueTags.forEach { tag ->
-					insert(_name,
+				content.uniqueTags.forEach { tag ->
+					insert(tableName,
 						uniqueTagTable.noteId to noteId,
 						uniqueTagTable.uniqueTag to tag
 					)
 				}
 			}
 			searchTagTable.run {
-				noteContent.searchTags.forEach { tag ->
+				content.searchTags.forEach { tag ->
 					database.insert(_name,
 						searchTagTable.noteId to noteId,
 						searchTag to tag
@@ -355,14 +457,14 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
-	override fun modifyNoteMemory(noteId: Long, noteMemory: NoteMemory) {
+	override fun modifyNoteMemory(noteId: Long, memory: NoteMemory) {
 		val nowTime = System.currentTimeMillis()
 		notesTable.run {
-			database.update(_name,
-				memoryState to noteMemory.state.ordinal,
-				memoryProgress to noteMemory.progress,
-				memoryLoad to noteMemory.load,
-				reviewTime to noteMemory.reviewTime,
+			database.update(tableName,
+				memoryState to memory.state.ordinal,
+				memoryProgress to memory.progress,
+				memoryLoad to memory.load,
+				reviewTime to memory.reviewTime,
 				memoryUpdateTime to nowTime
 			)
 		}
