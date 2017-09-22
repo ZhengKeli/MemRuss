@@ -26,14 +26,14 @@ data class NoteMemory(
 	 * 该词条的学习进度，
 	 * 标准地复习一次 progress + 1.0
 	 */
-	val progress: Float = 0.0f,
+	val progress: Double = 0.0,
 	
 	/**
 	 * 该词条的工作量有多大，
 	 * 一般在该阶段指平均一天要复习该词条多少次（可能小于 1），
 	 * 单个单词最大工作量应该为 3
 	 */
-	val load: Float = 0.0f,
+	val load: Double = 0.0,
 	
 	/**
 	 * 下一次需要复习的时间

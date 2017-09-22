@@ -13,7 +13,7 @@ private object confsTable {
 	val confName = "confName"
 	val confValue = "confValue"
 	val confCreateTime = "confCreateTime"
-	val confModifyTime = "confModifyTime"
+	val confUpdateTime = "confUpdateTime"
 	
 	val item_version = "version"
 	val item_bookName = "bookName"
@@ -73,17 +73,17 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					confName to TEXT + PRIMARY_KEY,
 					confValue to TEXT,
 					confCreateTime to INTEGER,
-					confModifyTime to INTEGER)
+					confUpdateTime to INTEGER)
 				insert(tableName,
 					confName to item_version,
 					confValue to 3,
 					confCreateTime to nowTime,
-					confModifyTime to nowTime)
+					confUpdateTime to nowTime)
 				insert(tableName,
 					confName to item_bookName,
 					confValue to bookName,
 					confCreateTime to nowTime,
-					confModifyTime to nowTime)
+					confUpdateTime to nowTime)
 			}
 			notesTable.run {
 				createTable(tableName, true,
@@ -94,7 +94,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					contentString to TEXT,
 					contentUpdateTime to INTEGER,
 					
-					memoryState to INTEGER,
+					memoryState to TEXT,
 					memoryProgress to REAL,
 					memoryLoad to REAL,
 					reviewTime to INTEGER,
@@ -161,20 +161,20 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				
 				val updated = database.update(tableName,
 					confValue to encoded,
-					confModifyTime to nowTime)
+					confUpdateTime to nowTime)
 					.whereArgs("$confName = '$item_memoryPlan' ")
 					.exec() == 1
 				if (!updated) database.insert(tableName,
 					confName to item_memoryPlan,
 					confValue to encoded,
 					confCreateTime to nowTime,
-					confModifyTime to nowTime)
+					confUpdateTime to nowTime)
 			}
 		}
 			
 	override var memory: NotebookMemory
 		get() = confsTable.run {
-			database.select(tableName, confValue, confModifyTime)
+			database.select(tableName, confValue, confUpdateTime)
 				.whereArgs("$confName = '$item_memory' ")
 				.exec {
 					//check data existence
@@ -200,7 +200,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				val encoded = NotebookMemoryCoder.encode(value)
 				database.update(tableName,
 					confValue to encoded,
-					confModifyTime to nowTime)
+					confUpdateTime to nowTime)
 					.whereArgs("$confName = '$item_memory' ")
 					.exec()
 				Unit
@@ -240,7 +240,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	override fun getNote(noteId: Long): Note {
 		return database.selectNotes()
 			.whereArgs(notesTable.noteId + "=" + noteId)
-			.exec { decodeNotes() }
+			.exec { parseNoteList() }
 			.getOrNull(0) ?: throw NoteIdNotFoundException(noteId)
 	}
 	
@@ -254,8 +254,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			WHERE ${searchTagTable._name}.${searchTagTable.searchTag}
 			LIKE '%$keyword%'
 			ORDER BY $tableName.$contentUpdateTime DESC """
-			
-			database.rawQuery(sql, null).use { cursor -> cursor.decodeNotes() }
+			database.rawQuery(sql, null).use { cursor -> cursor.parseNoteList() }
 		}
 	}
 	
@@ -263,7 +262,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		return database.selectNotes()
 			.orderBy(notesTable.contentUpdateTime, SqlOrderDirection.DESC)
 			.limit(offset, count)
-			.exec { decodeNotes() }
+			.exec { parseNoteList() }
 	}
 	
 	override fun selectNeedReviewNotes(nowTime: Long, asc: Boolean, count: Int, offset: Int): List<Note> {
@@ -272,7 +271,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				.whereArgs(" $reviewTime!=-1 AND $reviewTime<$nowTime ")
 				.orderBy(reviewTime, if (asc) SqlOrderDirection.ASC else SqlOrderDirection.DESC)
 				.limit(offset, count)
-				.exec { decodeNotes() }
+				.exec { parseNoteList() }
 		}
 	}
 	
@@ -295,58 +294,21 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			this@selectNotes.select(tableName, *standardColumns)
 		}
 	}
-	private fun Cursor.decodeNotes():List<Note>{
-		val read_notes = ArrayList<Note>(count)
-		moveToFirst()
+	private fun Cursor.parseNoteList():List<Note> = parseList(rowParser{
+		noteId:Long,createTime:Long,
+		contentType:String,contentString:String,contentUpdateTime:Long,
+		memoryState:String,memoryProgress:Double,memoryLoad:Double,reviewTime:Long,memoryUpdateTime:Long ->
 		
-		val index_noteId = getColumnIndex(notesTable.noteId)
-		val index_createTime = getColumnIndex(notesTable.createTime)
+		val noteContentCoder = noteContentCoders[contentType] ?: throw NoteTypeNotSupportedException(contentType)
+		val noteContent = noteContentCoder.decode(contentString)
+		val noteMemory = NoteMemory(NoteMemoryState.valueOf(memoryState),memoryProgress,memoryLoad,reviewTime)
 		
-		val index_typeTag = getColumnIndex(notesTable.contentType)
-		val index_noteContent = getColumnIndex(notesTable.contentString)
-		val index_contentUpdateTime = getColumnIndex(notesTable.contentUpdateTime)
-		
-		val index_memoryState = getColumnIndex(notesTable.memoryState)
-		val index_memoryProgress = getColumnIndex(notesTable.memoryProgress)
-		val index_memoryLoad = getColumnIndex(notesTable.memoryLoad)
-		val index_reviewTime = getColumnIndex(notesTable.reviewTime)
-		val index_memoryUpdateTime = getColumnIndex(notesTable.memoryUpdateTime)
-		
-		while (!isAfterLast) {
-			val read_noteId = getLong(index_noteId)
-			val read_createTime = getLong(index_createTime)
-			
-			val read_typeTag = getString(index_typeTag)
-			val read_noteContentString = getString(index_noteContent)
-			val read_contentUpdateTime = getLong(index_contentUpdateTime)
-			
-			val read_memoryState = NoteMemoryState.values()[getInt(index_memoryState)]
-			val read_memoryProgress = getFloat(index_memoryProgress)
-			val read_memoryLoad = getFloat(index_memoryLoad)
-			val read_reviewTime = getLong(index_reviewTime)
-			val read_memoryUpdateTime = getLong(index_memoryUpdateTime)
-			
-			val noteContentCoder = noteContentCoders[read_typeTag] ?: throw NoteTypeNotSupportedException(read_typeTag)
-			val read_noteContent = noteContentCoder.decode(read_noteContentString)
-			val read_noteMemory = NoteMemory(read_memoryState,read_memoryProgress,read_memoryLoad,read_reviewTime)
-			
-			val read_note = Note(
-				id = read_noteId,
-				createTime = read_createTime,
-				
-				content = read_noteContent,
-				contentUpdateTime = read_contentUpdateTime,
-				
-				memory = read_noteMemory,
-				memoryUpdateTime = read_memoryUpdateTime
-			)
-			
-			read_notes.add(read_note)
-			
-			moveToNext()
-		}
-		return read_notes
-	}
+		Note(noteId,createTime,
+			content = noteContent,
+			contentUpdateTime = contentUpdateTime,
+			memory = noteMemory,
+			memoryUpdateTime = memoryUpdateTime)
+	})
 	
 	
 	
@@ -378,7 +340,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					contentString to write_noteContentString,
 					contentUpdateTime to write_nowTime,
 					
-					memoryState to write_memory.state.ordinal,
+					memoryState to write_memory.state.name,
 					memoryProgress to write_memory.progress,
 					reviewTime to write_memory.reviewTime,
 					memoryLoad to write_memory.load,
@@ -461,7 +423,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		val nowTime = System.currentTimeMillis()
 		notesTable.run {
 			database.update(tableName,
-				memoryState to memory.state.ordinal,
+				memoryState to memory.state.name,
 				memoryProgress to memory.progress,
 				memoryLoad to memory.load,
 				reviewTime to memory.reviewTime,
