@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.zkl.ZKLRussian"
+<manifest package="com.zkl.zklRussian"
           xmlns:android="http://schemas.android.com/apk/res/android">
 	
 	<application
-		android:name=".control.MyApplication"
+		android:name="com.zkl.zklRussian.control.MyApplication"
 		android:allowBackup="true"
 		android:label="@string/ZKLRussian"
 		android:supportsRtl="true"
-		android:theme="@style/AppTheme">
-		<activity android:name=".ui.NotebookActivity">
+		android:theme="@style/AppTheme"
+		android:fullBackupContent="true">
+		<activity android:name="com.zkl.zklRussian.ui.NotebookActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>

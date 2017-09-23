@@ -5,7 +5,7 @@
 	android:layout_height="match_parent"
 	android:animateLayoutChanges="true"
 	android:orientation="vertical"
-	tools:context="com.zkl.ZKLRussian.ui.NoteViewFragment">
+	tools:context="com.zkl.zklRussian.ui.NoteViewFragment">
 	
 	
 	<LinearLayout
