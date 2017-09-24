@@ -36,8 +36,8 @@ class NoteViewFragment : NoteHoldingFragment {
 		
 		tv_title.text = getString(R.string.Note_view_id, noteId)
 		if (note.memory.state != NoteMemoryState.infant) {
-			tv_info.text =
-				"""memoryProgress:${note.memory.progress}
+			tv_info.text = """
+				memoryProgress:${note.memory.progress}
 				sumLoad:${note.memory.load}
 				reviewTime:${note.memory.reviewTime}
 			""".trimMargin()

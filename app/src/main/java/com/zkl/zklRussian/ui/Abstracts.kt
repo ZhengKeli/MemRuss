@@ -15,10 +15,12 @@ abstract class NotebookHoldingFragment: Fragment {
 	}
 	
 	//key
-	var notebookKey: Int = -1
+	protected var notebookKey: Int = -1
+		private set
 	override fun onViewStateRestored(savedInstanceState: Bundle?) {
 		super.onViewStateRestored(savedInstanceState)
 		notebookKey = savedInstanceState?.getInt(this::notebookKey.name) ?: notebookKey
+		if(notebookKey!=-1) _notebook = myApp.noteManager.getRegisterNotebook(notebookKey)!!
 	}
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
@@ -26,8 +28,8 @@ abstract class NotebookHoldingFragment: Fragment {
 	}
 	
 	//apis
-	protected var _notebook: Notebook? = null
-	protected val notebook: Notebook get() = _notebook ?: myApp.noteManager.getRegisterNotebook(notebookKey)!!
+	private var _notebook:Notebook? = null
+	protected val notebook: Notebook get() = _notebook!!
 	protected val mutableNotebook: MutableNotebook get() = notebook as MutableNotebook
 }
 
@@ -40,9 +42,11 @@ abstract class NoteHoldingFragment: NotebookHoldingFragment {
 	
 	//ids
 	protected var noteId: Long = -1L
+		private set
 	override fun onViewStateRestored(savedInstanceState: Bundle?) {
 		super.onViewStateRestored(savedInstanceState)
 		noteId = savedInstanceState?.getLong(this::noteId.name)?:noteId
+		if(noteId!=-1L) _note =  notebook.getNote(noteId)
 	}
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
@@ -50,8 +54,8 @@ abstract class NoteHoldingFragment: NotebookHoldingFragment {
 	}
 	
 	//api
-	protected var _note: Note? = null
-	protected val note: Note get() = _note ?: notebook.getNote(noteId)
+	private var _note: Note? = null
+	val note:Note get() = _note!!
 	
 }
 

@@ -14,4 +14,7 @@
 	<string name="Note_view_id">词条@%1$d</string>
 	<string name="question">问题</string>
 	<string name="answer">答案</string>
+	<string name="count_NotesInAll">共%1$d个词条</string>
+	<string name="add">添加</string>
+	<string name="menu">菜单</string>
 </resources>

@@ -16,4 +16,8 @@
 	<string name="Note_create">New Note</string>
 	<string name="answer">answer</string>
 	<string name="question">question</string>
+	
+	<string name="count_NotesInAll">%1$d Notes in All</string>
+	<string name="menu">menu</string>
+	<string name="add">add</string>
 </resources>

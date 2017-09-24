@@ -38,45 +38,42 @@ class NotebookFragment : NotebookHoldingFragment {
 	override fun onStart() {
 		super.onStart()
 		
+		initializeNotebookViews()
+		initializeSearchMode()
+		initializeNoteList()
+	}
+	
+	//notebook views
+	private fun initializeNotebookViews() {
 		tv_bookName.text = notebook.name
-		//todo make it string resources of android
-		tv_bookInfo.text = "共${notebook.noteCount}个词条"
+		tv_bookInfo.text = getString(R.string.count_NotesInAll, notebook.noteCount)
+		
+		if (notebook !is MutableNotebook) {
+			b_addNote.visibility = View.GONE
+		}
+		else {
+			b_addNote.setOnClickListener {
+				notebookActivity.jumpToFragment(NoteEditFragment(notebookKey, -1), true)
+			}
+		}
 		
 		b_menu.setOnClickListener {
 			Toast.makeText(context,"还没有菜单！",Toast.LENGTH_SHORT).show()
 			//todo show menu
 		}
-		
-		
-		
-		if(notebook !is MutableNotebook)
-			b_addNote.visibility = View.GONE
-		else
-			b_addNote.setOnClickListener {
-				notebookActivity.jumpToFragment(NoteEditFragment(notebookKey, -1),true)
-			}
-		
-		
-		//todo search
-		sv_search.setOnSearchClickListener {
-			tv_bookInfo.visibility = View.GONE
-			b_addNote.visibility = View.GONE
-		}
-		sv_search.setOnCloseListener {
-			tv_bookInfo.visibility = View.VISIBLE
-			b_addNote.visibility = View.VISIBLE
-			false
-		}
-		
-		//todo show notes
-		showNotes()
-		lv_notes.adapter = object :BaseAdapter(){
-			override fun getItem(position: Int) = showingNotes!![getItemId(position).toInt()]
+	}
+	
+	//note list
+	lateinit var showingNotes:List<Note>
+	private fun initializeNoteList() {
+		showingNotes = notesBuffer
+		lv_notes.adapter = object : BaseAdapter() {
+			override fun getItem(position: Int) = showingNotes[getItemId(position).toInt()]
 			override fun getItemId(position: Int) = position.toLong()
 			
-			override fun getCount() = showingNotes?.size?:0
+			override fun getCount() = showingNotes.size
 			override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-				val view = (convertView as? NoteItemView)?: NoteItemView(activity)
+				val view = (convertView as? NoteItemView) ?: NoteItemView(activity)
 				view.note = getItem(position)
 				return view
 			}
@@ -90,17 +87,41 @@ class NotebookFragment : NotebookHoldingFragment {
 		}
 	}
 	
-	
-	//notes
-	var showingNotes:List<Note>? = null
-	private fun showNotes(){
-		showingNotes = object : SectionBufferList<Note>(){
-			override fun getSection(startFrom: Int): List<Note>
-				= notebook.selectLatestNotes(sectionSize, startFrom)
-			override val size: Int = notebook.noteCount
+	//mode switch
+	private fun initializeSearchMode(){
+		sv_search.setOnSearchClickListener {
+			searchModeOn()
 		}
+		sv_search.setOnCloseListener {
+			searchModeOff()
+			false
+		}
+		searchModeOff()
+	}
+	private fun searchModeOn(){
+		tv_bookInfo.visibility = View.GONE
+		b_addNote.visibility = View.GONE
+		sv_search.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+		showingNotes = searchResult
+		//start search thread
+	}
+	private fun searchModeOff(){
+		tv_bookInfo.visibility = View.VISIBLE
+		b_addNote.visibility = View.VISIBLE
+		sv_search.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+		showingNotes = notesBuffer
 	}
 	
+	//notes buffer
+	val notesBuffer = object : SectionBufferList<Note>(){
+		override fun getSection(startFrom: Int): List<Note>
+			= notebook.selectLatestNotes(sectionSize, startFrom)
+		override val size: Int
+			get() = notebook.noteCount
+	}
+	
+	//search
+	var searchResult:List<Note> = emptyList()
 	
 }
 
