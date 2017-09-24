@@ -3,6 +3,10 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:layout_marginStart="8dp"
+	android:layout_marginLeft="8dp"
+	android:layout_marginEnd="8dp"
+	android:layout_marginRight="8dp"
 	android:animateLayoutChanges="true"
 	android:orientation="vertical"
 	tools:context="com.zkl.zklRussian.ui.NoteViewFragment">
@@ -20,7 +24,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:padding="16dp"
+			android:padding="8dp"
 			android:textAppearance="@style/TextAppearance.AppCompat.Large"
 			tools:text="Note@99"/>
 		
@@ -37,6 +41,7 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="0"
 			android:text="@string/delete"/>
+	
 	</LinearLayout>
 	
 	<TextView
@@ -44,10 +49,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="0"
-		android:paddingBottom="8dp"
-		android:paddingLeft="16dp"
-		android:paddingRight="16dp"
-		android:paddingTop="8dp"
+		android:padding="8dp"
 		tools:text="memoryState:xx\nnextTime:xx"/>
 	
 	<FrameLayout

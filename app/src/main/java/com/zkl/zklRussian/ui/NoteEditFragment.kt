@@ -38,7 +38,9 @@ class NoteEditFragment : NoteHoldingFragment {
 	override fun onStart() {
 		super.onStart()
 		
-		tv_title.text = getString(R.string.Note_edit_id, noteId)
+		tv_title.text =
+			if (isCreateMode) getString(R.string.Note_create)
+			else getString(R.string.Note_edit_id, noteId)
 		
 		var deleteConfirmed = false
 		b_delete.setOnClickListener {
@@ -126,14 +128,13 @@ class QuestionContentEditFragment : NoteContentEditFragment(){
 		syncTexts(false)
 		return true
 	}
-	override fun syncTexts(apply: Boolean):NoteContent{
+	override fun syncTexts(apply: Boolean): NoteContent {
 		if (apply) {
 			noteContent = QuestionContent(et_question!!.text.toString(), et_answer!!.text.toString())
 		} else {
 			et_question?.setText(noteContent!!.question, TextView.BufferType.NORMAL)
 			et_answer?.setText(noteContent!!.answer, TextView.BufferType.NORMAL)
 		}
-		
 		return noteContent!!
 	}
 	
