@@ -51,18 +51,8 @@ class NoteViewFragment : NoteHoldingFragment {
 		}
 		
 		b_delete.isEnabled = notebook is MutableNotebook
-		var deleteConfirmed = false
 		b_delete.setOnClickListener {
-			if (!deleteConfirmed) {
-				deleteConfirmed = true
-				b_delete.setText(R.string.confirm)
-			} else {
-				deleteConfirmed = false
-				b_delete.setText(R.string.delete)
-				
-				mutableNotebook.deleteNote(noteId)
-				notebookActivity.jumpBackFragment()
-			}
+			NoteDeleteDialog(notebookKey, noteId).show(fragmentManager, null)
 		}
 		
 		updateNoteContent(note.content)

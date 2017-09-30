@@ -9,6 +9,8 @@
 	<string name="CreateQuestionNote_colon">Create question note:</string>
 	<string name="delete">delete</string>
 	<string name="confirm">confirm</string>
+	<string name="confirmDeletion_title">Confirm deletion</string>
+	<string name="confirmDeletion_message">Are you sure to delete this Note?</string>
 	<string name="edit">edit</string>
 	
 	<string name="Note_view_id">Note@%1$d</string>
@@ -20,4 +22,5 @@
 	<string name="count_NotesInAll">%1$d Notes in All</string>
 	<string name="menu">menu</string>
 	<string name="add">add</string>
+	
 </resources>

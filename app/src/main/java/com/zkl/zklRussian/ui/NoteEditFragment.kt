@@ -42,16 +42,11 @@ class NoteEditFragment : NoteHoldingFragment {
 			if (isCreateMode) getString(R.string.Note_create)
 			else getString(R.string.Note_edit_id, noteId)
 		
-		var deleteConfirmed = false
-		b_delete.setOnClickListener {
-			if (!deleteConfirmed) {
-				deleteConfirmed = true
-				b_delete.setText(R.string.confirm)
-			} else {
-				mutableNotebook.deleteNote(this.noteId)
-				notebookActivity.jumpBackFragment()
-			}
+		if (isCreateMode) b_delete.visibility=View.GONE
+		else b_delete.setOnClickListener {
+			NoteDeleteDialog(notebookKey, noteId).show(fragmentManager,null)
 		}
+		
 		
 		b_ok.setOnClickListener {
 			val newNoteContent = noteContentViewFragment!!.syncTexts(true)
