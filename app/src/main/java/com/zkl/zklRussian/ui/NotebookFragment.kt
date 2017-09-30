@@ -66,6 +66,7 @@ class NotebookFragment : NotebookHoldingFragment {
 	//note list
 	lateinit var showingNotes:List<Note>
 	private fun initializeNoteList() {
+		notesBuffer.clearBuffer()
 		showingNotes = notesBuffer
 		lv_notes.adapter = object : BaseAdapter() {
 			override fun getItem(position: Int) = showingNotes[getItemId(position).toInt()]
@@ -113,7 +114,7 @@ class NotebookFragment : NotebookHoldingFragment {
 	}
 	
 	//notes buffer
-	val notesBuffer = object : SectionBufferList<Note>(){
+	private val notesBuffer = object : SectionBufferList<Note>(){
 		override fun getSection(startFrom: Int): List<Note>
 			= notebook.selectLatestNotes(sectionSize, startFrom)
 		override val size: Int
@@ -121,7 +122,7 @@ class NotebookFragment : NotebookHoldingFragment {
 	}
 	
 	//search
-	var searchResult:List<Note> = emptyList()
+	private var searchResult:List<Note> = emptyList()
 	
 }
 
@@ -156,29 +157,35 @@ class NoteItemView(context:Context):LinearLayout(context){
 }
 
 abstract class SectionBufferList<T>
-constructor(val sectionSize:Int = 50,val sectionCount:Int = 10)
+constructor(val sectionSize:Int = 20,val sectionCount:Int = 10)
 	: AbstractList<T>() {
 	
 	private val sections = LinkedList<List<T>>()
 	private var bufferFrom:Int = 0
-	private val bufferSize:Int get()= sectionSize*sections.size
-	@Synchronized override fun get(index: Int): T {
-		val relative = index - bufferFrom
-		while (relative < 0) appendFirst()
-		while (relative>= bufferSize) appendLast()
-		return sections[relative / sectionSize][relative % sectionSize]
+	private val bufferSize:Int get() {
+			return if (sections.isEmpty()) 0
+			else sectionSize * (sections.size - 1) + sections.last.size
 	}
-	@Synchronized private fun appendFirst(){
+	private val bufferToExclusive: Int get() = bufferFrom + bufferSize
+	@Synchronized override fun get(index: Int): T {
+		while (index < bufferFrom) extendAtHead()
+		while (index >= bufferToExclusive) appendAtTail()
+		return sections[(index - bufferFrom) / sectionSize][(index - bufferFrom) % sectionSize]
+	}
+	@Synchronized private fun extendAtHead() {
 		bufferFrom -= sectionSize
 		sections.addFirst(getSection(bufferFrom))
 		if (sections.size > sectionCount) sections.removeLast()
 	}
-	@Synchronized private fun appendLast(){
-		sections.addLast(getSection(bufferFrom + bufferSize))
+	@Synchronized private fun appendAtTail(){
+		sections.addLast(getSection(bufferToExclusive))
 		if (sections.size > sectionCount) {
 			sections.removeFirst()
 			bufferFrom += sectionSize
 		}
+	}
+	@Synchronized fun clearBuffer(){
+		sections.clear()
 	}
 	
 	abstract fun getSection(startFrom:Int):List<T>
