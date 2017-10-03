@@ -179,20 +179,8 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				.exec {
 					//check data existence
 					moveToFirst()
-					if (isAfterLast) return@exec NotebookMemory.infantInstance
-					
-					//read data
-					val oldMemory = NotebookMemoryCoder.decode(getString(0))
-					val modifyTime = getLong(1)
-					
-					//check isInvalid
-					val nowTime = System.currentTimeMillis()
-					val isInvalid = Math.abs(nowTime - modifyTime) > 1000 * 3600 * 24
-					
-					return@exec when (isInvalid) {
-						true -> recomputeMemoryLoad(oldMemory, true)
-						false -> oldMemory
-					}
+					if (!isAfterLast) NotebookMemoryCoder.decode(getString(0))
+					else NotebookMemory.infantInstance
 				}
 		}
 		set(value) = ConfsTable.run {
@@ -214,18 +202,6 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			}
 			return MemorySummary(sumMemoryLoad)
 		}
-	
-	//private memory
-	private fun recomputeMemoryLoad(oldMemory: NotebookMemory,writeIn:Boolean = true): NotebookMemory {
-		val recomputedSumLoad = NotesTable.run {
-			database.select(tableName, columns = "sum($memoryLoad)")
-				.exec { this.getDouble(0) }
-		}
-		val newMemory = oldMemory.copy(sumLoad = recomputedSumLoad)
-		if(writeIn) this.memory = newMemory
-		return newMemory
-	}
-	
 	
 	
 	//getters

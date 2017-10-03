@@ -11,7 +11,6 @@ object NotebookMemoryCoder {
 		 = memory.let {
 		 JSONObject(mapOf(
 			 it::state.run { name to get().name },
-			 it::sumLoad.run { name to get() },
 			 it::lastRefillTime.run { name to get() },
 			 it::lastResumeTime.run { name to get() },
 			 it::lastPauseTime.run { name to get() }
@@ -23,7 +22,6 @@ object NotebookMemoryCoder {
 		NotebookMemory(
 			state = NotebookMemoryState.valueOf(
 				getString(NotebookMemory::state.name)),
-			sumLoad = getDouble(NotebookMemory::sumLoad.name),
 			lastRefillTime = getLong(NotebookMemory::lastRefillTime.name),
 			lastResumeTime = getLong(NotebookMemory::lastResumeTime.name),
 			lastPauseTime = getLong(NotebookMemory::lastPauseTime.name)
@@ -38,9 +36,7 @@ object MemoryPlanCoder {
 			it::refillFrequency.run { name to get() },
 			it::maxLoad.run { name to get() },
 			it::minLoad.run { name to get() },
-			it::fulfillProgress.run { name to get() },
-			it::arg_k.run { name to get() },
-			it::arg_a.run { name to get() }
+			it::fulfillProgress.run { name to get() }
 		)).toString()
 	}
 	
@@ -50,9 +46,7 @@ object MemoryPlanCoder {
 			refillFrequency = getDouble(MemoryPlan::refillFrequency.name),
 			maxLoad = getDouble(MemoryPlan::maxLoad.name),
 			minLoad = getDouble(MemoryPlan::minLoad.name),
-			fulfillProgress = getDouble(MemoryPlan::fulfillProgress.name),
-			arg_k = getDouble(MemoryPlan::arg_k.name),
-			arg_a = getDouble(MemoryPlan::arg_a.name)
+			fulfillProgress = getDouble(MemoryPlan::fulfillProgress.name)
 		)
 	}
 }

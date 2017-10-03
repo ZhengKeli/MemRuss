@@ -27,19 +27,8 @@ data class MemoryPlan(
 	 * 圆满学习进度
 	 * 当某词条的学习进度超过该值时，系统将不会再要求复习该词
 	 */
-	val fulfillProgress:Double = 25.0,
+	val fulfillProgress:Double = 25.0
 	
-	/**
-	 * 记忆曲线线性因子 k
-	 * 与复习时间间隔成正比
-	 */
-	val arg_k:Double = 1.0,
-	
-	/**
-	 * 记忆曲线指数因子 a
-	 * exp(a)与复习时间间隔成正比
-	 */
-	val arg_a:Double = 2.0
 )
 
 enum class NotebookMemoryState {
@@ -68,13 +57,6 @@ data class NotebookMemory(
 	val state: NotebookMemoryState,
 	
 	/**
-	 * 总负荷
-	 * 用平均每天要复习的次数表示，
-	 * 用来帮助判断应该如何加入新词
-	 */
-	val sumLoad: Double,
-	
-	/**
 	 * 上次填充新词的时间
 	 * 用于计算应该添加多少新词
 	 * （为了避免因为时区变化而引起的错误，统一使用GMT+0毫秒时间)
@@ -101,7 +83,7 @@ data class NotebookMemory(
 ){
 	companion object {
 		val infantInstance =
-			NotebookMemory(NotebookMemoryState.infant, 0.0, -1L, -1L, -1L)
+			NotebookMemory(NotebookMemoryState.infant, -1L, -1L, -1L)
 	}
 }
 
