@@ -17,4 +17,6 @@
 	<string name="count_NotesInAll">共%1$d个词条</string>
 	<string name="add">添加</string>
 	<string name="menu">菜单</string>
+	<string name="confirmDeletion_message">你确定要删除这个词条吗？</string>
+	<string name="confirmDeletion_title">删除确认</string>
 </resources>
