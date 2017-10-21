@@ -1,17 +1,13 @@
 package com.zkl.zklRussian.control.note
 
-import android.app.Activity
 import android.database.sqlite.SQLiteDatabase
-import android.support.v4.app.Fragment
-import android.util.SparseArray
-import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Notebook
 import java.io.File
 import java.io.Serializable
 import java.util.*
 
-class NoteManager(workingDir: File){
+class NotebookShelf(workingDir: File){
 	init {
 		workingDir.mkdirs()
 	}
@@ -20,7 +16,7 @@ class NoteManager(workingDir: File){
 	
 	//summary
 	data class NotebookSummary(val file: File, val bookName: String):Serializable
-	fun loadBookSummaries(): Collection<NotebookSummary> {
+	fun loadBookSummaries(): List<NotebookSummary> {
 		return booksDir.takeIf { it.exists() }
 			?.listFiles { _, name -> name.endsWith(".zrb") }
 			?.mapNotNull { loadBookSummary(it) }
@@ -66,26 +62,6 @@ class NoteManager(workingDir: File){
 		return notebook
 	}
 	
-	
-	//register
-	private val registeredNotebooks = SparseArray<Notebook>()
-	@Synchronized fun registerNotebook(notebook: Notebook): Int {
-		val key = notebook.hashCode()
-		if (registeredNotebooks.get(key) == null)
-			registeredNotebooks.put(notebook.hashCode(), notebook)
-		return key
-	}
-	@Synchronized fun unregisterNotebook(key: Int) {
-		registeredNotebooks.remove(key)
-	}
-	@Synchronized fun getRegisterNotebook(key: Int): Notebook? {
-		return registeredNotebooks.get(key)
-	}
-	
 }
-
-
-val Activity.noteManager: NoteManager get() = myApp.noteManager
-val Fragment.noteManager: NoteManager get() = myApp.noteManager
 
 

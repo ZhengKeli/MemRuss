@@ -6,13 +6,13 @@ import com.zkl.zklRussian.control.note_old.note.LocalNote;
 import com.zkl.zklRussian.control.note_old.note.LocalQuestionNote;
 import com.zkl.zklRussian.control.note_old.note.NoteBody;
 import com.zkl.zklRussian.control.note_old.note.NoteStream;
-import com.zkl.zklRussian.control.tools.stringData.StringData;
+import com.zkl.zklRussian.control.note_old.stringData.StringData;
 
 import java.util.ArrayList;
 
-public class TextCoder {
-	public static final int writingNoteHeader_version_meaningNote1 = 1;
-	public static String getStringNoteHeader(){
+class TextCoder {
+	private static final int writingNoteHeader_version_meaningNote1 = 1;
+	private static String getStringNoteHeader(){
 		StringData header = new StringData();
 		header.add(writingNoteHeader_version_meaningNote1);
 		header.add("不要动这个大括号哦！");
@@ -20,7 +20,7 @@ public class TextCoder {
 		 return header.toString()+"\n\n\n";
 	}
 
-	public static String encodeStringNoteBody(NoteStream noteStream, boolean withHeader) {
+	static String encodeStringNoteBody(NoteStream noteStream, boolean withHeader) {
 		StringBuilder stringBuilder = new StringBuilder();
 		if(withHeader) stringBuilder.append(getStringNoteHeader());
 		noteStream.begin();
@@ -37,7 +37,7 @@ public class TextCoder {
 		return questionNoteBody.getQuestion() + "\n" + questionNoteBody.getAnswer() + "\n\n";
 	}
 	@Nullable
-	public static NoteStream decodeStringMeaningNote(String string) {
+	static NoteStream decodeStringMeaningNote(String string) {
 		boolean headerLegal=false;
 
 		StringData header=null;

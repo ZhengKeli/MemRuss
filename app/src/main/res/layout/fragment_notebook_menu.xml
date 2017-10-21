@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:layout_marginEnd="8dp"
+	android:layout_marginLeft="8dp"
+	android:layout_marginRight="8dp"
+	android:layout_marginStart="8dp">
+	
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:animateLayoutChanges="true"
+		android:divider="?android:attr/listDivider"
+		android:dividerPadding="8dp"
+		android:orientation="vertical"
+		android:showDividers="middle|end">
+		
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:gravity="center_vertical"
+			android:orientation="vertical">
+			
+			<TextView
+				android:id="@+id/tv_bookName"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:padding="8dp"
+				android:textAppearance="@style/TextAppearance.AppCompat.Large"
+				tools:text="@string/newBook"/>
+			
+			<TextView
+				android:id="@+id/tv_bookInfo"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="8dp"
+				tools:text="共x个词条"/>
+		
+		</LinearLayout>
+		
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:gravity="center_vertical"
+			android:orientation="vertical">
+			
+			<Button
+				android:id="@+id/b_"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Button"/>
+		</LinearLayout>
+		
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:gravity="center_vertical"
+			android:orientation="horizontal"
+			android:showDividers="middle|end">
+			
+			<EditText
+				android:id="@+id/et_export_path"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:ems="10"
+				android:inputType="textPersonName"
+				tools:text="/sdcard/ZKLRussian2"/>
+			
+			<Button
+				android:id="@+id/b_export"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0"
+				android:text="Export"/>
+		
+		</LinearLayout>
+	
+	</LinearLayout>
+	
+</ScrollView>

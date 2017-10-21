@@ -34,6 +34,7 @@ class NotebookFragment : NotebookHoldingFragment {
 		sv_search = rootView.findViewById(R.id.sv_search) as SearchView
 		lv_notes = rootView.findViewById(R.id.lv_notes) as ListView
 		
+		
 	}
 	override fun onStart() {
 		super.onStart()
@@ -53,7 +54,7 @@ class NotebookFragment : NotebookHoldingFragment {
 		}
 		else {
 			b_addNote.setOnClickListener {
-				notebookActivity.jumpToFragment(NoteEditFragment(notebookKey, -1), true)
+				mainActivity.jumpToFragment(NoteEditFragment(notebookKey, -1), true)
 			}
 		}
 		

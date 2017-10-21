@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.zkl.zklRussian.control.note_old.VersionException;
 import com.zkl.zklRussian.control.note_old.database.Database;
 import com.zkl.zklRussian.control.note_old.database.Selection;
 import com.zkl.zklRussian.control.note_old.database.Table;
@@ -16,8 +17,7 @@ import com.zkl.zklRussian.control.note_old.note.NoteBody;
 import com.zkl.zklRussian.control.note_old.note.NoteStream;
 import com.zkl.zklRussian.control.note_old.note.Notebook;
 import com.zkl.zklRussian.control.note_old.note.VersionControl;
-import com.zkl.zklRussian.control.tools.VersionException;
-import com.zkl.zklRussian.control.tools.stringData.StringData;
+import com.zkl.zklRussian.control.note_old.stringData.StringData;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -135,20 +135,20 @@ public class BookSyncCoder {
 		
 		public abstract byte[] rawData();
 		
-		public Notebook.BookInfo toBookInfo() {
+		Notebook.BookInfo toBookInfo() {
 			StringData stringData = StringData.decode(this.bookData());
 			return DataCoder.decodeNoteBookInfo(stringData);
 		}
 		
 		@Nullable
-		public Memory.PlanArgs getPlanArgs() {
+		Memory.PlanArgs getPlanArgs() {
 			String argsString = memoryPlanArgs();
 			if (argsString.isEmpty()) return null;
 			return DataCoder.decodeMemoryPlanArgs(StringData.decode(argsString));
 		}
 		
 		@Nullable
-		public Memory.PlanProgress getPlanProgress() {
+		Memory.PlanProgress getPlanProgress() {
 			String progress = memoryPlanProgress();
 			if (progress.isEmpty()) return null;
 			return DataCoder.decodeMemoryPlanProgress(StringData.decode(progress));
@@ -174,14 +174,14 @@ public class BookSyncCoder {
 		@Nullable
 		Memory.PlanProgress planProgress;
 		
-		public NotebookManifestsStructEncoder(@Nullable Notebook.BookInfo bookInfo, @Nullable Memory.PlanArgs planArgs,
-		                                      @Nullable Memory.PlanProgress planProgress) {
+		NotebookManifestsStructEncoder(@Nullable Notebook.BookInfo bookInfo, @Nullable Memory.PlanArgs planArgs,
+		                               @Nullable Memory.PlanProgress planProgress) {
 			this.bookInfo = bookInfo;
 			this.planArgs = planArgs;
 			this.planProgress = planProgress;
 		}
 		
-		public NotebookManifestsStructEncoder(@Nullable Memory.MemoryPlan memoryPlan) {
+		NotebookManifestsStructEncoder(@Nullable Memory.MemoryPlan memoryPlan) {
 			this(null, memoryPlan != null ? memoryPlan.args : null, memoryPlan != null ? memoryPlan.progress : null);
 		}
 		
@@ -189,7 +189,7 @@ public class BookSyncCoder {
 			this(bookInfo, memoryPlan.args, memoryPlan.progress);
 		}
 		
-		public NotebookManifestsStructEncoder(Notebook.BookInfo bookInfo) {
+		NotebookManifestsStructEncoder(Notebook.BookInfo bookInfo) {
 			this(bookInfo, null, null);
 		}
 		
@@ -233,7 +233,7 @@ public class BookSyncCoder {
 	public static class NotebookManifestStructDecoder extends NotebookManifestStruct {
 		Cursor cursor;
 		
-		public NotebookManifestStructDecoder(Cursor cursor) {
+		NotebookManifestStructDecoder(Cursor cursor) {
 			cursor.moveToFirst();
 			this.cursor = cursor;
 		}
@@ -260,7 +260,7 @@ public class BookSyncCoder {
 		}
 	}
 	
-	public abstract static class NoteStruct {
+	abstract static class NoteStruct {
 		/**
 		 * @return note总数，若为-1则说明不确定总数*
 		 */
@@ -291,7 +291,7 @@ public class BookSyncCoder {
 		abstract long nextTime();
 		
 		
-		public NoteStream toNoteStream() {
+		NoteStream toNoteStream() {
 			return new NoteStream() {
 				DataCoder.NoteBodyCoder<StringData> coder = DataCoder.getMainNoteDataCoder();
 				
@@ -317,7 +317,7 @@ public class BookSyncCoder {
 			};
 		}
 		
-		public ContentValues toContentValues(long nowTime) {
+		ContentValues toContentValues(long nowTime) {
 			ContentValues re = new ContentValues();
 			//id 行不用写
 			re.put(TableBook.Column.modifyTime, nowTime);//设置modifyTime
@@ -334,7 +334,7 @@ public class BookSyncCoder {
 			return re;
 		}
 		
-		public ContentValues toRawContentValues() {
+		ContentValues toRawContentValues() {
 			ContentValues re = new ContentValues();
 			//id 行不用写
 			re.put(TableBook.Column.modifyTime, modifyTime());//设置为原有时间
@@ -355,7 +355,7 @@ public class BookSyncCoder {
 	public static class NoteStructDecoder extends NoteStruct {
 		private Cursor cursor;
 		
-		public NoteStructDecoder(Cursor cursor) {
+		NoteStructDecoder(Cursor cursor) {
 			this.cursor = cursor;
 		}
 		
@@ -425,7 +425,7 @@ public class BookSyncCoder {
 	public static class NoteStructEncoder extends NoteStruct {
 		NoteStream noteStream;
 		
-		public NoteStructEncoder(NoteStream noteStream) {
+		NoteStructEncoder(NoteStream noteStream) {
 			this.noteStream = noteStream;
 		}
 		
@@ -480,27 +480,27 @@ public class BookSyncCoder {
 			return note.getNextTime();
 		}
 		
-		public LocalNote getCurrentNote() {
+		LocalNote getCurrentNote() {
 			return note;
 		}
 	}
 	
-	public static class DataCoder {
+	static class DataCoder {
 		//books
-		public static StringData encodeNoteBookInfo(Notebook.BookInfo bookInfo) {
+		static StringData encodeNoteBookInfo(Notebook.BookInfo bookInfo) {
 			StringData info = new StringData();
 			info.add(bookInfo.getBookName());
 			return info;
 		}
 		
-		public static Notebook.BookInfo decodeNoteBookInfo(StringData stringData) {
+		static Notebook.BookInfo decodeNoteBookInfo(StringData stringData) {
 			return new Notebook.BookInfo(
 				stringData.getString(0));
 		}
 		
 		//memory plan
 		@Nullable
-		protected static StringData encodeMemoryPlanArgs(@Nullable Memory.PlanArgs planArgs) {
+		static StringData encodeMemoryPlanArgs(@Nullable Memory.PlanArgs planArgs) {
 			if (planArgs == null) return null;
 			StringData argsSD = new StringData();
 			argsSD.add(planArgs.workLoadLimit);
@@ -512,7 +512,7 @@ public class BookSyncCoder {
 		}
 		
 		@Nullable
-		protected static Memory.PlanArgs decodeMemoryPlanArgs(@Nullable StringData stringData) {
+		static Memory.PlanArgs decodeMemoryPlanArgs(@Nullable StringData stringData) {
 			if (stringData == null) return null;
 			return new Memory.PlanArgs(
 				stringData.getFloat(0),
@@ -524,7 +524,7 @@ public class BookSyncCoder {
 		}
 		
 		@Nullable
-		protected static StringData encodeMemoryPlanProgress(@Nullable Memory.PlanProgress planProgress) {
+		static StringData encodeMemoryPlanProgress(@Nullable Memory.PlanProgress planProgress) {
 			if (planProgress == null) return null;
 			StringData progressSD = new StringData();
 			progressSD.add(planProgress.state.ordinal());
@@ -537,7 +537,7 @@ public class BookSyncCoder {
 		}
 		
 		@Nullable
-		protected static Memory.PlanProgress decodeMemoryPlanProgress(@Nullable StringData stringData) {
+		static Memory.PlanProgress decodeMemoryPlanProgress(@Nullable StringData stringData) {
 			if (stringData == null) return null;
 			return new Memory.PlanProgress(
 				Memory.PlanState.values()[stringData.getInteger(0)],
@@ -566,14 +566,14 @@ public class BookSyncCoder {
 			int getVersion();
 		}
 		
-		public static MainNoteBodyCoder getMainNoteDataCoder() {
+		static MainNoteBodyCoder getMainNoteDataCoder() {
 			MainNoteBodyCoder coder = new MainNoteBodyCoder();
 			coder.addCoder(new MeaningNoteBodyCoder());
 			return coder;
 		}
 		
 		public static class MainNoteBodyCoder implements NoteBodyCoder<StringData> {
-			public MainNoteBodyCoder() {
+			MainNoteBodyCoder() {
 			}
 			
 			public MainNoteBodyCoder(TypedNoteBodyCoder<StringData>[] coders) {
@@ -586,7 +586,7 @@ public class BookSyncCoder {
 			
 			ArrayList<Map<NoteBody.Type, TypedNoteBodyCoder<StringData>>> coders = new ArrayList<>();
 			
-			public void addCoder(TypedNoteBodyCoder<StringData> coder) {
+			void addCoder(TypedNoteBodyCoder<StringData> coder) {
 				while (coder.getVersion() > coders.size()) {
 					coders.add(null);
 				}
@@ -598,19 +598,19 @@ public class BookSyncCoder {
 				typeMap.put(coder.getType(), coder);
 			}
 			
-			public void addCoders(TypedNoteBodyCoder<StringData>[] coders) {
+			void addCoders(TypedNoteBodyCoder<StringData>[] coders) {
 				for (TypedNoteBodyCoder<StringData> coder : coders) {
 					addCoder(coder);
 				}
 			}
 			
-			public void addCoders(ArrayList<TypedNoteBodyCoder<StringData>> coders) {
+			void addCoders(ArrayList<TypedNoteBodyCoder<StringData>> coders) {
 				for (TypedNoteBodyCoder<StringData> coder : coders) {
 					addCoder(coder);
 				}
 			}
 			
-			public TypedNoteBodyCoder<StringData> getCoder(int version, NoteBody.Type type) {
+			TypedNoteBodyCoder<StringData> getCoder(int version, NoteBody.Type type) {
 				try {
 					return coders.get(version - 1).get(type);
 				} catch (Exception e) {
@@ -618,7 +618,7 @@ public class BookSyncCoder {
 				}
 			}
 			
-			public TypedNoteBodyCoder<StringData> getCoder(NoteBody.Type type) {
+			TypedNoteBodyCoder<StringData> getCoder(NoteBody.Type type) {
 				return getCoder(coders.size(), type);
 			}
 			
@@ -671,7 +671,7 @@ public class BookSyncCoder {
 	
 	//manifest & load ...
 	@NonNull
-	final Database database;
+	private final Database database;
 	
 	private void createTables() {
 		database.dropTableIfExists(TableManifests.name);
@@ -684,7 +684,7 @@ public class BookSyncCoder {
 	}
 	
 	@Nullable
-	public Notebook.BookInfo writeInitialize() {
+	private Notebook.BookInfo writeInitialize() {
 		final Notebook.BookInfo[] bookInfo = {null};
 		database.processTransaction(true, new Database.TransactionProcessor() {
 			public boolean onProcess(Database database) {
@@ -705,7 +705,7 @@ public class BookSyncCoder {
 	}
 	
 	@Nullable
-	public Notebook.BookInfo loadInitialize() {
+	private Notebook.BookInfo loadInitialize() {
 		try {
 			Table table = database.getTable(TableManifests.name);
 			if (table == null) return null;
@@ -721,7 +721,7 @@ public class BookSyncCoder {
 	 * 不合法时自动写成合法的
 	 */
 	@Nullable
-	public Notebook.BookInfo lenientInitialize() {
+	private Notebook.BookInfo lenientInitialize() {
 		Notebook.BookInfo tempInfo = loadInitialize();
 		if (tempInfo == null) {
 			tempInfo = writeInitialize();
@@ -732,9 +732,9 @@ public class BookSyncCoder {
 	public enum OpenMode {output, input, using}
 	
 	//initialize & release
-	final VersionControl.BookVersion bookVersion;
+	private final VersionControl.BookVersion bookVersion;
 	
-	public VersionControl.BookVersion getBookVersion() {
+	VersionControl.BookVersion getBookVersion() {
 		return bookVersion;
 	}
 	
@@ -745,7 +745,7 @@ public class BookSyncCoder {
 	 * @param database 用于硬盘同步信息的数据库
 	 * @param openMode 使用的方式，分为导出、导入和使用
 	 */
-	protected BookSyncCoder(@NonNull Database database, VersionControl.BookVersion bookVersion, OpenMode openMode) {
+	BookSyncCoder(@NonNull Database database, VersionControl.BookVersion bookVersion, OpenMode openMode) {
 		this.bookVersion = bookVersion;
 		this.database = database;
 		Notebook.BookInfo tempInfo = null;
@@ -775,21 +775,22 @@ public class BookSyncCoder {
 		bookTable = database.getTable(TableBook.name);
 	}
 	
-	public void close() {
+	void close() {
 		database.close();
 	}
 	
 	//book
-	final Table manifestTable;
+	private final Table manifestTable;
 	@NotNull
+	private
 	Notebook.BookInfo bookInfo;
 	
 	@NonNull
-	public Notebook.BookInfo getBookInfo() {
+	Notebook.BookInfo getBookInfo() {
 		return bookInfo;
 	}
 	
-	public boolean modifyBookInfo(final Notebook.BookInfo bookInfo) {
+	boolean modifyBookInfo(final Notebook.BookInfo bookInfo) {
 		boolean succeed = database.processTransaction(true, new Database.TransactionProcessor() {
 			public boolean onProcess(Database dataBase) {
 				return manifestTable.modifyAll(new NotebookManifestsStructEncoder(bookInfo).toContentValues()) == 1;
@@ -808,7 +809,7 @@ public class BookSyncCoder {
 	
 	//todo 有空把args和progress分开
 	@Nullable
-	public Memory.MemoryPlan getMemoryPlan() {
+	Memory.MemoryPlan getMemoryPlan() {
 		Cursor cursor = manifestTable.selectAll();
 		NotebookManifestStruct struct = new NotebookManifestStructDecoder(cursor);
 		if (struct.getPlanProgress() == null || struct.getPlanArgs() == null) {
@@ -816,7 +817,7 @@ public class BookSyncCoder {
 		} else return new Memory.MemoryPlan(struct.getPlanArgs(), struct.getPlanProgress());
 	}
 	
-	public boolean modifyMemoryPlan(@Nullable final Memory.MemoryPlan memoryPlan) {
+	boolean modifyMemoryPlan(@Nullable final Memory.MemoryPlan memoryPlan) {
 		return database.processTransaction(true, new Database.TransactionProcessor() {
 			public boolean onProcess(Database database) {
 				NotebookManifestsStructEncoder structEncoder = new NotebookManifestsStructEncoder(memoryPlan);
@@ -830,7 +831,7 @@ public class BookSyncCoder {
 	
 	
 	//_name
-	final Table bookTable;
+	private final Table bookTable;
 	
 	public int getSize() {
 		String expression = "select count(*) from " + TableBook.name;
@@ -841,7 +842,7 @@ public class BookSyncCoder {
 		return re;
 	}
 	
-	public Memory.MemoryStatistics getStatistics() {
+	Memory.MemoryStatistics getStatistics() {
 		Table book = bookTable;
 		if (book != null) {
 			long learning = book.count(TableBook.Column.progress + ">=" + Memory.progress_begin);
@@ -853,12 +854,12 @@ public class BookSyncCoder {
 		}
 	}
 	
-	public NoteStream getNote(long id) {
+	NoteStream getNote(long id) {
 		Cursor cursor = bookTable.select(TableBook.Column.noteId + "=" + id);
 		return (new NoteStructDecoder(cursor)).toNoteStream();
 	}
 	
-	public NoteStream getNotes(long offset, int limit) {
+	NoteStream getNotes(long offset, int limit) {
 		Selection selection = new Selection();
 		selection.setIncludedAllColumns();
 		selection.setOrderBy(TableBook.Column.modifyTime, false);
@@ -867,7 +868,7 @@ public class BookSyncCoder {
 		return new NoteStructDecoder(cursor).toNoteStream();
 	}
 	
-	public NoteStream getAllNotes() {
+	NoteStream getAllNotes() {
 		Selection selection = new Selection();
 		selection.setIncludedAllColumns();
 		selection.setOrderBy(TableBook.Column.modifyTime, true);
@@ -875,7 +876,7 @@ public class BookSyncCoder {
 		return (new NoteStructDecoder(cursor)).toNoteStream();
 	}
 	
-	public long getOffset(long noteId) {
+	long getOffset(long noteId) {
 		NoteStream noteStream = getNote(noteId);
 		noteStream.begin();
 		if (noteStream.goNext()) {
@@ -894,7 +895,7 @@ public class BookSyncCoder {
 		return -1;
 	}
 	
-	public NoteStream queryLearning(int limit, int maxProgress) {
+	NoteStream queryLearning(int limit, int maxProgress) {
 		Selection selection = new Selection();
 		selection.whereExpression = TableBook.Column.progress + ">=" + (Memory.progress_begin) + " and "
 			+ TableBook.Column.progress + "<" + maxProgress;
@@ -905,7 +906,7 @@ public class BookSyncCoder {
 		return new NoteStructDecoder(cursor).toNoteStream();
 	}
 	
-	public NoteStream queryNotInPlan(int limit) {
+	NoteStream queryNotInPlan(int limit) {
 		Selection selection = new Selection();
 		selection.whereExpression = TableBook.Column.progress + "=-1";
 		selection.setIncludedAllColumns();
@@ -915,7 +916,7 @@ public class BookSyncCoder {
 		return new NoteStructDecoder(cursor).toNoteStream();
 	}
 	
-	public NoteStream searchNotes(String key, int limit, long offset) {
+	NoteStream searchNotes(String key, int limit, long offset) {
 		Selection selection = new Selection();
 		selection.whereExpression = TableBook.Column.searchTags + " like " + "'%" + key + "%'";
 		selection.setLimit(offset, limit);
@@ -923,7 +924,7 @@ public class BookSyncCoder {
 		return new NoteStructDecoder(cursor).toNoteStream();
 	}
 	
-	public NoteStream matchDuplicate(String[] tags) {
+	NoteStream matchDuplicate(String[] tags) {
 		ArrayList<NoteStream> streams = new ArrayList<>(tags.length);
 		for (String tag : tags) {
 			Cursor cursor = bookTable.select(TableBook.Column.searchTags + " like " + "'%|" + tag + "%'");
@@ -938,7 +939,7 @@ public class BookSyncCoder {
 		void finishAll(boolean success);
 	}
 	
-	public boolean addNote(final NoteStream notes) {
+	boolean addNote(final NoteStream notes) {
 		return database.processTransaction(true, new Database.TransactionProcessor() {
 			public boolean onProcess(Database database) {
 				NoteStructEncoder encoder = new NoteStructEncoder(notes);
@@ -988,7 +989,7 @@ public class BookSyncCoder {
 		return success;
 	}
 	
-	public boolean rawAddNote(final NoteStream noteStream) {
+	boolean rawAddNote(final NoteStream noteStream) {
 		return database.processTransaction(true, new Database.TransactionProcessor() {
 			public boolean onProcess(Database database) {
 				NoteStructEncoder encoder = new NoteStructEncoder(noteStream);
@@ -1005,7 +1006,7 @@ public class BookSyncCoder {
 		});
 	}
 	
-	public boolean deleteNote(final long id) {
+	boolean deleteNote(final long id) {
 		return database.processTransaction(true, new Database.TransactionProcessor() {
 			public boolean onProcess(Database database) {
 				return bookTable.delete(TableBook.Column.noteId + "=" + id) == 1;
@@ -1045,7 +1046,7 @@ public class BookSyncCoder {
 		});
 	}
 	
-	public boolean modifyNoteProgress(final long id, @Nullable final Memory.NoteProgress noteProgress) {
+	boolean modifyNoteProgress(final long id, @Nullable final Memory.NoteProgress noteProgress) {
 		return database.processTransaction(true, new Database.TransactionProcessor() {
 			public boolean onProcess(Database database) {
 				ContentValues contentValues = new ContentValues();
@@ -1061,7 +1062,7 @@ public class BookSyncCoder {
 		});
 	}
 	
-	public boolean modifyAllNoteProgress(@Nullable final Memory.NoteProgress noteProgress) {
+	boolean modifyAllNoteProgress(@Nullable final Memory.NoteProgress noteProgress) {
 		final Memory.NoteProgress progress = noteProgress != null ? noteProgress : Memory.getNullProgress();
 		return database.processTransaction(true, new Database.TransactionProcessor() {
 			public boolean onProcess(Database database) {

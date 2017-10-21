@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -7,32 +8,16 @@
               android:gravity="center_vertical"
               android:clickable="false"
               android:baselineAligned="false">
+	
+	<TextView
+		android:drawableStart="@mipmap/ic_note_book"
+		android:drawableLeft="@mipmap/ic_note_book"
+		android:id="@+id/tv_notebookName"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:gravity="center_vertical"
+		tools:text="NotebookName"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_note_book"/>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="слово"
-            android:id="@+id/tv_notebook_name"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="tv_answer"
-            android:id="@+id/tv_notebook_info"
-            android:visibility="gone"/>
-    </LinearLayout>
 
 </LinearLayout>

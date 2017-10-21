@@ -21,7 +21,7 @@ abstract class NotebookHoldingFragment: Fragment {
 	override fun onViewStateRestored(savedInstanceState: Bundle?) {
 		super.onViewStateRestored(savedInstanceState)
 		notebookKey = savedInstanceState?.getInt(this::notebookKey.name) ?: notebookKey
-		if(notebookKey!=-1) _notebook = myApp.noteManager.getRegisterNotebook(notebookKey)!!
+		_notebook = myApp.hookManager.getValue(notebookKey) as Notebook
 	}
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
@@ -72,7 +72,7 @@ abstract class NotebookHoldingDialog: AppCompatDialogFragment{
 	override fun onViewStateRestored(savedInstanceState: Bundle?) {
 		super.onViewStateRestored(savedInstanceState)
 		notebookKey = savedInstanceState?.getInt(this::notebookKey.name) ?: notebookKey
-		if(notebookKey!=-1) _notebook = myApp.noteManager.getRegisterNotebook(notebookKey)!!
+		_notebook = myApp.hookManager.getValue(notebookKey) as? Notebook
 	}
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
@@ -98,7 +98,7 @@ abstract class NoteHoldingDialog: AppCompatDialogFragment{
 	override fun onViewStateRestored(savedInstanceState: Bundle?) {
 		super.onViewStateRestored(savedInstanceState)
 		notebookKey = savedInstanceState?.getInt(this::notebookKey.name) ?: notebookKey
-		if(notebookKey!=-1) _notebook = myApp.noteManager.getRegisterNotebook(notebookKey)!!
+		_notebook = myApp.hookManager.getValue(notebookKey) as Notebook
 		noteId = savedInstanceState?.getLong(this::noteId.name)?:noteId
 		if(noteId!=-1L) _note =  notebook.getNote(noteId)
 	}

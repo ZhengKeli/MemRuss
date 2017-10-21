@@ -1,9 +1,9 @@
-package com.zkl.zklRussian.control.tools.stringData;
+package com.zkl.zklRussian.control.note_old.stringData;
 
 import java.util.ArrayList;
 
 public class StringData {
-	ArrayList<Object> data;
+	private ArrayList<Object> data;
 	public StringData(){
 		data=new ArrayList<>();
 	}
@@ -33,7 +33,7 @@ public class StringData {
 	}
 	/**if the index or the value is not legal,the default value -1 will be returned**/
 	public int getInteger(int index){ return getInteger(index, -1); }
-	public int getInteger(int index,int defaultValue){
+	private int getInteger(int index, int defaultValue){
 		if(index>-1 && index<data.size()) {
 			return Integer.parseInt(getString(index));
 		}
@@ -44,7 +44,7 @@ public class StringData {
 
 
 	public void add(String string){ data.add(string); }
-	public void addAsEncodedStringData(String string){ data.add(new EncodedStringData(string)); }
+	private void addAsEncodedStringData(String string){ data.add(new EncodedStringData(string)); }
 	public void add(StringData sd){
 		if(sd==this){
 			throw new RuntimeException("A stringData can not add itself as its sub data or it will cause a dead cycle. "+
@@ -64,9 +64,9 @@ public class StringData {
 
 
 
-	public boolean isString(int index){ return (data.get(index) instanceof String); }
-	public boolean isStringData(int index){ return (data.get(index) instanceof StringData); }
-	public boolean isEncodedStringData(int index){ return (data.get(index) instanceof EncodedStringData);}
+	private boolean isString(int index){ return (data.get(index) instanceof String); }
+	private boolean isStringData(int index){ return (data.get(index) instanceof StringData); }
+	private boolean isEncodedStringData(int index){ return (data.get(index) instanceof EncodedStringData);}
 
 
 
@@ -86,8 +86,8 @@ public class StringData {
 		}
 	}
 
-	public static String encode(StringData stringData){ return StringDataCoder.encode(stringData); }
-	public static StringData clone(StringData stringData) {
+	private static String encode(StringData stringData){ return StringDataCoder.encode(stringData); }
+	private static StringData clone(StringData stringData) {
 		StringData re=new StringData();
 		for (int i=0;i<stringData.size();i++) {
 			Object object = stringData.get(i);

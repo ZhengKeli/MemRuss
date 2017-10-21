@@ -19,11 +19,11 @@ class NotebookCreationFragment: Fragment() {
 			val b_cancel = rootView.findViewById(R.id.b_cancel) as Button
 			
 			b_ok.setOnClickListener {
-				val newBook = myApp.noteManager.createNotebook(et_newBookName.text.toString())
-				notebookActivity.jumpToFragment(NotebookFragment(myApp.noteManager.registerNotebook(newBook)), false)
+				val newBook = myApp.notebookShelf.createNotebook(et_newBookName.text.toString())
+				mainActivity.jumpToFragment(NotebookFragment(myApp.hookManager.putHardHook(newBook)), false)
 			}
 			b_cancel.setOnClickListener {
-				notebookActivity.jumpBackFragment()
+				mainActivity.jumpBackFragment()
 			}
 			
 		}

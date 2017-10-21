@@ -1,21 +1,21 @@
-package com.zkl.zklRussian.control.tools.stringData;
+package com.zkl.zklRussian.control.note_old.stringData;
 
-public class StringDataCoder
+class StringDataCoder
 {
-	static public final String START_BRACKET ="{";
-	static public final String END_BRACKET="}";
-	static public final String DIVIDER="|";
-	static public final String TRANSFORMER="\\";
-	static public final String OFFICIAL_STRING=START_BRACKET+END_BRACKET+DIVIDER+TRANSFORMER;
+	static final String START_BRACKET ="{";
+	private static final String END_BRACKET="}";
+	private static final String DIVIDER="|";
+	private static final String TRANSFORMER="\\";
+	private static final String OFFICIAL_STRING=START_BRACKET+END_BRACKET+DIVIDER+TRANSFORMER;
 	
-	static public final char CHAR_START_BRACKET =START_BRACKET.charAt(0);
-	static public final char CHAR_END_BRACKET =END_BRACKET.charAt(0);
-	static public final char CHAR_DIVIDER=DIVIDER.charAt(0);
-	static public final char CHAR_TRANSFORMER=TRANSFORMER.charAt(0);
-	static public final char[] CHARS_OFFICIAL_STRING=OFFICIAL_STRING.toCharArray();
+	private static final char CHAR_START_BRACKET =START_BRACKET.charAt(0);
+	private static final char CHAR_END_BRACKET =END_BRACKET.charAt(0);
+	private static final char CHAR_DIVIDER=DIVIDER.charAt(0);
+	private static final char CHAR_TRANSFORMER=TRANSFORMER.charAt(0);
+	private static final char[] CHARS_OFFICIAL_STRING=OFFICIAL_STRING.toCharArray();
 	
 	
-	static protected  String getTransformed(String str){
+	private static String getTransformed(String str){
 		StringBuilder sb=new StringBuilder(str);
 		for(int i=0;i<sb.length();i++){
 			for(char c:CHARS_OFFICIAL_STRING){
@@ -28,7 +28,7 @@ public class StringDataCoder
 		}
 		return sb.toString();
 	}
-	static protected String ridTransform(String string){
+	private static String ridTransform(String string){
 		StringBuilder sb=new StringBuilder(string);
 		for(int i=0;i<sb.length();i++){
 			if(sb.charAt(i)==CHAR_TRANSFORMER){
@@ -59,8 +59,8 @@ public class StringDataCoder
 		}
 		return -1;
 	}
-	static private int nextStartBracket(String string,int startIndex){
-		return next(string, CHAR_START_BRACKET,startIndex);
+	static private int nextStartBracket(String string){
+		return next(string, CHAR_START_BRACKET, 0);
 	}
 	static private int nextEndBracket(String string,int startIndex){
 		return next(string, CHAR_END_BRACKET,startIndex);
@@ -69,11 +69,11 @@ public class StringDataCoder
 		return next(string,CHAR_DIVIDER,startIndex);
 	}
 	
-	protected static StringData decode(String string){
-		CursorString cursorString = new CursorString(string,nextStartBracket(string,0));
+	static StringData decode(String string){
+		CursorString cursorString = new CursorString(string,nextStartBracket(string));
 		return decode(cursorString);
 	}
-	protected static StringData decode(CursorString cursorString) {
+	static StringData decode(CursorString cursorString) {
 		StringData re=new StringData();
 
 		cursorString.cursor++;
@@ -93,7 +93,7 @@ public class StringDataCoder
 		}
 		return re;
 	}
-	protected static String encode(StringData sd){
+	static String encode(StringData sd){
 		StringBuilder sb=new StringBuilder("");
 		sb.append(START_BRACKET);
 		for(int i=0;i<sd.size();i++){

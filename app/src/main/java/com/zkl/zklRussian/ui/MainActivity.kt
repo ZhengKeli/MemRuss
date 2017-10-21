@@ -6,22 +6,14 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import com.zkl.zklRussian.R
-import com.zkl.zklRussian.control.myApp
 
-class NotebookActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_notebook)
 		
-		val bookSummaries = myApp.noteManager.loadBookSummaries()
-		if (bookSummaries.isEmpty()) {
-			jumpToFragment(NotebookInfantFragment())
-		} else {
-			val firstSummary=bookSummaries.first()
-			val firstNotebook=myApp.noteManager.openMutableNotebook(firstSummary.file)
-			jumpToFragment(NotebookFragment(myApp.noteManager.registerNotebook(firstNotebook)))
-		}
+		jumpToFragment(ShelfFragment(),false)
 		
 	}
 	
@@ -50,6 +42,6 @@ class NotebookActivity : AppCompatActivity() {
 	
 }
 
-val Fragment.notebookActivity get() = activity as NotebookActivity
+val Fragment.mainActivity get() = activity as MainActivity
 fun FragmentTransaction.replace(fragment: Fragment) = replace(R.id.fragment_container,fragment)!!
 

@@ -47,7 +47,7 @@ class NoteViewFragment : NoteHoldingFragment {
 		
 		b_edit.isEnabled = notebook is MutableNotebook
 		b_edit.setOnClickListener {
-			notebookActivity.jumpToFragment(NoteEditFragment(notebookKey,noteId),true)
+			mainActivity.jumpToFragment(NoteEditFragment(notebookKey,noteId),true)
 		}
 		
 		b_delete.isEnabled = notebook is MutableNotebook

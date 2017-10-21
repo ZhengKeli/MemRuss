@@ -1,8 +1,8 @@
-package com.zkl.zklRussian.control.tools;
+package com.zkl.zklRussian.control.note_old;
 
 public class VersionException extends RuntimeException {
-    int requestedVersion;
-    int currentVersion;
+    private int requestedVersion;
+    private int currentVersion;
 
     public int getRequestedVersion() {
         return requestedVersion;

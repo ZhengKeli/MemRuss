@@ -10,7 +10,7 @@
 		android:theme="@style/AppTheme"
 		android:fullBackupContent="true">
 		<activity
-			android:name="com.zkl.zklRussian.ui.NotebookActivity"
+			android:name="com.zkl.zklRussian.ui.MainActivity"
 			android:windowSoftInputMode="adjustResize">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>

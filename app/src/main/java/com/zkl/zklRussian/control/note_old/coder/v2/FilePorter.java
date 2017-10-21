@@ -2,10 +2,10 @@ package com.zkl.zklRussian.control.note_old.coder.v2;
 
 import android.os.Environment;
 
+import com.zkl.zklRussian.control.note_old.VersionException;
 import com.zkl.zklRussian.control.note_old.note.Notebook;
 import com.zkl.zklRussian.control.note_old.note.TempNotebook;
 import com.zkl.zklRussian.control.note_old.note.VersionControl;
-import com.zkl.zklRussian.control.tools.VersionException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,8 +19,8 @@ public class FilePorter {
 	public static final String exportFileDefaultDirectory = Environment.getExternalStorageDirectory() + "/ZKLRussian/";
 
 
-	public static class ParseException extends Exception { }
-	public static class FileParseException extends ParseException { }
+	static class ParseException extends Exception { }
+	static class FileParseException extends ParseException { }
 	public static class FileTooBigException extends FileParseException { }
 
 
@@ -54,7 +54,7 @@ public class FilePorter {
 	}
 
 	public static class BookPorter extends Porter {
-		public static final String fileExtension = ".zrb";
+		static final String fileExtension = ".zrb";
 		@Override public Notebook[] importFromFile(File file) throws IOException, ParseException {
 			try {
 				Notebook re= VersionControl.getMainBookLoader().loadBookWithPreferredVersion(
@@ -95,7 +95,7 @@ public class FilePorter {
 		}
 	}
 	public static class StringPorter extends StreamPorter {
-		public static final String fileExtension = ".txt";
+		static final String fileExtension = ".txt";
 
 		@Override public Notebook[] importFromStream(InputStream inputStream, long length) throws IOException, FileParseException {
 			byte[] bytes = new byte[(int) length];
