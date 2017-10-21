@@ -3,10 +3,10 @@
 	<string name="ZKLRussian">ZKLRussian</string>
 	<string name="confirm">确认</string>
 	<string name="delete">删除</string>
-	<string name="newBook">新笔记本</string>
+	<string name="newBook">新单词本</string>
 	<string name="answer_colon">答案：</string>
 	<string name="question_colon">问题：</string>
-	<string name="Notebook">笔记本</string>
+	<string name="Notebook">单词本</string>
 	<string name="CreateQuestionNote_colon">创建新的问答词条</string>
 	<string name="edit">编辑</string>
 	<string name="Note_create">新词条</string>
@@ -19,4 +19,6 @@
 	<string name="menu">菜单</string>
 	<string name="confirmDeletion_message">你确定要删除这个词条吗？</string>
 	<string name="confirmDeletion_title">删除确认</string>
+	<string name="importNotebook">导入单词本</string>
+	<string name="exportNotebook">导出单词本</string>
 </resources>

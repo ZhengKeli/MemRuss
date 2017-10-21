@@ -22,5 +22,7 @@
 	<string name="count_NotesInAll">%1$d Notes in All</string>
 	<string name="menu">menu</string>
 	<string name="add">add</string>
-	
+	<string name="importNotebook">Import Notebook</string>
+	<string name="exportNotebook">Export Notebook</string>
+
 </resources>
