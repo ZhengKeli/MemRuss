@@ -21,4 +21,5 @@
 	<string name="confirmDeletion_title">删除确认</string>
 	<string name="importNotebook">导入单词本</string>
 	<string name="exportNotebook">导出单词本</string>
+	<string name="createNotebook">新建单词本</string>
 </resources>

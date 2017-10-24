@@ -11,13 +11,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import com.zkl.zklRussian.R
+import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
 
 class NoteEditFragment : NoteHoldingFragment {
 	
 	constructor():super()
-	constructor(notebookKey: Int, noteId: Long) : super(notebookKey, noteId)
+	constructor(notebookKey: NotebookKey, noteId: Long) : super(notebookKey, noteId)
 	private val isCreateMode get() = noteId==-1L
 	
 	//view

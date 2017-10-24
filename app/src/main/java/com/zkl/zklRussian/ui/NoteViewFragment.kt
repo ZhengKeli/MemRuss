@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.zkl.zklRussian.R
+import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.NoteMemoryState
@@ -17,7 +18,7 @@ import com.zkl.zklRussian.core.note.QuestionContent
 class NoteViewFragment : NoteHoldingFragment {
 	
 	constructor():super()
-	constructor(notebookKey: Int, noteId: Long) : super(notebookKey,noteId)
+	constructor(notebookPath: NotebookKey, noteId: Long) : super(notebookPath,noteId)
 	
 	//view
 	private lateinit var tv_title: TextView

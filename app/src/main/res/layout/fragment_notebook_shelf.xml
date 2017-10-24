@@ -11,6 +11,25 @@
 		style="?android:attr/buttonBarStyle">
 		
 		<Button
+			android:id="@+id/b_create"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:text="@string/createNotebook"
+			style="?android:attr/buttonBarStyle"/>
+		
+		<Button
+			android:id="@+id/b_import"
+			style="?android:attr/buttonBarStyle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:text="@string/importNotebook"
+			/>
+		
+		<Button
 			android:id="@+id/b_export"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -19,16 +38,7 @@
 			android:text="@string/exportNotebook"
 			style="?android:attr/buttonBarStyle"
 			/>
-		
-		<Button
-			android:id="@+id/b_import"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:gravity="center"
-			android:text="@string/importNotebook"
-			style="?android:attr/buttonBarStyle"
-			/>
+	
 	</LinearLayout>
 	
 	<ListView

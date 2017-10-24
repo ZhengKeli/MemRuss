@@ -24,5 +24,6 @@
 	<string name="add">add</string>
 	<string name="importNotebook">Import Notebook</string>
 	<string name="exportNotebook">Export Notebook</string>
+	<string name="createNotebook">Create Notebook</string>
 
 </resources>

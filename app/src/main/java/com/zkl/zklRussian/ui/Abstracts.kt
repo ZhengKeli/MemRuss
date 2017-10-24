@@ -4,28 +4,32 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatDialogFragment
 import com.zkl.zklRussian.control.myApp
+import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Note
 import com.zkl.zklRussian.core.note.Notebook
 
+internal fun Bundle.getNotebookKey(key: String): NotebookKey? = getSerializable(key) as? NotebookKey
+internal fun Bundle.putNotebookKey(key: String, value: NotebookKey) = putSerializable(key, value)
+
 abstract class NotebookHoldingFragment: Fragment {
 	
 	constructor():super()
-	constructor(notebookKey: Int):super(){
-		this.notebookKey=notebookKey
+	constructor(notebookKey: NotebookKey):super(){
+		this.notebookKey = notebookKey
 	}
 	
 	//key
-	protected var notebookKey: Int = -1
+	protected lateinit var notebookKey: NotebookKey
 		private set
 	override fun onViewStateRestored(savedInstanceState: Bundle?) {
 		super.onViewStateRestored(savedInstanceState)
-		notebookKey = savedInstanceState?.getInt(this::notebookKey.name) ?: notebookKey
-		_notebook = myApp.hookManager.getValue(notebookKey) as Notebook
+		this.notebookKey = savedInstanceState?.getNotebookKey(this::notebookKey.name) ?: this.notebookKey
+		_notebook = myApp.notebookShelf.getOpenedNotebook(this.notebookKey)
 	}
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
-		outState.putInt(this::notebookKey.name, notebookKey)
+		outState.putNotebookKey(this::notebookKey.name, this.notebookKey)
 	}
 	
 	//apis
@@ -37,7 +41,7 @@ abstract class NotebookHoldingFragment: Fragment {
 abstract class NoteHoldingFragment: NotebookHoldingFragment {
 	
 	constructor():super()
-	constructor(notebookKey: Int, noteId: Long) : super(notebookKey) {
+	constructor(notebookKey: NotebookKey, noteId: Long) : super(notebookKey) {
 		this.noteId = noteId
 	}
 	
@@ -62,21 +66,21 @@ abstract class NoteHoldingFragment: NotebookHoldingFragment {
 
 abstract class NotebookHoldingDialog: AppCompatDialogFragment{
 	constructor():super()
-	constructor(notebookKey: Int):super(){
-		this.notebookKey=notebookKey
+	constructor(notebookKey: NotebookKey):super(){
+		this.notebookKey =notebookKey
 	}
 	
 	//key
-	protected var notebookKey: Int = -1
+	protected lateinit var notebookKey: NotebookKey
 		private set
 	override fun onViewStateRestored(savedInstanceState: Bundle?) {
 		super.onViewStateRestored(savedInstanceState)
-		notebookKey = savedInstanceState?.getInt(this::notebookKey.name) ?: notebookKey
-		_notebook = myApp.hookManager.getValue(notebookKey) as? Notebook
+		notebookKey = savedInstanceState?.getNotebookKey(this::notebookKey.name) ?: notebookKey
+		_notebook = myApp.notebookShelf.getOpenedNotebook(notebookKey)
 	}
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
-		outState.putInt(this::notebookKey.name, notebookKey)
+		outState.putNotebookKey(this::notebookKey.name, notebookKey)
 	}
 	
 	//apis
@@ -86,25 +90,26 @@ abstract class NotebookHoldingDialog: AppCompatDialogFragment{
 }
 abstract class NoteHoldingDialog: AppCompatDialogFragment{
 	constructor():super()
-	constructor(notebookKey: Int, noteId: Long) : super() {
+	constructor(notebookKey: NotebookKey, noteId: Long) : super() {
+		this.notebookKey = notebookKey
 		this.noteId = noteId
 	}
 	
 	//key
-	protected var notebookKey: Int = -1
+	protected lateinit var notebookKey: NotebookKey
 		private set
 	protected var noteId: Long = -1L
 		private set
 	override fun onViewStateRestored(savedInstanceState: Bundle?) {
 		super.onViewStateRestored(savedInstanceState)
-		notebookKey = savedInstanceState?.getInt(this::notebookKey.name) ?: notebookKey
-		_notebook = myApp.hookManager.getValue(notebookKey) as Notebook
+		notebookKey = savedInstanceState?.getNotebookKey(this::notebookKey.name) ?: notebookKey
+		_notebook = myApp.notebookShelf.getOpenedNotebook(notebookKey)
 		noteId = savedInstanceState?.getLong(this::noteId.name)?:noteId
 		if(noteId!=-1L) _note =  notebook.getNote(noteId)
 	}
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
-		outState.putInt(this::notebookKey.name, notebookKey)
+		outState.putNotebookKey(this::notebookKey.name, notebookKey)
 		outState.putLong(this::noteId.name, noteId)
 	}
 	

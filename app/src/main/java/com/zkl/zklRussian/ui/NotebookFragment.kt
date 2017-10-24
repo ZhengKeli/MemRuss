@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.zkl.zklRussian.R
+import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Note
 import com.zkl.zklRussian.core.note.QuestionContent
@@ -14,7 +15,7 @@ import java.util.*
 
 class NotebookFragment : NotebookHoldingFragment {
 	constructor() : super()
-	constructor(notebookKey: Int) : super(notebookKey)
+	constructor(notebookKey: NotebookKey) : super(notebookKey)
 	
 	//views
 	private lateinit var tv_bookName: TextView

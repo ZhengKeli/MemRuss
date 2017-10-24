@@ -1,6 +1,7 @@
 package com.zkl.zklRussian.control.note
 
 import android.database.sqlite.SQLiteDatabase
+import com.zkl.zklRussian.control.tools.HookSystem
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Notebook
 import java.io.File
@@ -8,10 +9,8 @@ import java.io.Serializable
 import java.util.*
 
 class NotebookShelf(workingDir: File){
-	init {
-		workingDir.mkdirs()
-	}
-	val booksDir = workingDir.resolve("books").apply { mkdirs() }
+	init { workingDir.mkdirs() }
+	private val booksDir = workingDir.resolve("books").apply { mkdirs() }
 	
 	
 	//summary
@@ -35,33 +34,47 @@ class NotebookShelf(workingDir: File){
 	
 	
 	//book opening & creating
-	@Synchronized fun openNotebook(file: File): Notebook {
-		val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
-		return MutableNotebook3(database)
-	}
-	@Synchronized fun openMutableNotebook(file: File): MutableNotebook {
-		val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READWRITE)
-		return MutableNotebook3(database)
-	}
-	@Synchronized fun createNotebook(bookName: String): MutableNotebook {
-		//find a new file name
-		val file:File = kotlin.run {
+	private val openedNotebooks = HookSystem<NotebookKey, Notebook>()
+	@Synchronized fun createNotebook(bookName: String): Pair<NotebookKey, MutableNotebook> {
+		val file: File = kotlin.run {
+			//find a new file name
 			val random = Random()
-			var randomFile:File
+			var randomFile: File
 			do {
-				val randomFileName = bookName+"_"+ Math.abs(random.nextLong())+".zrb"
+				val randomFileName = bookName + "_" + Math.abs(random.nextLong()) + ".zrb"
 				randomFile = File(booksDir, randomFileName)
-			}while (randomFile.exists())
+			} while (randomFile.exists())
 			return@run randomFile
 		}
-		
 		val database = SQLiteDatabase.openDatabase(file.path, null,
 			SQLiteDatabase.CREATE_IF_NECESSARY or SQLiteDatabase.OPEN_READWRITE)
-		val notebook = MutableNotebook3(database)
-		notebook.createTables(bookName)
-		return notebook
+		val notebook = MutableNotebook3(database).apply { createTables(bookName) }
+		val key = NotebookKey(file.canonicalPath, true)
+		openedNotebooks[key] = notebook
+		return Pair(key, notebook)
 	}
+	@Synchronized fun openNotebook(file:File): Pair<NotebookKey, Notebook> {
+		val key = NotebookKey(file.canonicalPath, false)
+		val opened = openedNotebooks[key]
+		if (opened is Notebook) return Pair(key,opened)
+		
+		val database = SQLiteDatabase.openDatabase(key.canonicalPath, null, SQLiteDatabase.OPEN_READONLY)
+		val notebook = MutableNotebook3(database) //todo change to immutableNotebook
+		openedNotebooks[key] = notebook
+		return Pair(key,notebook)
+	}
+	@Synchronized fun openMutableNotebook(file: File): Pair<NotebookKey, MutableNotebook> {
+		val key = NotebookKey(file.canonicalPath, true)
+		val opened = openedNotebooks[key]
+		if (opened is MutableNotebook) return Pair(key,opened)
+		
+		val database = SQLiteDatabase.openDatabase(key.canonicalPath, null, SQLiteDatabase.OPEN_READWRITE)
+		val mutableNotebook = MutableNotebook3(database)
+		openedNotebooks[key] = mutableNotebook
+		return Pair(key,mutableNotebook)
+	}
+	@Synchronized fun getOpenedNotebook(key: NotebookKey): Notebook? = openedNotebooks[key]
 	
 }
 
-
+data class NotebookKey internal constructor(val canonicalPath: String, val mutable: Boolean) : Serializable

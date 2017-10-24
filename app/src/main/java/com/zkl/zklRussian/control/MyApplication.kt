@@ -4,16 +4,11 @@ import android.app.Activity
 import android.app.Application
 import android.support.v4.app.Fragment
 import com.zkl.zklRussian.control.note.NotebookShelf
-import com.zkl.zklRussian.control.tools.hook.HookManager
 
 class MyApplication : Application() {
 	
 	//note
 	val notebookShelf by lazy { NotebookShelf(workingDir = filesDir.resolve("note")) }
-	
-	
-	//reference
-	val hookManager = HookManager()
 	
 }
 
