@@ -73,7 +73,11 @@ class NotebookShelf(workingDir: File){
 		openedNotebooks[key] = mutableNotebook
 		return Pair(key,mutableNotebook)
 	}
-	@Synchronized fun getOpenedNotebook(key: NotebookKey): Notebook? = openedNotebooks[key]
+	@Synchronized fun restoreOpenedNotebook(key: NotebookKey): Notebook {
+		return openedNotebooks[key] ?:
+			if (key.mutable) openMutableNotebook(File(key.canonicalPath)).second
+			else openNotebook(File(key.canonicalPath)).second
+	}
 	
 }
 
