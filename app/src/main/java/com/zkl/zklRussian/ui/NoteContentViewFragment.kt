@@ -26,7 +26,7 @@ class QuestionContentViewFragment : NoteContentViewFragment(){
 	private var tv_question: TextView?=null
 	private var tv_answer: TextView?=null
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_question_content_view,container,false).apply {
+		= inflater.inflate(R.layout.fragment_note_content_view_question,container,false).apply {
 		tv_question = findViewById(R.id.tv_question) as TextView
 		tv_answer = findViewById(R.id.tv_answer) as TextView
 	}

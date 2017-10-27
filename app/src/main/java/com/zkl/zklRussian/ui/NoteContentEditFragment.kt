@@ -29,7 +29,7 @@ class QuestionContentEditFragment : NoteContentEditFragment(){
 	private var et_question: EditText?=null
 	private var et_answer: EditText?=null
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_question_content_edit,container,false).apply {
+		= inflater.inflate(R.layout.fragment_note_content_edit_question,container,false).apply {
 		et_question = findViewById(R.id.et_question) as EditText
 		et_answer = findViewById(R.id.et_answer) as EditText
 	}
