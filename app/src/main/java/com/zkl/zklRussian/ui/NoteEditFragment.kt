@@ -47,7 +47,7 @@ class NoteEditFragment : NoteHoldingFragment {
 		
 		
 		b_ok.setOnClickListener {
-			val newNoteContent = noteContentViewFragment!!.syncTexts(true)
+			val newNoteContent = noteContentEditFragment!!.applyChange()
 			
 			if (isCreateMode) mutableNotebook.addNote(newNoteContent)
 			else mutableNotebook.modifyNoteContent(noteId, newNoteContent)
@@ -66,21 +66,22 @@ class NoteEditFragment : NoteHoldingFragment {
 	
 	
 	//noteContent
-	private var noteContentViewFragment: NoteContentEditFragment? = null
+	private var noteContentEditFragment: NoteContentEditFragment? = null
 	override fun onAttachFragment(childFragment: Fragment) {
 		super.onAttachFragment(childFragment)
-		noteContentViewFragment = childFragment as? NoteContentEditFragment
+		noteContentEditFragment = childFragment as? NoteContentEditFragment
 	}
 	private fun updateNoteContent(noteContent: NoteContent){
-		val updateSucceed = noteContentViewFragment?.setNoteContent(noteContent) == true
-		if (!updateSucceed) {
+		if (noteContentEditFragment?.isCompatible(noteContent) == true) {
+			noteContentEditFragment?.noteContent = noteContent
+		} else {
 			val fragment = typedNoteContentEditFragments[noteContent.typeTag]?.newInstance()
-				?:throw RuntimeException("The noteContent type \"${noteContent.typeTag}\" is not supported.")
+				?: throw RuntimeException("The noteContent type \"${noteContent.typeTag}\" is not supported.")
 			childFragmentManager.beginTransaction()
 				.replace(R.id.fl_noteContent_container, fragment)
 				.commit()
-			fragment.setNoteContent(noteContent)
-			noteContentViewFragment =fragment
+			fragment.noteContent = noteContent
+			noteContentEditFragment = fragment
 		}
 	}
 	

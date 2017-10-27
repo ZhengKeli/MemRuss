@@ -12,8 +12,8 @@ import com.zkl.zklRussian.core.note.QuestionContent
 
 //ContentViewFragment
 abstract class NoteContentViewFragment : Fragment(){
-	abstract val noteContent: NoteContent?
-	abstract fun setNoteContent(noteContent: NoteContent):Boolean
+	abstract var noteContent: NoteContent?
+	abstract fun isCompatible(noteContent: NoteContent):Boolean
 }
 val typedNoteContentViewFragments = hashMapOf<String,Class<out NoteContentViewFragment>>(
 	QuestionContent::class.simpleName!! to QuestionContentViewFragment::class.java
@@ -37,22 +37,29 @@ class QuestionContentViewFragment : NoteContentViewFragment(){
 	}
 	override fun onStart() {
 		super.onStart()
-		updateTextViews()
+		updateViews()
 	}
 	
-	private fun updateTextViews(){
-		tv_question?.text = noteContent!!.question
-		tv_answer?.text = noteContent!!.answer
+	private fun updateViews() {
+		tv_question?.text = questionContent?.question ?: ""
+		tv_answer?.text = questionContent?.answer ?: ""
 	}
 	
 	
 	//noteContent
-	override var noteContent: QuestionContent? = null
-	override fun setNoteContent(noteContent: NoteContent): Boolean {
-		this.noteContent = noteContent as? QuestionContent ?: return false
-		updateTextViews()
-		return true
-	}
+	private var questionContent: QuestionContent? = null
+		set(value) {
+			field = value
+			updateViews()
+		}
+	override var noteContent: NoteContent?
+		get() = questionContent
+		set(value) {
+			this.questionContent = value as QuestionContent
+		}
+	
+	override fun isCompatible(noteContent: NoteContent)
+		= noteContent is QuestionContent
 	
 }
 

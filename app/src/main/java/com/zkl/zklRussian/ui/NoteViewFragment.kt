@@ -67,15 +67,16 @@ class NoteViewFragment : NoteHoldingFragment {
 		noteContentViewFragment = childFragment as? NoteContentViewFragment
 	}
 	private fun updateNoteContent(noteContent: NoteContent){
-		val updateSucceed = noteContentViewFragment?.setNoteContent(noteContent) == true
-		if (!updateSucceed) {
+		if (noteContentViewFragment?.isCompatible(noteContent) == true) {
+			noteContentViewFragment?.noteContent = noteContent
+		} else {
 			val fragment = typedNoteContentViewFragments[noteContent.typeTag]?.newInstance()
-				?:throw RuntimeException("The noteContent type \"${noteContent.typeTag}\" is not supported.")
+				?: throw RuntimeException("The noteContent type \"${noteContent.typeTag}\" is not supported.")
 			childFragmentManager.beginTransaction()
 				.replace(R.id.fl_noteContent_container, fragment)
 				.commit()
-			fragment.setNoteContent(noteContent)
-			noteContentViewFragment =fragment
+			fragment.noteContent = noteContent
+			noteContentViewFragment = fragment
 		}
 	}
 	
