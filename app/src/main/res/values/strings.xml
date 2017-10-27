@@ -8,6 +8,7 @@
 	<string name="answer_colon">answer:</string>
 	<string name="CreateQuestionNote_colon">Create question note:</string>
 	<string name="delete">delete</string>
+	<string name="view">view</string>
 	<string name="confirm">confirm</string>
 	<string name="confirmDeletion_title">Confirm deletion</string>
 	<string name="confirmDeletion_message">Are you sure to delete this Note?</string>
@@ -25,5 +26,8 @@
 	<string name="importNotebook">Import Notebook</string>
 	<string name="exportNotebook">Export Notebook</string>
 	<string name="createNotebook">Create Notebook</string>
+	<string name="show">show</string>
+	<string name="remembered">remembered</string>
+	<string name="forgot">forgot</string>
 
 </resources>

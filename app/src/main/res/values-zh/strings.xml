@@ -22,4 +22,8 @@
 	<string name="importNotebook">导入单词本</string>
 	<string name="exportNotebook">导出单词本</string>
 	<string name="createNotebook">新建单词本</string>
+	<string name="view">查看</string>
+	<string name="show">显示</string>
+	<string name="remembered">记住了</string>
+	<string name="forgot">忘记了</string>
 </resources>
