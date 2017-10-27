@@ -88,22 +88,17 @@ abstract class NotebookHoldingDialog: AppCompatDialogFragment{
 	protected val notebook: Notebook get() = _notebook!!
 	protected val mutableNotebook: MutableNotebook get() = notebook as MutableNotebook
 }
-abstract class NoteHoldingDialog: AppCompatDialogFragment{
+abstract class NoteHoldingDialog: NotebookHoldingDialog{
 	constructor():super()
-	constructor(notebookKey: NotebookKey, noteId: Long) : super() {
-		this.notebookKey = notebookKey
+	constructor(notebookKey: NotebookKey, noteId: Long) : super(notebookKey) {
 		this.noteId = noteId
 	}
 	
 	//key
-	protected lateinit var notebookKey: NotebookKey
-		private set
 	protected var noteId: Long = -1L
 		private set
 	override fun onViewStateRestored(savedInstanceState: Bundle?) {
 		super.onViewStateRestored(savedInstanceState)
-		notebookKey = savedInstanceState?.getNotebookKey(this::notebookKey.name) ?: notebookKey
-		_notebook = myApp.notebookShelf.restoreOpenedNotebook(notebookKey)
 		noteId = savedInstanceState?.getLong(this::noteId.name)?:noteId
 		if(noteId!=-1L) _note =  notebook.getNote(noteId)
 	}
@@ -114,10 +109,6 @@ abstract class NoteHoldingDialog: AppCompatDialogFragment{
 	}
 	
 	//apis
-	private var _notebook:Notebook? = null
-	protected val notebook: Notebook get() = _notebook!!
-	protected val mutableNotebook: MutableNotebook get() = notebook as MutableNotebook
-	
 	private var _note: Note? = null
 	val note:Note get() = _note!!
 	
