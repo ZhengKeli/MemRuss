@@ -10,7 +10,6 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
 
-//ContentViewFragment
 abstract class NoteContentViewFragment : Fragment(){
 	abstract var noteContent: NoteContent?
 	abstract fun isCompatible(noteContent: NoteContent):Boolean
@@ -23,8 +22,8 @@ val typedNoteContentViewFragments = hashMapOf<String,Class<out NoteContentViewFr
 class QuestionContentViewFragment : NoteContentViewFragment(){
 	
 	//views
-	private var tv_question: TextView?=null
-	private var tv_answer: TextView?=null
+	private var tv_question: TextView? = null
+	private var tv_answer: TextView? = null
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_note_content_view_question,container,false).apply {
 		tv_question = findViewById(R.id.tv_question) as TextView
