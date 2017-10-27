@@ -10,7 +10,6 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
 
-//ContentViewFragment
 abstract class NoteContentViewFragment : Fragment(){
 	abstract var noteContent: NoteContent?
 	abstract fun isCompatible(noteContent: NoteContent):Boolean
