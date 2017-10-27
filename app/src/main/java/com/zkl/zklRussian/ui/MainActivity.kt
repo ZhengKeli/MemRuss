@@ -13,12 +13,12 @@ class MainActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_notebook)
 		
-		jumpToFragment(ShelfFragment(),false)
+		jumpToFragment(NotebookShelfFragment(true),false)
 		
 	}
 	
 	//fragment jump
-	fun jumpToFragment(fragment: Fragment, addToBackStack:Boolean=false) {
+	fun jumpToFragment(fragment: Fragment, addToBackStack:Boolean) {
 		if (addToBackStack) {
 			supportFragmentManager.beginTransaction()
 				.replace(R.id.fragment_container, fragment)
