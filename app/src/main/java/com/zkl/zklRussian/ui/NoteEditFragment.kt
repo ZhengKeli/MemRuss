@@ -60,7 +60,7 @@ class NoteEditFragment : NoteHoldingFragment {
 		
 		//update noteContent
 		if (isCreateMode) updateNoteContent(QuestionContent("", ""))
-		else updateNoteContent(note.content)
+		else updateNoteContent()
 		
 	}
 	
@@ -71,7 +71,7 @@ class NoteEditFragment : NoteHoldingFragment {
 		super.onAttachFragment(childFragment)
 		noteContentEditFragment = childFragment as? NoteContentEditFragment
 	}
-	private fun updateNoteContent(noteContent: NoteContent){
+	private fun updateNoteContent(noteContent: NoteContent=note.content){
 		if (noteContentEditFragment?.isCompatible(noteContent) == true) {
 			noteContentEditFragment?.noteContent = noteContent
 		} else {

@@ -10,7 +10,6 @@ import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
-import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.NoteMemoryState
 
 
@@ -55,7 +54,7 @@ class NoteViewFragment : NoteHoldingFragment {
 			NoteDeleteDialog(notebookKey, noteId).show(fragmentManager, null)
 		}
 		
-		updateNoteContent(note.content)
+		updateNoteContent()
 		
 	}
 	
@@ -66,7 +65,8 @@ class NoteViewFragment : NoteHoldingFragment {
 		super.onAttachFragment(childFragment)
 		noteContentViewFragment = childFragment as? NoteContentViewFragment
 	}
-	private fun updateNoteContent(noteContent: NoteContent){
+	private fun updateNoteContent() {
+		val noteContent = note.content
 		if (noteContentViewFragment?.isCompatible(noteContent) == true) {
 			noteContentViewFragment?.noteContent = noteContent
 		} else {

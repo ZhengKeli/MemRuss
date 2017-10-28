@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
-import com.zkl.zklRussian.core.note.NoteContent
 
 
 class NoteReviewFragment : NoteHoldingFragment {
@@ -33,11 +32,23 @@ class NoteReviewFragment : NoteHoldingFragment {
 			mainActivity.jumpToFragment(NoteViewFragment(notebookKey, noteId), true)
 		}
 		
-		updateNoteContent(note.content)
+		updateNoteContent()
 	}
 	
 	private fun onResult(result: ReviewResult){
-		//todo 跳到下一个词条
+		
+		//apply changes of memory progress
+		val newMemory = result.updateNoteMemory(note.memory)
+		mutableNotebook.modifyNoteMemory(noteId,newMemory)
+		
+		//jump to next note or finish page
+		val nextNote = notebook.selectNeedReviewNotes(System.currentTimeMillis()).firstOrNull()
+		if (nextNote != null) {
+			this.noteId = nextNote.id
+			updateNoteContent()
+		}else{
+			//todo 显示结束画面
+		}
 	}
 	
 	
@@ -47,7 +58,8 @@ class NoteReviewFragment : NoteHoldingFragment {
 		super.onAttachFragment(childFragment)
 		noteContentReviewFragment = childFragment as? NoteContentReviewFragment
 	}
-	private fun updateNoteContent(noteContent: NoteContent){
+	private fun updateNoteContent(){
+		val noteContent = note.content
 		if (noteContentReviewFragment?.isCompatible(noteContent) == true) {
 			noteContentReviewFragment?.noteContent = noteContent
 		} else {

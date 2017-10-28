@@ -42,16 +42,20 @@ abstract class NoteHoldingFragment: NotebookHoldingFragment {
 	
 	constructor():super()
 	constructor(notebookKey: NotebookKey, noteId: Long) : super(notebookKey) {
-		this.noteId = noteId
+		this._noteId = noteId
 	}
 	
 	//ids
-	protected var noteId: Long = -1L
-		private set
+	private var _noteId: Long = -1L
+	protected var noteId: Long
+		get() = _noteId
+		set(value) {
+			_noteId = value
+			if (value != -1L) _note = notebook.getNote(value)
+		}
 	override fun onViewStateRestored(savedInstanceState: Bundle?) {
 		super.onViewStateRestored(savedInstanceState)
-		noteId = savedInstanceState?.getLong(this::noteId.name)?:noteId
-		if(noteId!=-1L) _note =  notebook.getNote(noteId)
+		noteId = savedInstanceState?.getLong(this::noteId.name) ?: noteId
 	}
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)
@@ -91,16 +95,20 @@ abstract class NotebookHoldingDialog: AppCompatDialogFragment{
 abstract class NoteHoldingDialog: NotebookHoldingDialog{
 	constructor():super()
 	constructor(notebookKey: NotebookKey, noteId: Long) : super(notebookKey) {
-		this.noteId = noteId
+		this._noteId = noteId
 	}
 	
 	//key
-	protected var noteId: Long = -1L
-		private set
+	private var _noteId: Long = -1L
+	protected var noteId: Long
+		get() = _noteId
+		set(value) {
+			_noteId = value
+			if (value != -1L) _note = notebook.getNote(value)
+		}
 	override fun onViewStateRestored(savedInstanceState: Bundle?) {
 		super.onViewStateRestored(savedInstanceState)
 		noteId = savedInstanceState?.getLong(this::noteId.name)?:noteId
-		if(noteId!=-1L) _note =  notebook.getNote(noteId)
 	}
 	override fun onSaveInstanceState(outState: Bundle) {
 		super.onSaveInstanceState(outState)

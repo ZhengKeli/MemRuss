@@ -64,5 +64,3 @@ fun NoteMemory.getNextReviewTime(learned: Boolean, nowTime: Long = System.curren
 		load = nextLoad
 	)
 }
-
-
