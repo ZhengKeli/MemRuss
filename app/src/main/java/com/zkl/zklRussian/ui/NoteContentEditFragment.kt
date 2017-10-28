@@ -64,7 +64,7 @@ class QuestionContentEditFragment : NoteContentEditFragment(){
 	override var noteContent: NoteContent?
 		get() = questionContent
 		set(value) {
-			questionContent = noteContent as QuestionContent
+			questionContent = value as QuestionContent
 		}
 	
 	override fun isCompatible(noteContent: NoteContent)

@@ -91,14 +91,14 @@ class QuestionContentReviewFragment:NoteContentReviewFragment(){
 	}
 	
 	private var questionContent: QuestionContent? = null
-		set(value) {
-			field = value
-			updateViews()
-		}
+	set(value) {
+		field = value
+		updateViews()
+	}
 	override var noteContent: NoteContent?
 		get() = questionContent
 		set(value) {
-			questionContent=value as QuestionContent
+			questionContent = value as QuestionContent
 		}
 	
 	override fun isCompatible(noteContent: NoteContent)
