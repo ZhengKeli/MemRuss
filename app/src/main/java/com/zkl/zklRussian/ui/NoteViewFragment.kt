@@ -17,7 +17,7 @@ import com.zkl.zklRussian.core.note.NoteMemoryState
 class NoteViewFragment : NoteHoldingFragment {
 	
 	constructor():super()
-	constructor(notebookPath: NotebookKey, noteId: Long) : super(notebookPath,noteId)
+	constructor(notebookKey: NotebookKey, noteId: Long) : super(notebookKey,noteId)
 	
 	//view
 	private lateinit var tv_title: TextView

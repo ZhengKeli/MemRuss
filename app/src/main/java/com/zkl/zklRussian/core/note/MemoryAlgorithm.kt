@@ -49,20 +49,20 @@ object MemoryAlgorithm {
 		return ((24.0 * 3600 * 1000) / reviewInterval).coerceAtMost(maxSingleLoad)
 	}
 	
-	fun NoteMemory.getNextReviewTime(learned: Boolean, nowTime: Long = System.currentTimeMillis()): NoteMemory {
-		val nextProgress =
-			if (learned) progress + progressUnit
-			else progress - progressUnit * arg_pu
-		val reviewInterval = computeReviewInterval(nextProgress)
-		val nextReviewTime = nowTime + reviewInterval
-		val nextLoad = computeLoad(reviewInterval)
-		return copy(
-			progress = nextProgress,
-			reviewTime = nextReviewTime,
-			load = nextLoad
-		)
-	}
-	
+}
+
+fun NoteMemory.getNextReviewTime(learned: Boolean, nowTime: Long = System.currentTimeMillis()): NoteMemory {
+	val nextProgress =
+		if (learned) progress + MemoryAlgorithm.progressUnit
+		else progress - MemoryAlgorithm.progressUnit * MemoryAlgorithm.arg_pu
+	val reviewInterval = MemoryAlgorithm.computeReviewInterval(nextProgress)
+	val nextReviewTime = nowTime + reviewInterval
+	val nextLoad = MemoryAlgorithm.computeLoad(reviewInterval)
+	return copy(
+		progress = nextProgress,
+		reviewTime = nextReviewTime,
+		load = nextLoad
+	)
 }
 
 
