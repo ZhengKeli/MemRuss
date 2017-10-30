@@ -230,7 +230,8 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			WHERE ${SearchTagTable._name}.${SearchTagTable.searchTag}
 			LIKE '%$keyword%'
 			ORDER BY $tableName.$contentUpdateTime DESC """
-			val cursor:Cursor=database.rawQuery(sql, null)
+			val cursor: Cursor = database.rawQuery(sql, null)
+//			cursor.use { cursor.parseNoteList() }
 			cursor.parseNoteList().also { cursor.close() }
 		}
 	}
