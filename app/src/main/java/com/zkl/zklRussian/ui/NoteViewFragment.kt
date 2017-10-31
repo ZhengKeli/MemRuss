@@ -8,15 +8,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.zkl.zklRussian.R
-import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.NoteMemoryState
 
 
-class NoteViewFragment : NoteHoldingFragment {
+class NoteViewFragment : NoteHoldingFragment() {
 	
-	constructor():super()
-	constructor(notebookKey: NotebookKey, noteId: Long) : super(notebookKey,noteId)
 	
 	//view
 	private lateinit var tv_title: TextView
@@ -46,12 +43,18 @@ class NoteViewFragment : NoteHoldingFragment {
 		
 		b_edit.isEnabled = notebook is MutableNotebook
 		b_edit.setOnClickListener {
-			mainActivity.jumpToFragment(NoteEditFragment(notebookKey,noteId),true)
+			mainActivity.jumpToFragment(NoteEditFragment().also {
+				it.notebookKey=notebookKey
+				it.noteId=-1
+			},true)
 		}
 		
 		b_delete.isEnabled = notebook is MutableNotebook
 		b_delete.setOnClickListener {
-			NoteDeleteDialog(notebookKey, noteId).show(fragmentManager, null)
+			NoteDeleteDialog().also {
+				it.notebookKey=notebookKey
+				it.noteId=-1
+			}.show(fragmentManager, null)
 		}
 		
 		updateNoteContent()

@@ -4,12 +4,8 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import com.zkl.zklRussian.R
-import com.zkl.zklRussian.control.note.NotebookKey
 
-class NoteDeleteDialog:NoteHoldingDialog{
-	
-	constructor():super()
-	constructor(notebookKey: NotebookKey, noteId: Long) : super(notebookKey, noteId)
+class NoteDeleteDialog:NoteHoldingDialog(){
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		return AlertDialog.Builder(context)

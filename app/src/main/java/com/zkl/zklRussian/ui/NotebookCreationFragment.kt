@@ -20,7 +20,9 @@ class NotebookCreationFragment: Fragment() {
 			
 			b_ok.setOnClickListener {
 				val (key, _) = myApp.notebookShelf.createNotebook(et_newBookName.text.toString())
-				mainActivity.jumpToFragment(NotebookFragment(key), false)
+				mainActivity.jumpToFragment(NotebookFragment().also {
+					it.notebookKey=key
+				}, false)
 			}
 			b_cancel.setOnClickListener {
 				mainActivity.jumpBackFragment()

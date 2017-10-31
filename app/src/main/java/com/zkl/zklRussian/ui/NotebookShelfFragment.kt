@@ -11,8 +11,9 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.control.note.NotebookShelf
 
-class NotebookShelfFragment
-@JvmOverloads constructor(var autoJumpToFirst:Boolean=false) :Fragment(){
+class NotebookShelfFragment:Fragment(){
+	
+	var autoJumpToFirst: Boolean = false
 	
 	lateinit var b_create:Button
 	lateinit var b_import:Button
@@ -34,7 +35,9 @@ class NotebookShelfFragment
 		if (summaries.isEmpty()) mainActivity.jumpToFragment(NotebookInfantFragment(),false)
 		else if (autoJumpToFirst) {
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(summaries.first().file)
-			mainActivity.jumpToFragment(NotebookFragment(key), true)
+			mainActivity.jumpToFragment(NotebookFragment().also {
+				it.notebookKey = key
+			}, true)
 			autoJumpToFirst = false
 		}
 		
@@ -63,7 +66,9 @@ class NotebookShelfFragment
 		lv_notebooks.setOnItemClickListener { parent, _, position, _ ->
 			val summary = parent.adapter.getItem(position) as NotebookShelf.NotebookSummary
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(summary.file)
-			mainActivity.jumpToFragment(NotebookFragment(key),true)
+			mainActivity.jumpToFragment(NotebookFragment().also {
+				it.notebookKey = key
+			},true)
 		}
 	}
 	

@@ -15,11 +15,15 @@
 	<string name="edit">edit</string>
 	
 	<string name="Note_view_id">Note@%1$d</string>
+	<string name="Note_create">New Note</string>
 	<string name="Note_edit_id">Edit Note@%1$d</string>
 	<string name="Note_review_progress">Progress:%1$d</string>
-	<string name="Note_create">New Note</string>
+	<string name="Note_review_noMore">No more words need to be reviewed</string>
+	<string name="back">back</string>
+	
 	<string name="answer">answer</string>
 	<string name="question">question</string>
+	
 	
 	<string name="count_NotesInAll">%1$d Notes in All</string>
 	<string name="menu">menu</string>
