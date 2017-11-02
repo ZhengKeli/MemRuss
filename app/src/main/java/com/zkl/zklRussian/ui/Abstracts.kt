@@ -8,122 +8,98 @@ import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Note
 import com.zkl.zklRussian.core.note.Notebook
+import org.jetbrains.anko.bundleOf
 
 internal fun Bundle.getNotebookKey(key: String): NotebookKey? = getSerializable(key) as? NotebookKey
-internal fun Bundle.putNotebookKey(key: String, value: NotebookKey) = putSerializable(key, value)
+internal fun Bundle.putNotebookKey(key: String, value: NotebookKey?) = putSerializable(key, value)
+internal operator fun Bundle?.plus(bundle: Bundle) = (this?:Bundle()).apply { putAll(bundle) }
 
 abstract class NotebookHoldingFragment: Fragment() {
 	
-	//notebookKey
-	var notebookKey: NotebookKey? = null
-		set(value) {
-			field = value
-			_notebook = null
+	companion object {
+		val arg_notebookKey = "notebookKey"
+		fun <T : NotebookHoldingFragment> Class<T>.newInstance(notebookKey: NotebookKey):T
+			= newInstance().apply {
+			arguments += bundleOf(arg_notebookKey to notebookKey)
 		}
-	override fun onViewStateRestored(savedInstanceState: Bundle?) {
-		super.onViewStateRestored(savedInstanceState)
-		if (notebookKey == null) notebookKey = savedInstanceState?.getNotebookKey(this::notebookKey.name)
-	}
-	override fun onSaveInstanceState(outState: Bundle) {
-		super.onSaveInstanceState(outState)
-		notebookKey?.let { outState.putNotebookKey(this::notebookKey.name, it) }
 	}
 	
-	//notebook
-	private var _notebook: Notebook? = null
-		get() {
-			if (field == null) {
-				field = notebookKey?.let { myApp.notebookShelf.restoreOpenedNotebook(it) }
-			}
-			return field
+	protected var notebookKey: NotebookKey
+		get()= arguments!!.getNotebookKey(arg_notebookKey)!!
+		set(value) {
+			arguments!!.putNotebookKey(arg_notebookKey,value)
+			cachedNotebook = null
 		}
-	protected val notebook: Notebook get() = _notebook!!
+	
+	private var cachedNotebook: Notebook? = null
+	protected val notebook: Notebook
+		get() = cachedNotebook ?:myApp.notebookShelf.restoreNotebook(notebookKey).also { cachedNotebook = it }
 	protected val mutableNotebook: MutableNotebook get() = notebook as MutableNotebook
 	
 }
 abstract class NoteHoldingFragment : NotebookHoldingFragment() {
 	
-	//noteId
-	var noteId: Long = -1L
+	companion object {
+		val arg_noteId = "noteId"
+		fun <T : NoteHoldingFragment> Class<T>.newInstance(notebookKey: NotebookKey, noteId: Long)
+			= newInstance(notebookKey).apply {
+			arguments += bundleOf(arg_noteId to noteId)
+		}
+	}
+
+	protected var noteId: Long
+		get() = arguments?.getLong(arg_noteId, -1L) ?: -1L
 		set(value) {
-			field = value
-			_note = null
+			arguments!!.putLong(arg_noteId, value)
+			cachedNote = null
 		}
-	override fun onViewStateRestored(savedInstanceState: Bundle?) {
-		super.onViewStateRestored(savedInstanceState)
-		noteId = noteId.takeIf { it != -1L } ?: savedInstanceState?.getLong(this::noteId.name) ?: -1L
-	}
-	override fun onSaveInstanceState(outState: Bundle) {
-		super.onSaveInstanceState(outState)
-		outState.putLong(this::noteId.name, noteId)
-	}
 	
-	//note
-	private var _note: Note? = null
-		get() {
-			if (field == null) {
-				field = noteId.takeIf { it!=-1L }?.let { notebook.getNote(it) }
-			}
-			return field
-		}
-	val note:Note get() = _note!!
+	private var cachedNote: Note? = null
+	val note:Note get() = cachedNote?:notebook.getNote(noteId).also { cachedNote=it }
 	
 }
 
 abstract class NotebookHoldingDialog: AppCompatDialogFragment(){
 	
-	//notebookKey
-	var notebookKey: NotebookKey? = null
-		set(value) {
-			field = value
-			_notebook = null
+	companion object {
+		val arg_notebookKey = "notebookKey"
+		fun <T : NotebookHoldingDialog> Class<T>.newInstance(notebookKey: NotebookKey):T
+			= newInstance().apply {
+			arguments += bundleOf(arg_notebookKey to notebookKey)
 		}
-	override fun onViewStateRestored(savedInstanceState: Bundle?) {
-		super.onViewStateRestored(savedInstanceState)
-		if (notebookKey == null) notebookKey = savedInstanceState?.getNotebookKey(this::notebookKey.name)
-	}
-	override fun onSaveInstanceState(outState: Bundle) {
-		super.onSaveInstanceState(outState)
-		notebookKey?.let { outState.putNotebookKey(this::notebookKey.name, it) }
 	}
 	
-	//notebook
-	private var _notebook: Notebook? = null
-		get() {
-			if (field == null) {
-				field = notebookKey?.let { myApp.notebookShelf.restoreOpenedNotebook(it) }
-			}
-			return field
+	protected var notebookKey: NotebookKey
+		get()= arguments!!.getNotebookKey(NotebookHoldingFragment.arg_notebookKey)!!
+		set(value) {
+			arguments!!.putNotebookKey(NotebookHoldingFragment.arg_notebookKey,value)
+			cachedNotebook = null
 		}
-	protected val notebook: Notebook get() = _notebook!!
+	
+	private var cachedNotebook: Notebook? = null
+	protected val notebook: Notebook
+		get() = cachedNotebook ?:myApp.notebookShelf.restoreNotebook(notebookKey).also { cachedNotebook = it }
 	protected val mutableNotebook: MutableNotebook get() = notebook as MutableNotebook
 	
 }
 abstract class NoteHoldingDialog: NotebookHoldingDialog(){
 	
-	//noteId
-	var noteId: Long = -1L
-		set(value) {
-			field = value
-			_note = null
+	companion object {
+		val arg_noteId = "noteId"
+		fun <T : NoteHoldingDialog> Class<T>.newInstance(notebookKey: NotebookKey, noteId: Long)
+			= newInstance(notebookKey).apply {
+			arguments += bundleOf(arg_noteId to noteId)
 		}
-	override fun onViewStateRestored(savedInstanceState: Bundle?) {
-		super.onViewStateRestored(savedInstanceState)
-		noteId = noteId.takeIf { it != -1L } ?: savedInstanceState?.getLong(this::noteId.name) ?: -1L
-	}
-	override fun onSaveInstanceState(outState: Bundle) {
-		super.onSaveInstanceState(outState)
-		outState.putLong(this::noteId.name, noteId)
 	}
 	
-	//note
-	private var _note: Note? = null
-		get() {
-			if (field == null) {
-				field = noteId.takeIf { it!=-1L }?.let { notebook.getNote(it) }
-			}
-			return field
+	protected var noteId: Long
+		get() = arguments?.getLong(NoteHoldingFragment.arg_noteId, -1L) ?: -1L
+		set(value) {
+			arguments!!.putLong(NoteHoldingFragment.arg_noteId, value)
+			cachedNote = null
 		}
-	val note:Note get() = _note!!
+	
+	private var cachedNote: Note? = null
+	val note:Note get() = cachedNote?:notebook.getNote(noteId).also { cachedNote=it }
 	
 }

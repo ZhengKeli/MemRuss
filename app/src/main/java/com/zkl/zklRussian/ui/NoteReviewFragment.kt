@@ -8,9 +8,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.zkl.zklRussian.R
+import com.zkl.zklRussian.control.note.NotebookKey
 
 
 class NoteReviewFragment : NoteHoldingFragment() {
+	
+	companion object {
+		fun newInstance(notebookKey: NotebookKey, noteId: Long)
+			= NoteReviewFragment::class.java.newInstance(notebookKey, noteId)
+	}
 	
 	//view
 	private lateinit var tv_title: TextView
@@ -25,10 +31,7 @@ class NoteReviewFragment : NoteHoldingFragment() {
 		
 		tv_title.text = getString(R.string.Note_review_progress, note.memory.progress.toInt())
 		b_view.setOnClickListener {
-			mainActivity.jumpToFragment(NoteViewFragment().also {
-				it.notebookKey=notebookKey
-				it.noteId=-1
-			}, true)
+			mainActivity.jumpToFragment(NoteViewFragment.newInstance(notebookKey, noteId), true)
 		}
 		
 		updateNoteContent()

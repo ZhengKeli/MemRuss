@@ -8,10 +8,16 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.zkl.zklRussian.R
+import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
 
 class NoteEditFragment : NoteHoldingFragment() {
+	
+	companion object {
+		fun newInstance(notebookKey: NotebookKey, noteId: Long)
+			= NoteEditFragment::class.java.newInstance(notebookKey, noteId)
+	}
 	
 	private val isCreateMode get() = noteId==-1L
 	
@@ -39,10 +45,7 @@ class NoteEditFragment : NoteHoldingFragment() {
 		
 		if (isCreateMode) b_delete.visibility=View.GONE
 		else b_delete.setOnClickListener {
-			NoteDeleteDialog().also {
-				it.notebookKey=notebookKey
-				it.noteId=-1
-			}.show(fragmentManager,null)
+			NoteDeleteDialog.newInstance(notebookKey,noteId).show(fragmentManager,null)
 		}
 		
 		

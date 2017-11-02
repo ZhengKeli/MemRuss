@@ -7,12 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.zkl.zklRussian.R
+import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Note
 import com.zkl.zklRussian.core.note.QuestionContent
 import java.util.*
 
 class NotebookFragment : NotebookHoldingFragment() {
+	
+	companion object {
+		fun newInstance(notebookKey: NotebookKey)
+			= NotebookFragment::class.java.newInstance(notebookKey)
+	}
 	
 	//views
 	private lateinit var tv_bookName: TextView
@@ -52,10 +58,7 @@ class NotebookFragment : NotebookHoldingFragment() {
 		}
 		else {
 			b_addNote.setOnClickListener {
-				mainActivity.jumpToFragment(NoteEditFragment().also {
-					it.notebookKey=notebookKey
-					it.noteId=-1
-				}, true)
+				mainActivity.jumpToFragment(NoteEditFragment.newInstance(notebookKey,-1), true)
 			}
 		}
 		
@@ -84,10 +87,7 @@ class NotebookFragment : NotebookHoldingFragment() {
 		lv_notes.setOnItemClickListener { _, view, _, _ ->
 			view as NoteItemView
 			activity.supportFragmentManager.beginTransaction()
-				.replace(NoteViewFragment().also {
-					it.notebookKey = notebookKey
-					it.noteId = view.note!!.id
-				})
+				.replace(NoteViewFragment.newInstance(notebookKey,view.note!!.id))
 				.addToBackStack(null)
 				.commit()
 		}

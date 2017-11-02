@@ -13,9 +13,10 @@ class MainActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_notebook)
 		
-		jumpToFragment(NotebookShelfFragment().also {
-			it.autoJumpToFirst = true
-		},false)
+		if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null) {
+			jumpToFragment(NotebookShelfFragment.newInstance(true),false)
+		}
+		
 		
 	}
 	

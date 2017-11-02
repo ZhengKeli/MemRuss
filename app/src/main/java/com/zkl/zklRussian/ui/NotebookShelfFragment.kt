@@ -10,10 +10,25 @@ import android.widget.*
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.control.note.NotebookShelf
+import org.jetbrains.anko.bundleOf
 
 class NotebookShelfFragment:Fragment(){
 	
-	var autoJumpToFirst: Boolean = false
+	companion object {
+		private val arg_autoJump: String = "autoJump"
+		fun newInstance(autoJumpToFirst: Boolean)
+			= NotebookShelfFragment().apply {
+			arguments = bundleOf(
+				arg_autoJump to autoJumpToFirst
+			)
+		}
+	}
+	
+	private var autoJumpToFirst: Boolean = false
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		autoJumpToFirst = arguments?.getBoolean(arg_autoJump) == true
+	}
 	
 	lateinit var b_create:Button
 	lateinit var b_import:Button
@@ -35,9 +50,7 @@ class NotebookShelfFragment:Fragment(){
 		if (summaries.isEmpty()) mainActivity.jumpToFragment(NotebookInfantFragment(),false)
 		else if (autoJumpToFirst) {
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(summaries.first().file)
-			mainActivity.jumpToFragment(NotebookFragment().also {
-				it.notebookKey = key
-			}, true)
+			mainActivity.jumpToFragment(NotebookFragment.newInstance(key), true)
 			autoJumpToFirst = false
 		}
 		
@@ -66,9 +79,7 @@ class NotebookShelfFragment:Fragment(){
 		lv_notebooks.setOnItemClickListener { parent, _, position, _ ->
 			val summary = parent.adapter.getItem(position) as NotebookShelf.NotebookSummary
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(summary.file)
-			mainActivity.jumpToFragment(NotebookFragment().also {
-				it.notebookKey = key
-			},true)
+			mainActivity.jumpToFragment(NotebookFragment.newInstance(key),true)
 		}
 	}
 	
