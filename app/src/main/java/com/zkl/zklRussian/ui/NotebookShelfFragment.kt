@@ -24,11 +24,12 @@ class NotebookShelfFragment:Fragment(){
 		}
 	}
 	
-	private var autoJumpToFirst: Boolean = false
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		autoJumpToFirst = arguments?.getBoolean(arg_autoJump) == true
-	}
+	private var autoJump:Boolean
+		get() = arguments!!.getBoolean(arg_autoJump)
+		set(value) {
+			arguments!!.putBoolean(arg_autoJump,value)
+		}
+	
 	
 	lateinit var b_create:Button
 	lateinit var b_import:Button
@@ -48,10 +49,10 @@ class NotebookShelfFragment:Fragment(){
 		
 		val summaries = myApp.notebookShelf.loadBookSummaries()
 		if (summaries.isEmpty()) mainActivity.jumpToFragment(NotebookInfantFragment(),false)
-		else if (autoJumpToFirst) {
+		else if (autoJump) {
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(summaries.first().file)
 			mainActivity.jumpToFragment(NotebookFragment.newInstance(key), true)
-			autoJumpToFirst = false
+			autoJump = false
 		}
 		
 		b_create.setOnClickListener{
@@ -88,7 +89,7 @@ class NotebookShelfFragment:Fragment(){
 
 
 class NotebookItemView(context: Context):LinearLayout(context){
-	val tv_notebookName:TextView
+	private val tv_notebookName:TextView
 	init {
 		LayoutInflater.from(context).inflate(R.layout.adapter_notebook_item, this, true)
 		tv_notebookName= findViewById(R.id.tv_notebookName) as TextView
