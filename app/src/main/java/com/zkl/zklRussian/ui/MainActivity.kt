@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_notebook)
+		setContentView(R.layout.activity_main)
 		
 		if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null) {
 			supportFragmentManager.jumpTo(NotebookShelfFragment.newInstance(true))
