@@ -12,13 +12,25 @@ class MainActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
 		
-		if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null) {
+		if (getShowingFragment() == null) {
 			supportFragmentManager.jumpTo(NotebookShelfFragment.newInstance(true))
 		}
 	}
 	
+	override fun onBackPressed() {
+		val backHandler = getShowingFragment() as? BackPressedHandler
+		val absorbed = backHandler?.onBackPressed() == true
+		if (!absorbed) super.onBackPressed()
+	}
+	
+	fun getShowingFragment() = supportFragmentManager.findFragmentById(R.id.fragment_container)
 }
 
+interface BackPressedHandler{
+	fun onBackPressed():Boolean
+}
+
+val Fragment.mainActivity get() = activity as MainActivity
 fun FragmentManager.jumpTo(fragment: Fragment, addToBackStack:Boolean=false) {
 	val transaction=beginTransaction()
 	transaction.replace(R.id.fragment_container, fragment)

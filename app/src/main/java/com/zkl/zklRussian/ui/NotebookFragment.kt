@@ -10,10 +10,11 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Note
+import com.zkl.zklRussian.core.note.NotebookMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
 import java.util.*
 
-class NotebookFragment : NotebookHoldingFragment() {
+class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 	
 	companion object {
 		fun newInstance(notebookKey: NotebookKey)
@@ -21,27 +22,31 @@ class NotebookFragment : NotebookHoldingFragment() {
 	}
 	
 	//views
+	private lateinit var b_back: ImageButton
 	private lateinit var tv_bookName: TextView
-	private lateinit var b_menu:Button
 	private lateinit var tv_bookInfo:TextView
 	private lateinit var b_addNote:ImageButton
+	private lateinit var b_review:ImageButton
 	private lateinit var sv_search:SearchView
 	private lateinit var lv_notes:ListView
-	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_notebook, container, false).also { rootView ->
+		= inflater.inflate(R.layout.fragment_notebook, container, false).apply {
 		
-		tv_bookName = rootView.findViewById(R.id.tv_bookName) as TextView
-		b_menu = rootView.findViewById(R.id.b_menu) as Button
-		tv_bookInfo = rootView.findViewById(R.id.tv_bookInfo) as TextView
-		b_addNote = rootView.findViewById(R.id.b_addNote) as ImageButton
-		sv_search = rootView.findViewById(R.id.sv_search) as SearchView
-		lv_notes = rootView.findViewById(R.id.lv_notes) as ListView
-		
+		b_back = findViewById(R.id.b_back) as ImageButton
+		tv_bookName = findViewById(R.id.tv_bookName) as TextView
+		tv_bookInfo = findViewById(R.id.tv_bookInfo) as TextView
+		b_addNote = findViewById(R.id.b_addNote) as ImageButton
+		b_review = findViewById(R.id.b_review) as ImageButton
+		sv_search = findViewById(R.id.sv_search) as SearchView
+		lv_notes = findViewById(R.id.lv_notes) as ListView
 		
 	}
 	override fun onStart() {
 		super.onStart()
+		
+		b_back.setOnClickListener{
+			fragmentManager.popBackStack()
+		}
 		
 		initializeNotebookViews()
 		initializeSearchMode()
@@ -53,20 +58,32 @@ class NotebookFragment : NotebookHoldingFragment() {
 		tv_bookName.text = notebook.name
 		tv_bookInfo.text = getString(R.string.count_NotesInAll, notebook.noteCount)
 		
-		if (notebook !is MutableNotebook) {
-			b_addNote.visibility = View.GONE
+		b_addNote.setOnClickListener {
+			val fragment = NoteEditFragment.newInstance(notebookKey, -1)
+			fragmentManager.jumpTo(fragment,true)
 		}
-		else {
-			b_addNote.setOnClickListener {
-				val fragment = NoteEditFragment.newInstance(notebookKey, -1)
-				fragmentManager.jumpTo(fragment,true)
+		b_review.setOnClickListener{
+			when(notebook.memory.state) {
+				NotebookMemoryState.learning -> fragmentManager.jumpTo(NoteReviewFragment.newInstance(notebookKey))
+				NotebookMemoryState.infant -> {
+					//todo jump to learning plan initialization page
+				}
+				NotebookMemoryState.paused->{
+					//todo jump to learning plan paused page
+				}
 			}
 		}
 		
-		b_menu.setOnClickListener {
-			val fragment = NotebookMenuFragment.newInstance(notebookKey)
-			fragmentManager.jumpTo(fragment,true)
+		tv_bookInfo.visibility = View.VISIBLE
+		if (notebook is MutableNotebook) {
+			b_addNote.visibility = View.VISIBLE
+			b_review.visibility = View.VISIBLE
 		}
+		else {
+			b_addNote.visibility = View.GONE
+			b_review.visibility = View.GONE
+		}
+		
 	}
 	
 	//note list
@@ -93,28 +110,45 @@ class NotebookFragment : NotebookHoldingFragment() {
 	}
 	
 	//mode switch
+	var searchMode: Boolean = false
+		set(value) {
+			if (field == value) return
+			field = value
+			if (value) {
+				tv_bookInfo.visibility = View.GONE
+				b_addNote.visibility = View.GONE
+				b_review.visibility = View.GONE
+				sv_search.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+				showingNotes = searchResult
+				//todo start search thread
+			} else {
+				tv_bookInfo.visibility = View.VISIBLE
+				if (notebook is MutableNotebook) {
+					b_addNote.visibility = View.VISIBLE
+					b_review.visibility = View.VISIBLE
+				}
+				sv_search.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+				sv_search.isIconified = true
+				showingNotes = notesBuffer
+				//todo stop search thread
+			}
+		}
 	private fun initializeSearchMode(){
 		sv_search.setOnSearchClickListener {
-			searchModeOn()
+			searchMode =true
 		}
 		sv_search.setOnCloseListener {
-			searchModeOff()
+			searchMode =false
 			false
 		}
-		searchModeOff()
+		searchMode = false
 	}
-	private fun searchModeOn(){
-		tv_bookInfo.visibility = View.GONE
-		b_addNote.visibility = View.GONE
-		sv_search.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-		showingNotes = searchResult
-		//start search thread
-	}
-	private fun searchModeOff(){
-		tv_bookInfo.visibility = View.VISIBLE
-		b_addNote.visibility = View.VISIBLE
-		sv_search.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
-		showingNotes = notesBuffer
+	
+	override fun onBackPressed(): Boolean {
+		return if (searchMode) {
+			searchMode=false
+			true
+		}else false
 	}
 	
 	//notes buffer
@@ -127,6 +161,8 @@ class NotebookFragment : NotebookHoldingFragment() {
 	
 	//search
 	private var searchResult:List<Note> = emptyList()
+	
+	
 	
 }
 
@@ -152,9 +188,7 @@ class NoteItemView(context:Context):LinearLayout(context){
 						tv_content.text = content.answer
 					}
 				}
-				else ->{
-				
-				}
+				else ->{ }
 			}
 			
 		}

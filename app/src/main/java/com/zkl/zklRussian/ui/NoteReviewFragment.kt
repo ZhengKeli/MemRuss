@@ -14,7 +14,7 @@ import com.zkl.zklRussian.control.note.NotebookKey
 class NoteReviewFragment : NoteHoldingFragment() {
 	
 	companion object {
-		fun newInstance(notebookKey: NotebookKey, noteId: Long)
+		fun newInstance(notebookKey: NotebookKey, noteId: Long=-1L)
 			= NoteReviewFragment::class.java.newInstance(notebookKey, noteId)
 	}
 	
@@ -28,6 +28,8 @@ class NoteReviewFragment : NoteHoldingFragment() {
 	}
 	override fun onStart() {
 		super.onStart()
+		
+		if (noteId == -1L) jumpToNextNote()
 		
 		tv_title.text = getString(R.string.Note_review_progress, note.memory.progress.toInt())
 		b_view.setOnClickListener {
@@ -45,6 +47,9 @@ class NoteReviewFragment : NoteHoldingFragment() {
 		mutableNotebook.modifyNoteMemory(noteId,newMemory)
 		
 		//jump to next note or finish page
+		jumpToNextNote()
+	}
+	private fun jumpToNextNote(){
 		val nextNote = notebook.selectNeedReviewNotes(System.currentTimeMillis()).firstOrNull()
 		if (nextNote != null) {
 			this.noteId = nextNote.id

@@ -43,11 +43,7 @@ enum class NotebookMemoryState {
 	/**
 	 * 该单词本的学习计划被暂停了
 	 */
-	paused,
-	/**
-	 * 该单词本目前的所有单词都完成学习了
-	 */
-	finished
+	paused
 }
 data class NotebookMemory(
 	
