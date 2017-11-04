@@ -31,7 +31,8 @@ class NoteReviewFragment : NoteHoldingFragment() {
 		
 		tv_title.text = getString(R.string.Note_review_progress, note.memory.progress.toInt())
 		b_view.setOnClickListener {
-			mainActivity.jumpToFragment(NoteViewFragment.newInstance(notebookKey, noteId), true)
+			val fragment = NoteViewFragment.newInstance(notebookKey, noteId)
+			fragmentManager.jumpTo(fragment, true)
 		}
 		
 		updateNoteContent()
@@ -49,7 +50,8 @@ class NoteReviewFragment : NoteHoldingFragment() {
 			this.noteId = nextNote.id
 			updateNoteContent()
 		}else{
-			//todo 显示结束画面
+			fragmentManager.popBackStack()
+			fragmentManager.jumpTo(NoteReviewFinishedFragment.newInstance(notebookKey),true)
 		}
 	}
 	

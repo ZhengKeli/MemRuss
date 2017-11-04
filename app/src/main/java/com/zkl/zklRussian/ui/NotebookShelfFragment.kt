@@ -48,15 +48,15 @@ class NotebookShelfFragment:Fragment(){
 		super.onStart()
 		
 		val summaries = myApp.notebookShelf.loadBookSummaries()
-		if (summaries.isEmpty()) mainActivity.jumpToFragment(NotebookInfantFragment(),false)
+		if (summaries.isEmpty()) fragmentManager.jumpTo(NotebookInfantFragment(),false)
 		else if (autoJump) {
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(summaries.first().file)
-			mainActivity.jumpToFragment(NotebookFragment.newInstance(key), true)
+			fragmentManager.jumpTo(NotebookFragment.newInstance(key), true)
 			autoJump = false
 		}
 		
 		b_create.setOnClickListener{
-			mainActivity.jumpToFragment(NotebookCreationFragment(),true)
+			fragmentManager.jumpTo(NotebookCreationFragment(),true)
 		}
 		b_import.setOnClickListener {
 			TODO()
@@ -80,7 +80,7 @@ class NotebookShelfFragment:Fragment(){
 		lv_notebooks.setOnItemClickListener { parent, _, position, _ ->
 			val summary = parent.adapter.getItem(position) as NotebookShelf.NotebookSummary
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(summary.file)
-			mainActivity.jumpToFragment(NotebookFragment.newInstance(key),true)
+			fragmentManager.jumpTo(NotebookFragment.newInstance(key),true)
 		}
 	}
 	

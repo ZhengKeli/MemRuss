@@ -55,10 +55,10 @@ class NoteEditFragment : NoteHoldingFragment() {
 			if (isCreateMode) mutableNotebook.addNote(newNoteContent)
 			else mutableNotebook.modifyNoteContent(noteId, newNoteContent)
 			
-			mainActivity.jumpBackFragment()
+			fragmentManager.popBackStack()
 		}
 		b_cancel.setOnClickListener {
-			mainActivity.jumpBackFragment()
+			fragmentManager.popBackStack()
 		}
 		
 		//update noteContent

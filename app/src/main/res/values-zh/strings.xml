@@ -29,4 +29,5 @@
 	<string name="Note_review_progress">进度：%1$d</string>
 	<string name="Note_review_noMore">没有更多词需要复习了</string>
 	<string name="back">返回</string>
+	<string name="Note_view_info">学习进度：%1$d\\n学习负荷：%2$d\\n复习时间：%3$d</string>
 </resources>

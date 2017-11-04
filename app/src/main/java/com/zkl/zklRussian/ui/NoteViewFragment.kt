@@ -38,18 +38,16 @@ class NoteViewFragment : NoteHoldingFragment() {
 		
 		tv_title.text = getString(R.string.Note_view_id, noteId)
 		if (note.memory.state != NoteMemoryState.infant) {
-			tv_info.text = """
-				memoryProgress:${note.memory.progress}
-				sumLoad:${note.memory.load}
-				reviewTime:${note.memory.reviewTime}
-			""".trimMargin()
+			tv_info.text = getString(R.string.Note_view_info,
+				note.memory.progress, note.memory.load, note.memory.reviewTime)
 		} else {
 			tv_info.visibility = View.GONE
 		}
 		
 		b_edit.isEnabled = notebook is MutableNotebook
 		b_edit.setOnClickListener {
-			mainActivity.jumpToFragment(NoteEditFragment.newInstance(notebookKey,noteId),true)
+			val fragment = NoteEditFragment.newInstance(notebookKey, noteId)
+			fragmentManager.jumpTo(fragment,true)
 		}
 		
 		b_delete.isEnabled = notebook is MutableNotebook

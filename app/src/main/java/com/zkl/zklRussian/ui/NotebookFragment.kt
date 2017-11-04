@@ -58,13 +58,14 @@ class NotebookFragment : NotebookHoldingFragment() {
 		}
 		else {
 			b_addNote.setOnClickListener {
-				mainActivity.jumpToFragment(NoteEditFragment.newInstance(notebookKey,-1), true)
+				val fragment = NoteEditFragment.newInstance(notebookKey, -1)
+				fragmentManager.jumpTo(fragment,true)
 			}
 		}
 		
 		b_menu.setOnClickListener {
-			Toast.makeText(context,"还没有菜单！",Toast.LENGTH_SHORT).show()
-			//todo show menu
+			val fragment = NotebookMenuFragment.newInstance(notebookKey)
+			fragmentManager.jumpTo(fragment,true)
 		}
 	}
 	
@@ -86,10 +87,8 @@ class NotebookFragment : NotebookHoldingFragment() {
 		}
 		lv_notes.setOnItemClickListener { _, view, _, _ ->
 			view as NoteItemView
-			activity.supportFragmentManager.beginTransaction()
-				.replace(NoteViewFragment.newInstance(notebookKey,view.note!!.id))
-				.addToBackStack(null)
-				.commit()
+			val fragment = NoteViewFragment.newInstance(notebookKey, view.note!!.id)
+			fragmentManager.jumpTo(fragment,true)
 		}
 	}
 	
