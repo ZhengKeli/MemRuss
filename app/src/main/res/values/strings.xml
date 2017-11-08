@@ -35,5 +35,6 @@
 	<string name="show">show</string>
 	<string name="remembered">remembered</string>
 	<string name="forgot">forgot</string>
-	
+	<string name="MemoryPlan">MemoryPlan</string>
+
 </resources>

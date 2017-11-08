@@ -44,12 +44,12 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 	override fun onStart() {
 		super.onStart()
 		
-		b_back.setOnClickListener{
+		b_back.setOnClickListener {
 			fragmentManager.popBackStack()
 		}
 		
 		initializeNotebookViews()
-		initializeSearchMode()
+		initializeSearchView()
 		initializeNoteList()
 	}
 	
@@ -109,7 +109,8 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 		}
 	}
 	
-	//mode switch
+	
+	//search
 	var searchMode: Boolean = false
 		set(value) {
 			if (field == value) return
@@ -133,7 +134,14 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 				//todo stop search thread
 			}
 		}
-	private fun initializeSearchMode(){
+	override fun onBackPressed(): Boolean {
+		return if (searchMode) {
+			searchMode=false
+			true
+		}else false
+	}
+	private var searchResult:List<Note> = emptyList()
+	private fun initializeSearchView(){
 		sv_search.setOnSearchClickListener {
 			searchMode =true
 		}
@@ -141,15 +149,25 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 			searchMode =false
 			false
 		}
+		sv_search.setOnQueryTextListener(
+			object:SearchView.OnQueryTextListener{
+				override fun onQueryTextSubmit(query: String): Boolean {
+					searchText(query)
+					return true
+				}
+				override fun onQueryTextChange(newText: String): Boolean {
+					searchText(newText)
+					return true
+				}
+				fun searchText(text:String){
+					//todo do search
+				}
+			}
+		)
 		searchMode = false
 	}
 	
-	override fun onBackPressed(): Boolean {
-		return if (searchMode) {
-			searchMode=false
-			true
-		}else false
-	}
+	
 	
 	//notes buffer
 	private val notesBuffer = object : SectionBufferList<Note>(){
@@ -159,8 +177,6 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 			get() = notebook.noteCount
 	}
 	
-	//search
-	private var searchResult:List<Note> = emptyList()
 	
 	
 	

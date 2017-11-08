@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 		if (!absorbed) super.onBackPressed()
 	}
 	
-	fun getShowingFragment() = supportFragmentManager.findFragmentById(R.id.fragment_container)
+	private fun getShowingFragment():Fragment? = supportFragmentManager.findFragmentById(R.id.fragment_container)
 }
 
 interface BackPressedHandler{
