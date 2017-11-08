@@ -1,89 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<android.support.constraint.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:orientation="vertical"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:layout_marginStart="8dp"
-	android:layout_marginLeft="8dp"
 	android:layout_marginEnd="8dp"
+	android:layout_marginLeft="8dp"
 	android:layout_marginRight="8dp"
+	android:layout_marginStart="8dp"
 	android:animateLayoutChanges="true">
 	
-	<LinearLayout
-		android:layout_width="match_parent"
+	<android.support.constraint.ConstraintLayout
+		android:id="@+id/ll_titleBar"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_weight="0"
 		android:gravity="center_vertical"
-		android:orientation="horizontal">
+		app:layout_constraintBottom_toTopOf="@+id/cl_infoBar"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
 		
 		<ImageButton
 			android:id="@+id/b_back"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_weight="0"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/tv_bookName"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
 			app:srcCompat="@drawable/ic_back"/>
 		
 		<TextView
 			android:id="@+id/tv_bookName"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="0"
-			android:padding="8dp"
-			android:textAppearance="@style/TextAppearance.AppCompat.Large"
-			tools:text="@string/newBook"/>
-	
-	</LinearLayout>
-	
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_weight="0"
-		android:gravity="center_vertical"
-		android:orientation="horizontal">
-		
-		<TextView
-			android:id="@+id/tv_bookInfo"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
 			android:padding="8dp"
-			tools:text="共x个词条"/>
-		
-		<ImageButton
-			android:id="@+id/b_addNote"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="0"
-			android:padding="4dp"
-			android:src="@mipmap/ic_add"
-			android:contentDescription="@string/add"/>
-		
-		<ImageButton
-			android:id="@+id/b_review"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			app:srcCompat="@drawable/ic_review"/>
+			android:textAppearance="@style/TextAppearance.AppCompat.Large"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/sv_search"
+			app:layout_constraintStart_toEndOf="@+id/b_back"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="@string/newBook"/>
 		
 		<SearchView
 			android:id="@+id/sv_search"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="0"
-			android:padding="8dp"/>
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"/>
 	
-	</LinearLayout>
+	</android.support.constraint.ConstraintLayout>
+	
+	<android.support.constraint.ConstraintLayout
+		android:id="@+id/cl_infoBar"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical"
+		app:layout_constraintBottom_toTopOf="@+id/lv_notes"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/ll_titleBar">
+		
+		<TextView
+			android:id="@+id/tv_bookInfo"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:padding="8dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/b_review"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="共x个词条"/>
+		
+		<ImageButton
+			android:id="@+id/b_addNote"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/add"
+			android:padding="14dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:srcCompat="@drawable/ic_add"/>
+		
+		<ImageButton
+			android:id="@+id/b_review"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/b_addNote"
+			app:layout_constraintTop_toTopOf="parent"
+			app:srcCompat="@drawable/ic_review"/>
+	
+	</android.support.constraint.ConstraintLayout>
 	
 	<ListView
 		android:id="@+id/lv_notes"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_weight="1"/>
-	
-	
-</LinearLayout>
+		android:layout_width="wrap_content"
+		android:layout_height="0dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="@+id/cl_infoBar"
+		app:layout_constraintTop_toBottomOf="@+id/cl_infoBar"/>
+
+
+</android.support.constraint.ConstraintLayout>
 	
 	

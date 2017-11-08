@@ -2,6 +2,7 @@ package com.zkl.zklRussian.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 	private lateinit var b_back: ImageButton
 	private lateinit var tv_bookName: TextView
 	private lateinit var tv_bookInfo:TextView
+	private lateinit var cl_infoBar:ConstraintLayout
 	private lateinit var b_addNote:ImageButton
 	private lateinit var b_review:ImageButton
 	private lateinit var sv_search:SearchView
@@ -35,6 +37,7 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 		b_back = findViewById(R.id.b_back) as ImageButton
 		tv_bookName = findViewById(R.id.tv_bookName) as TextView
 		tv_bookInfo = findViewById(R.id.tv_bookInfo) as TextView
+		cl_infoBar = findViewById(R.id.cl_infoBar) as ConstraintLayout
 		b_addNote = findViewById(R.id.b_addNote) as ImageButton
 		b_review = findViewById(R.id.b_review) as ImageButton
 		sv_search = findViewById(R.id.sv_search) as SearchView
@@ -74,7 +77,6 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 			}
 		}
 		
-		tv_bookInfo.visibility = View.VISIBLE
 		if (notebook is MutableNotebook) {
 			b_addNote.visibility = View.VISIBLE
 			b_review.visibility = View.VISIBLE
@@ -116,20 +118,20 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 			if (field == value) return
 			field = value
 			if (value) {
-				tv_bookInfo.visibility = View.GONE
-				b_addNote.visibility = View.GONE
-				b_review.visibility = View.GONE
-				sv_search.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+				tv_bookName.visibility = View.GONE
+				b_back.visibility = View.GONE
+				cl_infoBar.visibility = View.GONE
+				sv_search.layoutParams.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT_SPREAD
+				
 				showingNotes = searchResult
 				//todo start search thread
 			} else {
-				tv_bookInfo.visibility = View.VISIBLE
-				if (notebook is MutableNotebook) {
-					b_addNote.visibility = View.VISIBLE
-					b_review.visibility = View.VISIBLE
-				}
-				sv_search.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+				tv_bookName.visibility = View.VISIBLE
+				b_back.visibility = View.VISIBLE
+				cl_infoBar.visibility = View.VISIBLE
+				sv_search.layoutParams.width = ConstraintLayout.LayoutParams.WRAP_CONTENT
 				sv_search.isIconified = true
+				
 				showingNotes = notesBuffer
 				//todo stop search thread
 			}
