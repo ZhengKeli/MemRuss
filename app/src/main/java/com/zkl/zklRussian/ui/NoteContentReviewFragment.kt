@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
-import com.zkl.zklRussian.core.note.NoteMemory
+import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
 import com.zkl.zklRussian.core.note.getNextReviewTime
 
@@ -22,15 +22,15 @@ abstract class NoteContentReviewFragment: Fragment(){
 }
 
 interface ReviewResult{
-	fun updateNoteMemory(oldMemory:NoteMemory,nowTime:Long=System.currentTimeMillis()):NoteMemory
+	fun updateNoteMemory(oldMemoryState: NoteMemoryState, nowTime:Long=System.currentTimeMillis()): NoteMemoryState
 }
 val standardIncreaseResult = object : ReviewResult {
-	override fun updateNoteMemory(oldMemory: NoteMemory, nowTime: Long)
-		= oldMemory.getNextReviewTime(true, nowTime)
+	override fun updateNoteMemory(oldMemoryState: NoteMemoryState, nowTime: Long)
+		= oldMemoryState.getNextReviewTime(true, nowTime)
 }
 val standardDegreaseResult = object : ReviewResult {
-	override fun updateNoteMemory(oldMemory: NoteMemory, nowTime: Long)
-		= oldMemory.getNextReviewTime(false, nowTime)
+	override fun updateNoteMemory(oldMemoryState: NoteMemoryState, nowTime: Long)
+		= oldMemoryState.getNextReviewTime(false, nowTime)
 }
 
 val typedNoteContentReviewFragments = hashMapOf<String,Class<out NoteContentReviewFragment>>(

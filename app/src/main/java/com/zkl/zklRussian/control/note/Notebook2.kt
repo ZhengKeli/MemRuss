@@ -11,7 +11,7 @@ class Notebook2:Notebook{
 		get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 	override val memorySummary: MemorySummary
 		get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-	override val memory: NotebookMemory
+	override val memoryState: NotebookMemoryState
 		get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 	override val noteCount: Int
 		get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.

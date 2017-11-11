@@ -51,7 +51,7 @@ object MemoryAlgorithm {
 	
 }
 
-fun NoteMemory.getNextReviewTime(learned: Boolean, nowTime: Long = System.currentTimeMillis()): NoteMemory {
+fun NoteMemoryState.getNextReviewTime(learned: Boolean, nowTime: Long = System.currentTimeMillis()): NoteMemoryState {
 	val nextProgress =
 		if (learned) progress + MemoryAlgorithm.progressUnit
 		else progress - MemoryAlgorithm.progressUnit * MemoryAlgorithm.arg_pu

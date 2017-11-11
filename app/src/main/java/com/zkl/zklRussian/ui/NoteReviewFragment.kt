@@ -31,7 +31,7 @@ class NoteReviewFragment : NoteHoldingFragment() {
 		
 		if (noteId == -1L) jumpToNextNote()
 		
-		tv_title.text = getString(R.string.Note_review_progress, note.memory.progress.toInt())
+		tv_title.text = getString(R.string.Note_review_progress, note.memoryState.progress.toInt())
 		b_view.setOnClickListener {
 			val fragment = NoteViewFragment.newInstance(notebookKey, noteId)
 			fragmentManager.jumpTo(fragment, true)
@@ -43,7 +43,7 @@ class NoteReviewFragment : NoteHoldingFragment() {
 	private fun onResult(result: ReviewResult){
 		
 		//apply changes of memory progress
-		val newMemory = result.updateNoteMemory(note.memory)
+		val newMemory = result.updateNoteMemory(note.memoryState)
 		mutableNotebook.modifyNoteMemory(noteId,newMemory)
 		
 		//jump to next note or finish page

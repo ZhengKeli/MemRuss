@@ -34,7 +34,7 @@ data class Note (
 	/**
 	 * 词条的记忆状态
 	 */
-	val memory: NoteMemory,
+	val memoryState: NoteMemoryState,
 	
 	/**
 	 * 词条记忆状态最后一次被修改的毫秒时间戳

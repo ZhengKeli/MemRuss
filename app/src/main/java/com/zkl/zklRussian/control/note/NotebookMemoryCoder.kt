@@ -1,16 +1,16 @@
 package com.zkl.zklRussian.control.note
 
 import com.zkl.zklRussian.core.note.MemoryPlan
-import com.zkl.zklRussian.core.note.NotebookMemory
 import com.zkl.zklRussian.core.note.NotebookMemoryState
+import com.zkl.zklRussian.core.note.NotebookMemoryStatus
 import org.json.JSONObject
 
 
 object NotebookMemoryCoder {
-	 fun encode(memory: NotebookMemory)
-		 = memory.let {
+	 fun encode(memoryState: NotebookMemoryState)
+		 = memoryState.let {
 		 JSONObject(mapOf(
-			 it::state.run { name to get().name },
+			 it::status.run { name to get().name },
 			 it::lastRefillTime.run { name to get() },
 			 it::lastResumeTime.run { name to get() },
 			 it::lastPauseTime.run { name to get() }
@@ -19,12 +19,12 @@ object NotebookMemoryCoder {
 	
 	fun decode(string: String)
 		= JSONObject(string).run {
-		NotebookMemory(
-			state = NotebookMemoryState.valueOf(
-				getString(NotebookMemory::state.name)),
-			lastRefillTime = getLong(NotebookMemory::lastRefillTime.name),
-			lastResumeTime = getLong(NotebookMemory::lastResumeTime.name),
-			lastPauseTime = getLong(NotebookMemory::lastPauseTime.name)
+		NotebookMemoryState(
+			status = NotebookMemoryStatus.valueOf(
+				getString(NotebookMemoryState::status.name)),
+			lastRefillTime = getLong(NotebookMemoryState::lastRefillTime.name),
+			lastResumeTime = getLong(NotebookMemoryState::lastResumeTime.name),
+			lastPauseTime = getLong(NotebookMemoryState::lastPauseTime.name)
 		)
 	}
 }

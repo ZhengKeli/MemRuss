@@ -1,7 +1,7 @@
 package com.zkl.zklRussian.core.note
 
 
-enum class NoteMemoryState {
+enum class NoteMemoryStatus {
 	/**
 	 * 该词条还未被加到复习计划中
 	 */
@@ -15,12 +15,12 @@ enum class NoteMemoryState {
 	 */
 	finished
 }
-data class NoteMemory(
+data class NoteMemoryState(
 	
 	/**
 	 * 该词条的学习阶段
 	 */
-	val state: NoteMemoryState = NoteMemoryState.infant,
+	val status: NoteMemoryStatus = NoteMemoryStatus.infant,
 	
 	/**
 	 * 该词条的学习进度，

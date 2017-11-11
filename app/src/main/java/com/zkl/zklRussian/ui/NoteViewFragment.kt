@@ -10,7 +10,7 @@ import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
-import com.zkl.zklRussian.core.note.NoteMemoryState
+import com.zkl.zklRussian.core.note.NoteMemoryStatus
 
 
 class NoteViewFragment : NoteHoldingFragment() {
@@ -37,9 +37,9 @@ class NoteViewFragment : NoteHoldingFragment() {
 		super.onStart()
 		
 		tv_title.text = getString(R.string.Note_view_id, noteId)
-		if (note.memory.state != NoteMemoryState.infant) {
+		if (note.memoryState.status != NoteMemoryStatus.infant) {
 			tv_info.text = getString(R.string.Note_view_info,
-				note.memory.progress, note.memory.load, note.memory.reviewTime)
+				note.memoryState.progress, note.memoryState.load, note.memoryState.reviewTime)
 		} else {
 			tv_info.visibility = View.GONE
 		}

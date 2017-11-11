@@ -32,7 +32,7 @@ interface Notebook:Closeable {
 	/**
 	 * 该笔记本的复习状态
 	 */
-	val memory: NotebookMemory
+	val memoryState: NotebookMemoryState
 	
 	
 	
@@ -109,7 +109,7 @@ interface MutableNotebook : Notebook {
 	
 	//memory
 	override var memoryPlan: MemoryPlan?
-	override var memory: NotebookMemory
+	override var memoryState: NotebookMemoryState
 	
 	
 	//notes
@@ -119,7 +119,7 @@ interface MutableNotebook : Notebook {
 	 * @return 返回刚加入的词条的 noteId
 	 */
 	@Throws(DuplicateException::class)
-	fun addNote(content: NoteContent, memory: NoteMemory? = null): Long
+	fun addNote(content: NoteContent, memoryState: NoteMemoryState? = null): Long
 	
 	/**
 	 * 添加一堆词条
@@ -142,7 +142,7 @@ interface MutableNotebook : Notebook {
 	/**
 	 * 修改 note 的复习进度
 	 */
-	fun modifyNoteMemory(noteId: Long, memory: NoteMemory)
+	fun modifyNoteMemory(noteId: Long, memoryState: NoteMemoryState)
 	
 }
 

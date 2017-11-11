@@ -31,7 +31,7 @@ data class MemoryPlan(
 	
 )
 
-enum class NotebookMemoryState {
+enum class NotebookMemoryStatus {
 	/**
 	 * 该单词本尚未制定学习计划
 	 */
@@ -45,12 +45,12 @@ enum class NotebookMemoryState {
 	 */
 	paused
 }
-data class NotebookMemory(
+data class NotebookMemoryState(
 	
 	/**
 	 * 该单词本的学习阶段
 	 */
-	val state: NotebookMemoryState,
+	val status: NotebookMemoryStatus,
 	
 	/**
 	 * 上次填充新词的时间
@@ -79,7 +79,7 @@ data class NotebookMemory(
 ){
 	companion object {
 		val infantInstance =
-			NotebookMemory(NotebookMemoryState.infant, -1L, -1L, -1L)
+			NotebookMemoryState(NotebookMemoryStatus.infant, -1L, -1L, -1L)
 	}
 }
 

@@ -23,7 +23,7 @@ class MemoryPlanFragment :NotebookHoldingFragment(){
 	}
 	
 	fun updateViews(){
-		val memory = notebook.memory
+		val memory = notebook.memoryState
 		
 	}
 }
