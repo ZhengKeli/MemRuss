@@ -5,6 +5,7 @@ import java.io.Closeable
 interface Notebook:Closeable {
 	
 	//info
+	
 	/**
 	 * 该单词本版本
 	 */
@@ -20,6 +21,11 @@ interface Notebook:Closeable {
 	//memory
 	
 	/**
+	 * 该笔记本的复习状态
+	 */
+	val memoryState: NotebookMemoryState
+	
+	/**
 	 * 该笔记本的复习计划
 	 */
 	val memoryPlan: MemoryPlan?
@@ -28,11 +34,6 @@ interface Notebook:Closeable {
 	 * 该笔记本的复习状态汇总信息
 	 */
 	val memorySummary: MemorySummary
-	
-	/**
-	 * 该笔记本的复习状态
-	 */
-	val memoryState: NotebookMemoryState
 	
 	
 	
@@ -109,7 +110,6 @@ interface MutableNotebook : Notebook {
 	
 	//memory
 	override var memoryPlan: MemoryPlan?
-	override var memoryState: NotebookMemoryState
 	
 	
 	//notes

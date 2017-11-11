@@ -183,7 +183,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					else NotebookMemoryState.infantInstance
 				}
 		}
-		set(value) = ConfsTable.run {
+		private set(value) = ConfsTable.run {
 			val nowTime = System.currentTimeMillis()
 			val encoded = NotebookMemoryCoder.encode(value)
 			database.update(tableName,
