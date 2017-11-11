@@ -31,4 +31,8 @@
 	<string name="back">返回</string>
 	<string name="Note_view_info">学习进度：%1$d\\n学习负荷：%2$d\\n复习时间：%3$d</string>
 	<string name="MemoryPlan">复习计划</string>
+	<string name="makeMemoryPlan">制定复习计划</string>
+	<string name="MemoryPlan_paused">复习计划（已暂停）</string>
+	<string name="dailyLearn_value">每天学习的单词数：%1$d</string>
+	<string name="maxLoad_value">最大工作量：%1$d</string>
 </resources>

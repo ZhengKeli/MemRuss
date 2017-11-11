@@ -29,7 +29,7 @@
 		android:id="@+id/sv_content"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
-		app:layout_constraintBottom_toTopOf="@+id/b_cancel2"
+		app:layout_constraintBottom_toTopOf="@+id/b_cancel"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/tv_title">
@@ -41,15 +41,15 @@
 			android:padding="8dp">
 			
 			<TextView
-				android:id="@+id/tv_daily"
+				android:id="@+id/tv_dailyFill"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="0"
 				android:textAppearance="@style/TextAppearance.AppCompat.Large"
-				tools:text="每天学习的单词数："/>
+				tools:text="@string/dailyLearn_value"/>
 			
 			<SeekBar
-				android:id="@+id/sb_daily"
+				android:id="@+id/sb_dailyFill"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="0"
@@ -61,7 +61,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="0"
 				android:textAppearance="@style/TextAppearance.AppCompat.Large"
-				tools:text="最大工作量："/>
+				tools:text="@string/maxLoad_value"/>
 			
 			<SeekBar
 				android:id="@+id/sb_maxLoad"
@@ -75,7 +75,7 @@
 	</ScrollView>
 	
 	<Button
-		android:id="@+id/b_cancel2"
+		android:id="@+id/b_cancel"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="8dp"
@@ -85,10 +85,10 @@
 		android:text="@android:string/cancel"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="@+id/b_ok2"/>
+		app:layout_constraintTop_toTopOf="@+id/b_ok"/>
 	
 	<Button
-		android:id="@+id/b_ok2"
+		android:id="@+id/b_ok"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="8dp"

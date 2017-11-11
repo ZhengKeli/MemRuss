@@ -15,7 +15,7 @@
 	<string name="edit">edit</string>
 	
 	<string name="Note_view_id">Note@%1$d</string>
-	<string name="Note_view_info">memoryProgress:%1$d\nmemoryLoad:%2$d\nreviewTime:%3$d</string>
+	<string name="Note_view_info">memory progress:%1$d\nmemory load:%2$d\nreview time:%3$d</string>
 	<string name="Note_create">New Note</string>
 	<string name="Note_edit_id">Edit Note@%1$d</string>
 	<string name="Note_review_progress">Progress:%1$d</string>
@@ -35,6 +35,10 @@
 	<string name="show">show</string>
 	<string name="remembered">remembered</string>
 	<string name="forgot">forgot</string>
-	<string name="MemoryPlan">MemoryPlan</string>
+	<string name="MemoryPlan">Memory Plan</string>
+	<string name="makeMemoryPlan">Make Memory Plan</string>
+	<string name="MemoryPlan_paused">Memory Plan (Paused)</string>
+	<string name="dailyLearn_value">Daily learn: %1$d</string>
+	<string name="maxLoad_value">Max load: %1$d</string>
 
 </resources>

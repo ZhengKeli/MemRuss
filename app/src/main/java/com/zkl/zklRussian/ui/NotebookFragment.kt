@@ -65,7 +65,7 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 			fragmentManager.jumpTo(fragment,true)
 		}
 		b_memoryPlan.setOnClickListener{
-			fragmentManager.jumpTo(MemoryPlanFragment.newInstance(notebookKey))
+			fragmentManager.jumpTo(MemoryPlanFragment.newInstance(notebookKey),true)
 		}
 		
 		if (notebook is MutableNotebook) {
@@ -197,14 +197,15 @@ class NoteItemView(context:Context):LinearLayout(context){
 						tv_content.text = content.answer
 					}
 				}
-				else ->{ }
+				else -> {
+				}
 			}
 			
 		}
 }
 
 abstract class SectionBufferList<T>
-constructor(val sectionSize:Int = 20,val sectionCount:Int = 10)
+constructor(val sectionSize: Int = 20, val sectionCount: Int = 10)
 	: AbstractList<T>() {
 	
 	private val sections = LinkedList<List<T>>()
