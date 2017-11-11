@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.constraint.ConstraintLayout
-	android:id="@+id/linearLayout2"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
@@ -14,7 +13,7 @@
 	android:animateLayoutChanges="true">
 	
 	<TextView
-		android:id="@+id/tv_bookName"
+		android:id="@+id/tv_title"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="8dp"
@@ -33,7 +32,7 @@
 		app:layout_constraintBottom_toTopOf="@+id/b_cancel2"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/tv_bookName">
+		app:layout_constraintTop_toBottomOf="@+id/tv_title">
 		
 		<LinearLayout
 			android:layout_width="match_parent"
@@ -80,13 +79,13 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="8dp"
+		android:layout_marginLeft="8dp"
 		android:layout_marginStart="8dp"
 		android:layout_weight="0"
 		android:text="@android:string/cancel"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="@+id/b_ok2"
-		android:layout_marginLeft="8dp"/>
+		app:layout_constraintTop_toTopOf="@+id/b_ok2"/>
 	
 	<Button
 		android:id="@+id/b_ok2"
@@ -94,11 +93,11 @@
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="8dp"
 		android:layout_marginEnd="8dp"
+		android:layout_marginRight="8dp"
 		android:layout_weight="0"
 		android:text="@android:string/ok"
 		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		android:layout_marginRight="8dp"/>
+		app:layout_constraintEnd_toEndOf="parent"/>
 
 
 </android.support.constraint.ConstraintLayout>

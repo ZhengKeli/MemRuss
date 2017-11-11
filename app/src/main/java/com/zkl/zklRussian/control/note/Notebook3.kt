@@ -184,15 +184,15 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				}
 		}
 		set(value) = ConfsTable.run {
-				val nowTime = System.currentTimeMillis()
-				val encoded = NotebookMemoryCoder.encode(value)
-				database.update(tableName,
-					confValue to encoded,
-					confUpdateTime to nowTime)
-					.whereArgs("$confName = '$item_memory' ")
-					.exec()
-				Unit
-			}
+			val nowTime = System.currentTimeMillis()
+			val encoded = NotebookMemoryCoder.encode(value)
+			database.update(tableName,
+				confValue to encoded,
+				confUpdateTime to nowTime)
+				.whereArgs("$confName = '$item_memory' ")
+				.exec()
+			Unit
+		}
 	
 	override val memorySummary: MemorySummary
 		get() {

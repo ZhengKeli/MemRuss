@@ -14,7 +14,7 @@ data class MemoryPlan(
 	 * 用平均每天要复习的次数表示，
 	 * 当实际工作量超过它的时候，系统将停止加入新词
 	 */
-	val maxLoad:Double = 200.0,
+	val maxLoad:Double,
 	
 	/**
 	 * 最小工作量

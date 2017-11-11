@@ -11,7 +11,6 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Note
-import com.zkl.zklRussian.core.note.NotebookMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
 import java.util.*
 
@@ -28,18 +27,18 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 	private lateinit var tv_bookInfo:TextView
 	private lateinit var cl_infoBar:ConstraintLayout
 	private lateinit var b_addNote:ImageButton
-	private lateinit var b_review:ImageButton
+	private lateinit var b_memoryPlan:ImageButton
 	private lateinit var sv_search:SearchView
 	private lateinit var lv_notes:ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_notebook, container, false).apply {
 		
 		b_back = findViewById(R.id.b_back) as ImageButton
-		tv_bookName = findViewById(R.id.tv_bookName) as TextView
+		tv_bookName = findViewById(R.id.tv_title) as TextView
 		tv_bookInfo = findViewById(R.id.tv_bookInfo) as TextView
 		cl_infoBar = findViewById(R.id.cl_infoBar) as ConstraintLayout
 		b_addNote = findViewById(R.id.b_addNote) as ImageButton
-		b_review = findViewById(R.id.b_review) as ImageButton
+		b_memoryPlan = findViewById(R.id.b_memoryPlan) as ImageButton
 		sv_search = findViewById(R.id.sv_search) as SearchView
 		lv_notes = findViewById(R.id.lv_notes) as ListView
 		
@@ -65,25 +64,17 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 			val fragment = NoteEditFragment.newInstance(notebookKey, -1)
 			fragmentManager.jumpTo(fragment,true)
 		}
-		b_review.setOnClickListener{
-			when(notebook.memory.state) {
-				NotebookMemoryState.learning -> fragmentManager.jumpTo(NoteReviewFragment.newInstance(notebookKey))
-				NotebookMemoryState.infant -> {
-					//todo jump to learning plan initialization page
-				}
-				NotebookMemoryState.paused->{
-					//todo jump to learning plan paused page
-				}
-			}
+		b_memoryPlan.setOnClickListener{
+			fragmentManager.jumpTo(MemoryPlanFragment.newInstance(notebookKey))
 		}
 		
 		if (notebook is MutableNotebook) {
 			b_addNote.visibility = View.VISIBLE
-			b_review.visibility = View.VISIBLE
+			b_memoryPlan.visibility = View.VISIBLE
 		}
 		else {
 			b_addNote.visibility = View.GONE
-			b_review.visibility = View.GONE
+			b_memoryPlan.visibility = View.GONE
 		}
 		
 	}
