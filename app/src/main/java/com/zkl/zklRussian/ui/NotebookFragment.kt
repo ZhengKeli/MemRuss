@@ -23,23 +23,29 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 	
 	//views
 	private lateinit var b_back: ImageButton
-	private lateinit var tv_bookName: TextView
-	private lateinit var tv_bookInfo:TextView
-	private lateinit var cl_infoBar:ConstraintLayout
-	private lateinit var b_addNote:ImageButton
-	private lateinit var b_memoryPlan:ImageButton
+	private lateinit var tv_title: TextView
 	private lateinit var sv_search:SearchView
+	private lateinit var cl_infoBar:ConstraintLayout
+	private lateinit var tv_bookInfo:TextView
+	private lateinit var b_memoryPlan:ImageButton
+	private lateinit var b_addNote:ImageButton
+	private lateinit var cl_review:ConstraintLayout
+	private lateinit var tv_review:TextView
+	private lateinit var b_review:Button
 	private lateinit var lv_notes:ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_notebook, container, false).apply {
 		
 		b_back = findViewById(R.id.b_back) as ImageButton
-		tv_bookName = findViewById(R.id.tv_title) as TextView
-		tv_bookInfo = findViewById(R.id.tv_bookInfo) as TextView
-		cl_infoBar = findViewById(R.id.cl_infoBar) as ConstraintLayout
-		b_addNote = findViewById(R.id.b_addNote) as ImageButton
-		b_memoryPlan = findViewById(R.id.b_memoryPlan) as ImageButton
+		tv_title = findViewById(R.id.tv_title) as TextView
 		sv_search = findViewById(R.id.sv_search) as SearchView
+		cl_infoBar = findViewById(R.id.cl_infoBar) as ConstraintLayout
+		tv_bookInfo = findViewById(R.id.tv_bookInfo) as TextView
+		b_memoryPlan = findViewById(R.id.b_memoryPlan) as ImageButton
+		b_addNote = findViewById(R.id.b_addNote) as ImageButton
+		cl_review = findViewById(R.id.cl_review) as ConstraintLayout
+		tv_review = findViewById(R.id.tv_review) as TextView
+		b_review = findViewById(R.id.b_review) as Button
 		lv_notes = findViewById(R.id.lv_notes) as ListView
 		
 	}
@@ -57,9 +63,11 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 	
 	//notebook views
 	private fun initializeNotebookViews() {
-		tv_bookName.text = notebook.name
-		tv_bookInfo.text = getString(R.string.count_NotesInAll, notebook.noteCount)
+		//title
+		tv_title.text = notebook.name
 		
+		//info
+		tv_bookInfo.text = getString(R.string.count_NotesInAll, notebook.noteCount)
 		b_addNote.setOnClickListener {
 			val fragment = NoteEditFragment.newInstance(notebookKey, -1)
 			fragmentManager.jumpTo(fragment,true)
@@ -67,16 +75,30 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 		b_memoryPlan.setOnClickListener{
 			fragmentManager.jumpTo(MemoryPlanFragment.newInstance(notebookKey),true)
 		}
-		
 		if (notebook is MutableNotebook) {
 			b_addNote.visibility = View.VISIBLE
 			b_memoryPlan.visibility = View.VISIBLE
-		}
-		else {
+		} else {
 			b_addNote.visibility = View.GONE
 			b_memoryPlan.visibility = View.GONE
 		}
 		
+		//review
+		
+		if(notebook is MutableNotebook){
+			b_review.setOnClickListener {
+				fragmentManager.jumpTo(NoteReviewFragment.newInstance(notebookKey),true)
+			}
+			updateNeedReview()
+		}
+		
+	}
+	private fun updateNeedReview(){
+		val needReviewCount = notebook.countNeedReviewNotes(System.currentTimeMillis())
+		if (needReviewCount>0) {
+			cl_review.visibility = View.VISIBLE
+			tv_review.text = getString(R.string.needReview,needReviewCount)
+		}
 	}
 	
 	//note list
@@ -109,7 +131,7 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 			if (field == value) return
 			field = value
 			if (value) {
-				tv_bookName.visibility = View.GONE
+				tv_title.visibility = View.GONE
 				b_back.visibility = View.GONE
 				cl_infoBar.visibility = View.GONE
 				sv_search.layoutParams.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT_SPREAD
@@ -117,7 +139,7 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 				showingNotes = searchResult
 				//todo start search thread
 			} else {
-				tv_bookName.visibility = View.VISIBLE
+				tv_title.visibility = View.VISIBLE
 				b_back.visibility = View.VISIBLE
 				cl_infoBar.visibility = View.VISIBLE
 				sv_search.layoutParams.width = ConstraintLayout.LayoutParams.WRAP_CONTENT
@@ -153,7 +175,7 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 					return true
 				}
 				fun searchText(text:String){
-					//todo do search
+					TODO("search by $text")
 				}
 			}
 		)
@@ -175,9 +197,10 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 	
 }
 
-class NoteItemView(context:Context):LinearLayout(context){
-	private val tv_title:TextView
-	private val tv_content:TextView
+class NoteItemView(context: Context) : LinearLayout(context) {
+	private val tv_title: TextView
+	private val tv_content: TextView
+	
 	init {
 		LayoutInflater.from(context).inflate(R.layout.adapter_note_item, this, true)
 		tv_title = this.findViewById(R.id.tv_title) as TextView

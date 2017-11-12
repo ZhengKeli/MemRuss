@@ -30,7 +30,8 @@
 			app:layout_constraintEnd_toStartOf="@+id/tv_title"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:srcCompat="@drawable/ic_back"/>
+			app:srcCompat="@drawable/ic_back"
+			android:contentDescription="@string/back"/>
 		
 		<TextView
 			android:id="@+id/tv_title"
@@ -60,7 +61,6 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:gravity="center_vertical"
-		app:layout_constraintBottom_toTopOf="@+id/lv_notes"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/ll_titleBar">
@@ -69,7 +69,8 @@
 			android:id="@+id/tv_bookInfo"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:padding="8dp"
+			android:layout_marginEnd="8dp"
+			android:layout_marginStart="8dp"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/b_memoryPlan"
 			app:layout_constraintStart_toStartOf="parent"
@@ -94,18 +95,52 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/b_addNote"
 			app:layout_constraintTop_toTopOf="parent"
-			app:srcCompat="@drawable/ic_review"/>
+			app:srcCompat="@drawable/ic_memory_plan"
+			android:contentDescription="@string/MemoryPlan"/>
 	
 	</android.support.constraint.ConstraintLayout>
 	
+	<android.support.constraint.ConstraintLayout
+		android:id="@+id/cl_review"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		tools:visibility="visible"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/cl_infoBar">
+		
+		<TextView
+			android:id="@+id/tv_review"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
+			android:layout_marginStart="8dp"
+			android:text="@string/needReview"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/b_review"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"/>
+		
+		<Button
+			android:id="@+id/b_review"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/goToReview"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"/>
+	</android.support.constraint.ConstraintLayout>
+	
+	
 	<ListView
 		android:id="@+id/lv_notes"
-		android:layout_width="wrap_content"
+		android:layout_width="0dp"
 		android:layout_height="0dp"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="@+id/cl_infoBar"
-		app:layout_constraintTop_toBottomOf="@+id/cl_infoBar"/>
+		app:layout_constraintTop_toBottomOf="@+id/cl_review"/>
 
 
 </android.support.constraint.ConstraintLayout>

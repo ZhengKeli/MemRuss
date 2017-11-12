@@ -61,6 +61,12 @@ interface Notebook:Closeable {
 	fun selectLatestNotes(count: Int = 100, offset: Int = 0): List<Note>
 	
 	/**
+	 * 统计有多少词条需要复习
+	 * （只有处于正在复习状态的词条会被检索出来）
+	 */
+	fun countNeedReviewNotes(nowTime:Long):Int
+	
+	/**
 	 * 根据需要复习的时间检索词条
 	 * （只有处于正在复习状态的词条会被检索出来）
 	 */

@@ -243,6 +243,17 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			.exec { parseNoteList() }
 	}
 	
+	override fun countNeedReviewNotes(nowTime: Long): Int {
+		return NotesTable.run {
+			database.select(tableName,"count(*)")
+				.whereArgs(" $reviewTime!=-1 AND $reviewTime<$nowTime ")
+				.exec {
+					moveToFirst()
+					getInt(0)
+				}
+		}
+	}
+	
 	override fun selectNeedReviewNotes(nowTime: Long, asc: Boolean, count: Int, offset: Int): List<Note> {
 		return NotesTable.run {
 			database.selectNotes()
