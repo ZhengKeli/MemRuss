@@ -120,6 +120,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	}
 	
 	
+	
 	//info
 	override val version: Int = 3
 	override var name: String
@@ -141,70 +142,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	
 	
 	
-	//memory
-	override var memoryPlan: MemoryPlan?
-		get() = ConfsTable.run {
-			database.select(tableName, confValue)
-				.whereArgs("$confName = '$item_memoryPlan' ")
-				.exec {
-					moveToFirst()
-					return@exec if (isAfterLast) null
-					else MemoryPlanCoder.decode(getString(0))
-				}
-		}
-		set(value) = ConfsTable.run {
-			if (value == null) {
-				database.delete(tableName,"$confName = '$item_memoryPlan' ")
-			} else {
-				val encoded = MemoryPlanCoder.encode(value)
-				val nowTime = System.currentTimeMillis()
-				
-				val updated = database.update(tableName,
-					confValue to encoded,
-					confUpdateTime to nowTime)
-					.whereArgs("$confName = '$item_memoryPlan' ")
-					.exec() == 1
-				if (!updated) database.insert(tableName,
-					confName to item_memoryPlan,
-					confValue to encoded,
-					confCreateTime to nowTime,
-					confUpdateTime to nowTime)
-			}
-		}
-			
-	override var memoryState: NotebookMemoryState
-		get() = ConfsTable.run {
-			database.select(tableName, confValue, confUpdateTime)
-				.whereArgs("$confName = '$item_memoryState' ")
-				.exec {
-					//check data existence
-					moveToFirst()
-					if (!isAfterLast) NotebookMemoryCoder.decode(getString(0))
-					else NotebookMemoryState.infantInstance
-				}
-		}
-		private set(value) = ConfsTable.run {
-			val nowTime = System.currentTimeMillis()
-			val encoded = NotebookMemoryCoder.encode(value)
-			database.update(tableName,
-				confValue to encoded,
-				confUpdateTime to nowTime)
-				.whereArgs("$confName = '$item_memoryState' ")
-				.exec()
-			Unit
-		}
-	
-	override val memorySummary: MemorySummary
-		get() {
-			val sumMemoryLoad = NotesTable.run {
-				database.select(tableName, columns = "sum($memoryLoad)")
-					.exec { this.getFloat(0) }
-			}
-			return MemorySummary(sumMemoryLoad)
-		}
-	
-	
-	//getters
+	//note getters
 	
 	override val noteCount: Int get() {
 		return database.select(NotesTable.tableName, "count(*)").exec {
@@ -241,27 +179,6 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			.orderBy(NotesTable.contentUpdateTime, SqlOrderDirection.DESC)
 			.limit(offset, count)
 			.exec { parseNoteList() }
-	}
-	
-	override fun countNeedReviewNotes(nowTime: Long): Int {
-		return NotesTable.run {
-			database.select(tableName,"count(*)")
-				.whereArgs(" $reviewTime!=-1 AND $reviewTime<$nowTime ")
-				.exec {
-					moveToFirst()
-					getInt(0)
-				}
-		}
-	}
-	
-	override fun selectNeedReviewNotes(nowTime: Long, asc: Boolean, count: Int, offset: Int): List<Note> {
-		return NotesTable.run {
-			database.selectNotes()
-				.whereArgs(" $reviewTime!=-1 AND $reviewTime<$nowTime ")
-				.orderBy(reviewTime, if (asc) SqlOrderDirection.ASC else SqlOrderDirection.DESC)
-				.limit(offset, count)
-				.exec { parseNoteList() }
-		}
 	}
 	
 	override fun checkUniqueTag(tag: String,exceptId:Long): Long {
@@ -420,6 +337,110 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			)
 		}
 	}
+	
+	
+	
+	//memory
+	override var memoryPlan: MemoryPlan?
+		get() = ConfsTable.run {
+			database.select(tableName, confValue)
+				.whereArgs("$confName = '$item_memoryPlan' ")
+				.exec {
+					moveToFirst()
+					return@exec if (isAfterLast) null
+					else MemoryPlanCoder.decode(getString(0))
+				}
+		}
+		set(value) = ConfsTable.run {
+			if (value == null) {
+				database.delete(tableName,"$confName = '$item_memoryPlan' ")
+			} else {
+				val encoded = MemoryPlanCoder.encode(value)
+				val nowTime = System.currentTimeMillis()
+				
+				val updated = database.update(tableName,
+					confValue to encoded,
+					confUpdateTime to nowTime)
+					.whereArgs("$confName = '$item_memoryPlan' ")
+					.exec() == 1
+				if (!updated) database.insert(tableName,
+					confName to item_memoryPlan,
+					confValue to encoded,
+					confCreateTime to nowTime,
+					confUpdateTime to nowTime)
+			}
+		}
+	
+	override var memoryState: NotebookMemoryState
+		get() = ConfsTable.run {
+			database.select(tableName, confValue, confUpdateTime)
+				.whereArgs("$confName = '$item_memoryState' ")
+				.exec {
+					//check data existence
+					moveToFirst()
+					if (!isAfterLast) NotebookMemoryCoder.decode(getString(0))
+					else NotebookMemoryState.infantInstance
+				}
+		}
+		private set(value) = ConfsTable.run {
+			val nowTime = System.currentTimeMillis()
+			val encoded = NotebookMemoryCoder.encode(value)
+			database.update(tableName,
+				confValue to encoded,
+				confUpdateTime to nowTime)
+				.whereArgs("$confName = '$item_memoryState' ")
+				.exec()
+			Unit
+		}
+	
+	override val sumMemoryLoad: Double
+		get() = NotesTable.run {
+			database.select(tableName, columns = "sum($memoryLoad)")
+				.exec {
+					moveToFirst()
+					getDouble(0)
+				}
+		}
+	
+	override fun fillNotes(count: Int) {
+		NotesTable.run {
+			database.select(tableName, noteId)
+				.whereArgs("$memoryStatus='${NoteMemoryStatus.infant}'")
+				.limit(count)
+				.exec {
+					moveToFirst()
+					database.transaction {
+						do {
+							val noteId = getLong(0)
+							modifyNoteMemory(noteId, NoteMemoryState.beginningState())
+						} while (moveToNext())
+					}
+				}
+		}
+		
+	}
+	
+	override fun countNeedReviewNotes(nowTime: Long): Int {
+		return NotesTable.run {
+			database.select(tableName,"count(*)")
+				.whereArgs(" $reviewTime!=-1 AND $reviewTime<$nowTime ")
+				.exec {
+					moveToFirst()
+					getInt(0)
+				}
+		}
+	}
+	
+	override fun selectNeedReviewNotes(nowTime: Long, asc: Boolean, count: Int, offset: Int): List<Note> {
+		return NotesTable.run {
+			database.selectNotes()
+				.whereArgs(" $reviewTime!=-1 AND $reviewTime<$nowTime ")
+				.orderBy(reviewTime, if (asc) SqlOrderDirection.ASC else SqlOrderDirection.DESC)
+				.limit(offset, count)
+				.exec { parseNoteList() }
+		}
+	}
+	
 }
 
 

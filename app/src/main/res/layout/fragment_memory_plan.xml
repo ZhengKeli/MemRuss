@@ -41,30 +41,15 @@
 			android:padding="8dp">
 			
 			<TextView
-				android:id="@+id/tv_dailyFill"
+				android:id="@+id/tv_memoryLoad"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="0"
 				android:textAppearance="@style/TextAppearance.AppCompat.Large"
-				tools:text="@string/dailyLearn_value"/>
+				tools:text="@string/memoryLoad_value"/>
 			
 			<SeekBar
-				android:id="@+id/sb_dailyFill"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_weight="0"
-				android:padding="16dp"/>
-			
-			<TextView
-				android:id="@+id/tv_maxLoad"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_weight="0"
-				android:textAppearance="@style/TextAppearance.AppCompat.Large"
-				tools:text="@string/maxLoad_value"/>
-			
-			<SeekBar
-				android:id="@+id/sb_maxLoad"
+				android:id="@+id/sb_memoryLoad"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="0"

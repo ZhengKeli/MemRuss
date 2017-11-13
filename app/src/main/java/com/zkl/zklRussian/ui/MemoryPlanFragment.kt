@@ -20,19 +20,15 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 	}
 	
 	private lateinit var tv_title: TextView
-	private lateinit var tv_daily: TextView
-	private lateinit var sb_dailyFill: SeekBar
-	private lateinit var tv_maxLoad: TextView
-	private lateinit var sb_maxLoad: SeekBar
+	private lateinit var tv_memoryLoad: TextView
+	private lateinit var sb_memoryLoad: SeekBar
 	private lateinit var b_cancel: Button
 	private lateinit var b_ok: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_memory_plan, container, false).apply {
 		tv_title = findViewById(R.id.tv_title) as TextView
-		tv_daily = findViewById(R.id.tv_dailyFill) as TextView
-		sb_dailyFill = findViewById(R.id.sb_dailyFill) as SeekBar
-		tv_maxLoad = findViewById(R.id.tv_maxLoad) as TextView
-		sb_maxLoad = findViewById(R.id.sb_maxLoad) as SeekBar
+		tv_memoryLoad = findViewById(R.id.tv_memoryLoad) as TextView
+		sb_memoryLoad = findViewById(R.id.sb_memoryLoad) as SeekBar
 		b_cancel = findViewById(R.id.b_cancel) as Button
 		b_ok = findViewById(R.id.b_ok) as Button
 	}
@@ -45,32 +41,17 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 	}
 	
 	
-	val dailyFillRange = 0..50
-	var SeekBar.dailyFill: Int
-		get() = progress + dailyFillRange.start
-		set(value) {
-			progress = value
-		}
-	val maxLoadRange = 0..500
-	var SeekBar.maxLoad: Int
-		get() = progress + maxLoadRange.start
+	val memoryLoadRange = 0..500
+	var SeekBar.memoryLoad: Int
+		get() = progress + memoryLoadRange.start
 		set(value) {
 			progress = value
 		}
 	private fun initViews() {
-		sb_dailyFill.max = dailyFillRange.run { endInclusive - start }
-		sb_dailyFill.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+		sb_memoryLoad.max = memoryLoadRange.run { endInclusive - start }
+		sb_memoryLoad.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 			override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-				tv_daily.text = getString(R.string.dailyLearn_value, seekBar.dailyFill)
-			}
-			
-			override fun onStartTrackingTouch(seekBar: SeekBar) {}
-			override fun onStopTrackingTouch(seekBar: SeekBar) {}
-		})
-		sb_maxLoad.max = maxLoadRange.run { endInclusive - start }
-		sb_maxLoad.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-			override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-				tv_maxLoad.text = getString(R.string.maxLoad_value, seekBar.maxLoad)
+				tv_memoryLoad.text = getString(R.string.memoryLoad_value, seekBar.memoryLoad)
 			}
 			
 			override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -82,9 +63,9 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 		}
 		b_ok.setOnClickListener {
 			mutableNotebook.memoryPlan = MemoryPlan(
-				dailyFill = sb_dailyFill.dailyFill.toDouble(),
-				maxLoad = sb_maxLoad.maxLoad.toDouble()
+				targetLoad = sb_memoryLoad.memoryLoad.toDouble()
 			)
+			mutableNotebook.fillNotesByPlan()
 			fragmentManager.popBackStack()
 		}
 	}
@@ -99,8 +80,7 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 		}
 		
 		val memoryPlan = notebook.memoryPlan?: MemoryPlan.default
-		sb_dailyFill.dailyFill = Math.round(memoryPlan.dailyFill).toInt()
-		sb_maxLoad.maxLoad = Math.round(memoryPlan.maxLoad).toInt()
+		sb_memoryLoad.memoryLoad = Math.round(memoryPlan.targetLoad).toInt()
 	}
 	
 	

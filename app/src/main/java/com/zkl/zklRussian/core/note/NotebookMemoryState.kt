@@ -4,27 +4,15 @@ package com.zkl.zklRussian.core.note
 data class MemoryPlan(
 	
 	/**
-	 * 加入新单词的速度
-	 * 用平均每天加入的新词数量表示
-	 */
-	val dailyFill:Double,
-	
-	/**
 	 * 最大工作量
 	 * 用平均每天要复习的次数表示，
 	 * 当实际工作量超过它的时候，系统将停止加入新词
 	 */
-	val maxLoad:Double,
-	
-	/**
-	 * 圆满学习进度
-	 * 当某词条的学习进度超过该值时，系统将不会再要求复习该词
-	 */
-	val fullProgress:Double = 25.0
-	
+	val targetLoad:Double
+
 ){
 	companion object {
-		val default = MemoryPlan(10.0, 200.0, 25.0)
+		val default = MemoryPlan( 200.0)
 	}
 }
 
@@ -80,12 +68,3 @@ data class NotebookMemoryState(
 	}
 }
 
-data class MemorySummary(
-	
-	/**
-	 * 总负荷
-	 * 用平均每天要复习的次数表示，
-	 * 用来帮助判断应该如何加入新词
-	 */
-	val sumLoad:Float=0f
-)

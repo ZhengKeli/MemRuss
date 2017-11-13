@@ -38,8 +38,7 @@
 	<string name="MemoryPlan">Memory Plan</string>
 	<string name="makeMemoryPlan">Make Memory Plan</string>
 	<string name="MemoryPlan_paused">Memory Plan (Paused)</string>
-	<string name="dailyLearn_value">Daily learn: %1$d</string>
-	<string name="maxLoad_value">Max load: %1$d</string>
+	<string name="memoryLoad_value">Daily review times: %1$d</string>
 	<string name="goToReview">Go to review</string>
 	<string name="needReview">There are %1$d words to review!</string>
 

@@ -18,25 +18,6 @@ interface Notebook:Closeable {
 	
 	
 	
-	//memory
-	
-	/**
-	 * 该笔记本的复习状态
-	 */
-	val memoryState: NotebookMemoryState
-	
-	/**
-	 * 该笔记本的复习计划
-	 */
-	val memoryPlan: MemoryPlan?
-	
-	/**
-	 * 该笔记本的复习状态汇总信息
-	 */
-	val memorySummary: MemorySummary
-	
-	
-	
 	//notes
 	
 	/**
@@ -60,17 +41,6 @@ interface Notebook:Closeable {
 	 */
 	fun selectLatestNotes(count: Int = 100, offset: Int = 0): List<Note>
 	
-	/**
-	 * 统计有多少词条需要复习
-	 * （只有处于正在复习状态的词条会被检索出来）
-	 */
-	fun countNeedReviewNotes(nowTime:Long):Int
-	
-	/**
-	 * 根据需要复习的时间检索词条
-	 * （只有处于正在复习状态的词条会被检索出来）
-	 */
-	fun selectNeedReviewNotes(nowTime:Long, asc: Boolean = false, count: Int = 1, offset: Int = 0): List<Note>
 	
 	/**
 	 * 根据关键词搜索一些词条
@@ -97,6 +67,39 @@ interface Notebook:Closeable {
 		}
 	}
 	
+	
+	
+	//memory
+	
+	/**
+	 * 该笔记本的复习状态
+	 */
+	val memoryState: NotebookMemoryState
+	
+	/**
+	 * 该笔记本的复习计划
+	 */
+	val memoryPlan: MemoryPlan?
+	
+	/**
+	 * 总负荷
+	 * 用平均每天要复习的次数表示，
+	 * 用来帮助判断应该如何加入新词
+	 */
+	val sumMemoryLoad: Double
+	
+	/**
+	 * 统计有多少词条需要复习
+	 * （只有处于正在复习状态的词条会被检索出来）
+	 */
+	fun countNeedReviewNotes(nowTime:Long):Int
+	
+	/**
+	 * 根据需要复习的时间检索词条
+	 * （只有处于正在复习状态的词条会被检索出来）
+	 */
+	fun selectNeedReviewNotes(nowTime:Long, asc: Boolean = false, count: Int = 1, offset: Int = 0): List<Note>
+	
 }
 
 interface MutableNotebook : Notebook {
@@ -112,10 +115,6 @@ interface MutableNotebook : Notebook {
 	
 	//info
 	override var name:String
-	
-	
-	//memory
-	override var memoryPlan: MemoryPlan?
 	
 	
 	//notes
@@ -149,6 +148,24 @@ interface MutableNotebook : Notebook {
 	 * 修改 note 的复习进度
 	 */
 	fun modifyNoteMemory(noteId: Long, memoryState: NoteMemoryState)
+	
+	
+	//memory
+	
+	/**
+	 * 复习计划
+	 * 若将其设为 null 则会重设所有单词的状态
+	 */
+	override var memoryPlan: MemoryPlan?
+	
+	fun fillNotes(count: Int=1)
+	
+	fun fillNotesByPlan() {
+		val targetLoad = memoryPlan?.targetLoad ?: 0.0
+		val sumLoad = sumMemoryLoad
+		val addCount = ((targetLoad - sumLoad) / MemoryAlgorithm.maxSingleLoad).toInt()
+		if(addCount>0) fillNotes(addCount)
+	}
 	
 }
 

@@ -33,18 +33,14 @@ object MemoryPlanCoder {
 	fun encode(memory: MemoryPlan)
 		= memory.let {
 		JSONObject(mapOf(
-			it::dailyFill.run { name to get() },
-			it::maxLoad.run { name to get() },
-			it::fullProgress.run { name to get() }
+			it::targetLoad.run { name to get() }
 		)).toString()
 	}
 	
 	fun decode(string: String): MemoryPlan
 		= JSONObject(string).run {
 		MemoryPlan(
-			dailyFill = getDouble(MemoryPlan::dailyFill.name),
-			maxLoad = getDouble(MemoryPlan::maxLoad.name),
-			fullProgress = getDouble(MemoryPlan::fullProgress.name)
+			targetLoad = getDouble(MemoryPlan::targetLoad.name)
 		)
 	}
 }

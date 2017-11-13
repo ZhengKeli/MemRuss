@@ -42,4 +42,9 @@ data class NoteMemoryState(
 	 */
 	val reviewTime: Long = -1
 
-)
+){
+	companion object {
+		fun beginningState(nowTime:Long=System.currentTimeMillis())
+			= NoteMemoryState(NoteMemoryStatus.learning,0.0,MemoryAlgorithm.maxSingleLoad,nowTime)
+	}
+}
