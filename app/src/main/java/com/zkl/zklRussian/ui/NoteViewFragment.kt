@@ -39,7 +39,8 @@ class NoteViewFragment : NoteHoldingFragment() {
 		tv_title.text = getString(R.string.Note_view_id, noteId)
 		if (note.memoryState.status != NoteMemoryStatus.infant) {
 			tv_info.text = getString(R.string.Note_view_info,
-				note.memoryState.progress, note.memoryState.load, note.memoryState.reviewTime)
+				note.memoryState.progress.toInt(), note.memoryState.load.toInt(), note.memoryState.reviewTime)
+				.replace("\\n", "\n")
 		} else {
 			tv_info.visibility = View.GONE
 		}

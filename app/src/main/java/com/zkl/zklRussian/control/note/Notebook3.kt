@@ -333,8 +333,9 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				memoryProgress to memoryState.progress,
 				memoryLoad to memoryState.load,
 				reviewTime to memoryState.reviewTime,
-				memoryUpdateTime to nowTime
-			)
+				memoryUpdateTime to nowTime)
+				.whereArgs("${NotesTable.noteId}=$noteId")
+				.exec()
 		}
 	}
 	
@@ -402,18 +403,18 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				}
 		}
 	
-	override fun fillNotes(count: Int) {
+	override fun fillNotes(count: Int,nowTime: Long) {
 		NotesTable.run {
 			database.select(tableName, noteId)
 				.whereArgs("$memoryStatus='${NoteMemoryStatus.infant}'")
 				.limit(count)
 				.exec {
-					moveToFirst()
+					moveToPosition(-1)
 					database.transaction {
-						do {
+						while (moveToNext()){
 							val noteId = getLong(0)
-							modifyNoteMemory(noteId, NoteMemoryState.beginningState())
-						} while (moveToNext())
+							modifyNoteMemory(noteId, NoteMemoryState.beginningState(nowTime))
+						}
 					}
 				}
 		}

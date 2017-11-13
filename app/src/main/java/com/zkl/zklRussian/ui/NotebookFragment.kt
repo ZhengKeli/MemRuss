@@ -97,7 +97,7 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 		if (notebook is MutableNotebook) {
 			mutableNotebook.fillNotesByPlan()
 			val needReviewCount = notebook.countNeedReviewNotes(System.currentTimeMillis())
-			if (needReviewCount>0) {
+			if (needReviewCount > 0) {
 				cl_review.visibility = View.VISIBLE
 				tv_review.text = getString(R.string.needReview,needReviewCount)
 			}

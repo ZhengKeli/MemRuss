@@ -12,7 +12,7 @@ data class MemoryPlan(
 
 ){
 	companion object {
-		val default = MemoryPlan( 200.0)
+		val default = MemoryPlan( 100.0)
 	}
 }
 

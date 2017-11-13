@@ -6,7 +6,7 @@ object MemoryAlgorithm {
 	
 	val progressUnit:Double = 1.0
 	
-	val maxSingleLoad:Double = 3.0
+	val maxSingleLoad:Double = 5.0
 	
 	
 	//参数
@@ -54,7 +54,7 @@ object MemoryAlgorithm {
 fun NoteMemoryState.getNextReviewTime(learned: Boolean, nowTime: Long = System.currentTimeMillis()): NoteMemoryState {
 	val nextProgress =
 		if (learned) progress + MemoryAlgorithm.progressUnit
-		else progress - MemoryAlgorithm.progressUnit * MemoryAlgorithm.arg_pu
+		else (progress - MemoryAlgorithm.progressUnit * MemoryAlgorithm.arg_pu).coerceAtLeast(0.0)
 	val reviewInterval = MemoryAlgorithm.computeReviewInterval(nextProgress)
 	val nextReviewTime = nowTime + reviewInterval
 	val nextLoad = MemoryAlgorithm.computeLoad(reviewInterval)

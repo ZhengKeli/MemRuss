@@ -158,7 +158,7 @@ interface MutableNotebook : Notebook {
 	 */
 	override var memoryPlan: MemoryPlan?
 	
-	fun fillNotes(count: Int=1)
+	fun fillNotes(count: Int = 1, nowTime: Long=System.currentTimeMillis())
 	
 	fun fillNotesByPlan() {
 		val targetLoad = memoryPlan?.targetLoad ?: 0.0
