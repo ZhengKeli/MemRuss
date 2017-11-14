@@ -33,9 +33,16 @@ abstract class NotebookHoldingFragment: Fragment() {
 	
 	private var cachedNotebook: Notebook? = null
 	protected val notebook: Notebook
-		get() = cachedNotebook ?:myApp.notebookShelf.restoreNotebook(notebookKey).also { cachedNotebook = it }
+		get() = cachedNotebook ?:loadNotebook()
 	protected val mutableNotebook: MutableNotebook get() = notebook as MutableNotebook
-	
+	fun loadNotebook() = myApp.notebookShelf.restoreNotebook(notebookKey).also { cachedNotebook = it }
+	fun tryLoadNotebook():Notebook?{
+		return try {
+			loadNotebook()
+		} catch (e: Exception) {
+			null
+		}
+	}
 }
 abstract class NoteHoldingFragment : NotebookHoldingFragment() {
 	
@@ -55,8 +62,16 @@ abstract class NoteHoldingFragment : NotebookHoldingFragment() {
 		}
 	
 	private var cachedNote: Note? = null
-	val note:Note get() = cachedNote?:notebook.getNote(noteId).also { cachedNote=it }
+	val note:Note get() = cachedNote?: loadNote()
 	
+	fun loadNote() = notebook.getNote(noteId).also { cachedNote = it }
+	fun tryLoadNote():Note?{
+		return try {
+			loadNote()
+		} catch (e: Exception) {
+			null
+		}
+	}
 }
 
 abstract class NotebookHoldingDialog: AppCompatDialogFragment(){

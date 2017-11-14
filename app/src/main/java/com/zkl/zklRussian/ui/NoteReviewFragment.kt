@@ -28,8 +28,7 @@ class NoteReviewFragment : NoteHoldingFragment() {
 	}
 	override fun onStart() {
 		super.onStart()
-		
-		if (noteId == -1L) jumpToNextNote()
+		if (tryLoadNote() == null) jumpToNextNote()
 		
 		tv_title.text = getString(R.string.Note_review_progress, note.memoryState.progress.toInt())
 		b_view.setOnClickListener {
