@@ -15,7 +15,9 @@
 	<string name="edit">edit</string>
 	
 	<string name="Note_view_id">Note@%1$d</string>
-	<string name="Note_view_info">memory progress:%1$d \nmemory load:%2$d \nreview time:%3$d</string>
+	<string name="Note_view_info">
+		memory progress:%1$d\nmemory load:%2$f\nreview time:%3$d
+	</string>
 	<string name="Note_create">New Note</string>
 	<string name="Note_edit_id">Edit Note@%1$d</string>
 	<string name="Note_review_progress">Progress:%1$d</string>
@@ -41,5 +43,6 @@
 	<string name="memoryLoad_value">Daily review times: %1$d</string>
 	<string name="goToReview">Go to review</string>
 	<string name="needReview">There are %1$d words to review!</string>
+	<string name="notebookShelf">Notebook Shelf</string>
 
 </resources>

@@ -20,7 +20,6 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 			= NotebookFragment::class.java.newInstance(notebookKey)
 	}
 	
-	//views
 	private lateinit var b_back: ImageButton
 	private lateinit var tv_title: TextView
 	private lateinit var sv_search:SearchView
@@ -58,6 +57,7 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 		initializeNotebookViews()
 		initializeSearchView()
 		initializeNoteList()
+		
 	}
 	
 	//notebook views
@@ -101,7 +101,6 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 				tv_review.text = getString(R.string.needReview,needReviewCount)
 			}
 		}
-		
 	}
 	
 	//note list

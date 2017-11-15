@@ -29,11 +29,14 @@
 	<string name="Note_review_progress">进度：%1$d</string>
 	<string name="Note_review_noMore">没有更多词需要复习了</string>
 	<string name="back">返回</string>
-	<string name="Note_view_info">学习进度：%1$d\\n学习负荷：%2$d\\n复习时间：%3$d</string>
+	<string name="Note_view_info">
+		学习进度：%1$d\n学习负荷：%2$d\n复习时间：%3$f
+	</string>
 	<string name="MemoryPlan">复习计划</string>
 	<string name="makeMemoryPlan">制定复习计划</string>
 	<string name="MemoryPlan_paused">复习计划（已暂停）</string>
 	<string name="memoryLoad_value">每天复习的次数：%1$d</string>
 	<string name="goToReview">去复习</string>
 	<string name="needReview">有%1$d个单词需要复习哦！</string>
+	<string name="notebookShelf">笔记本夹</string>
 </resources>

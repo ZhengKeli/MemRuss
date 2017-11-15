@@ -1,26 +1,22 @@
-<android.support.constraint.ConstraintLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:orientation="vertical"
 	android:layout_marginEnd="8dp"
 	android:layout_marginLeft="8dp"
 	android:layout_marginRight="8dp"
-	android:layout_marginStart="8dp"
-	android:animateLayoutChanges="true"
-	tools:context="com.zkl.zklRussian.ui.NoteViewFragment">
+	android:layout_marginStart="8dp">
 	
 	
 	<android.support.constraint.ConstraintLayout
 		android:id="@+id/ll_titleBar"
-		android:layout_width="0dp"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:gravity="center_vertical|end"
-		app:layout_constraintBottom_toTopOf="@+id/fl_noteContent_container"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
+		android:layout_weight="0"
+		android:gravity="center_vertical|end">
 		
 		<TextView
 			android:id="@+id/tv_title"
@@ -48,13 +44,10 @@
 	
 	<FrameLayout
 		android:id="@+id/fl_noteContent_container"
-		android:layout_width="0dp"
+		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/ll_titleBar">
+		android:layout_weight="1">
 	
 	</FrameLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

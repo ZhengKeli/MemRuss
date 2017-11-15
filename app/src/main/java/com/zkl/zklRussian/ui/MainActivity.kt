@@ -1,5 +1,7 @@
 package com.zkl.zklRussian.ui
 
+import android.app.UiModeManager
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -10,6 +12,7 @@ class MainActivity : AppCompatActivity() {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		(getSystemService(Context.UI_MODE_SERVICE) as UiModeManager).nightMode=UiModeManager.MODE_NIGHT_AUTO
 		setContentView(R.layout.activity_main)
 		
 		if (getShowingFragment() == null) {

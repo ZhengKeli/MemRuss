@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:padding="15dp"
-              android:gravity="center_vertical"
-              android:clickable="false"
-              android:baselineAligned="false">
-	
-	<TextView
-		android:drawableStart="@mipmap/ic_note_book"
-		android:drawableLeft="@mipmap/ic_note_book"
-		android:id="@+id/tv_notebookName"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:gravity="center_vertical"
-		tools:text="NotebookName"/>
 
+<TextView
+	android:id="@+id/tv_notebookName"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:drawableLeft="@mipmap/ic_note_book"
+	android:drawableStart="@mipmap/ic_note_book"
+	android:gravity="center_vertical"
+	android:padding="16dp"
+	android:textAppearance="?android:attr/textAppearanceLarge"
+	tools:text="NotebookName"/>
 
-</LinearLayout>

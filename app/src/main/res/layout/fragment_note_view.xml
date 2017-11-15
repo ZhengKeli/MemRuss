@@ -1,24 +1,22 @@
-<android.support.constraint.ConstraintLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:animateLayoutChanges="true"
-	tools:context="com.zkl.zklRussian.ui.NoteViewFragment">
+	android:orientation="vertical"
+	android:paddingEnd="8dp"
+	android:paddingLeft="8dp"
+	android:paddingRight="8dp"
+	android:paddingStart="8dp">
 	
 	
 	<android.support.constraint.ConstraintLayout
 		android:id="@+id/ll_titleBar"
-		android:layout_width="0dp"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="8dp"
-		android:layout_marginStart="8dp"
-		android:gravity="center_vertical|end"
-		app:layout_constraintBottom_toTopOf="@+id/tv_info"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
+		android:layout_weight="0"
+		android:gravity="center_vertical|end">
 		
 		<TextView
 			android:id="@+id/tv_title"
@@ -56,28 +54,18 @@
 	
 	<TextView
 		android:id="@+id/tv_info"
-		android:layout_width="0dp"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="8dp"
-		android:layout_marginStart="8dp"
+		android:layout_weight="0"
 		android:padding="8dp"
-		app:layout_constraintBottom_toTopOf="@+id/fl_noteContent_container"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/ll_titleBar"
 		tools:text="@string/Note_view_info"/>
 	
 	<FrameLayout
 		android:id="@+id/fl_noteContent_container"
-		android:layout_width="0dp"
+		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:layout_marginEnd="8dp"
-		android:layout_marginStart="8dp"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/tv_info">
+		android:layout_weight="1">
 	
 	</FrameLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

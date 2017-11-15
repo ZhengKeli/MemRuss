@@ -1,48 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:paddingEnd="8dp"
+	android:paddingLeft="8dp"
+	android:paddingRight="8dp"
+	android:paddingStart="8dp">
 	
-	<LinearLayout
-		android:layout_width="match_parent"
+	<TextView
+		android:id="@+id/tv_title"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		style="?android:attr/buttonBarStyle">
+		android:padding="8dp"
+		android:textAppearance="@style/TextAppearance.AppCompat.Large"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		android:text="@string/notebookShelf"/>
+	
+	<android.support.constraint.ConstraintLayout
+		android:id="@+id/cl_buttons"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/tv_title">
 		
 		<Button
 			android:id="@+id/b_create"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
 			android:gravity="center"
 			android:text="@string/createNotebook"
-			style="?android:attr/buttonBarStyle"/>
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/b_import"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"/>
 		
 		<Button
 			android:id="@+id/b_import"
-			style="?android:attr/buttonBarStyle"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
 			android:gravity="center"
 			android:text="@string/importNotebook"
-			/>
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/b_export"
+			app:layout_constraintStart_toEndOf="@+id/b_create"
+			app:layout_constraintTop_toTopOf="parent"/>
 		
 		<Button
 			android:id="@+id/b_export"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
 			android:gravity="center"
 			android:text="@string/exportNotebook"
-			style="?android:attr/buttonBarStyle"
-			/>
-	
-	</LinearLayout>
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@+id/b_import"
+			app:layout_constraintTop_toTopOf="parent"/>
+	</android.support.constraint.ConstraintLayout>
 	
 	<ListView
 		android:id="@+id/lv_notebooks"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
-</LinearLayout>
+		android:layout_width="wrap_content"
+		android:layout_height="0dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/cl_buttons">
+	
+	</ListView>
+
+</android.support.constraint.ConstraintLayout>
