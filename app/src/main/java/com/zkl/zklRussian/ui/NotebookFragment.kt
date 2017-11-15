@@ -12,7 +12,6 @@ import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Note
 import com.zkl.zklRussian.core.note.QuestionContent
-import java.util.*
 
 class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 	
@@ -127,10 +126,12 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 			fragmentManager.jumpTo(fragment,true)
 		}
 	}
-	
+	private fun updateNoteList(){
+		(lv_notes.adapter as BaseAdapter).notifyDataSetChanged()
+	}
 	
 	//search
-	var searchMode: Boolean = false
+	private var isSearchMode: Boolean = false
 		set(value) {
 			if (field == value) return
 			field = value
@@ -138,34 +139,36 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 				tv_title.visibility = View.GONE
 				b_back.visibility = View.GONE
 				cl_infoBar.visibility = View.GONE
+				cl_review.visibility = View.GONE
 				sv_search.layoutParams.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT_SPREAD
 				
 				showingNotes = searchResult
-				//todo start search thread
+				updateNoteList()
 			} else {
 				tv_title.visibility = View.VISIBLE
 				b_back.visibility = View.VISIBLE
 				cl_infoBar.visibility = View.VISIBLE
+				updateNeedReview()
 				sv_search.layoutParams.width = ConstraintLayout.LayoutParams.WRAP_CONTENT
 				sv_search.isIconified = true
 				
 				showingNotes = notesBuffer
-				//todo stop search thread
+				updateNoteList()
 			}
 		}
 	override fun onBackPressed(): Boolean {
-		return if (searchMode) {
-			searchMode=false
+		return if (isSearchMode) {
+			isSearchMode =false
 			true
 		}else false
 	}
-	private var searchResult:List<Note> = emptyList()
+	private var searchResult:ArrayList<Note> = arrayListOf()
 	private fun initializeSearchView(){
 		sv_search.setOnSearchClickListener {
-			searchMode =true
+			isSearchMode =true
 		}
 		sv_search.setOnCloseListener {
-			searchMode =false
+			isSearchMode =false
 			false
 		}
 		sv_search.setOnQueryTextListener(
@@ -179,13 +182,29 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 					return true
 				}
 				fun searchText(text:String){
-					TODO("search by $text")
+					searcher.post(text)
 				}
 			}
 		)
-		searchMode = false
+		isSearchMode = false
 	}
 	
+	private val searcher=object :PendingWorker<String, List<Note>>(){
+		override fun onWork(request: String): List<Note> {
+			Thread.sleep(100)
+			return if (request.isEmpty()) emptyList()
+			else notebook.selectByKeyword(request)
+		}
+		override fun onDone(request: String, result: List<Note>) {
+			lv_notes.post {
+				if (isSearchMode) {
+					searchResult.clear()
+					searchResult.addAll(result)
+					updateNoteList()
+				}
+			}
+		}
+	}
 	
 	
 	//notes buffer
@@ -195,8 +214,6 @@ class NotebookFragment : NotebookHoldingFragment(),BackPressedHandler {
 		override val size: Int
 			get() = notebook.noteCount
 	}
-	
-	
 	
 	
 }
@@ -231,38 +248,3 @@ class NoteItemView(context: Context) : LinearLayout(context) {
 		}
 }
 
-abstract class SectionBufferList<T>
-constructor(val sectionSize: Int = 20, val sectionCount: Int = 10)
-	: AbstractList<T>() {
-	
-	private val sections = LinkedList<List<T>>()
-	private var bufferFrom:Int = 0
-	private val bufferSize:Int get() {
-			return if (sections.isEmpty()) 0
-			else sectionSize * (sections.size - 1) + sections.last.size
-	}
-	private val bufferToExclusive: Int get() = bufferFrom + bufferSize
-	@Synchronized override fun get(index: Int): T {
-		while (index < bufferFrom) extendAtHead()
-		while (index >= bufferToExclusive) appendAtTail()
-		return sections[(index - bufferFrom) / sectionSize][(index - bufferFrom) % sectionSize]
-	}
-	@Synchronized private fun extendAtHead() {
-		bufferFrom -= sectionSize
-		sections.addFirst(getSection(bufferFrom))
-		if (sections.size > sectionCount) sections.removeLast()
-	}
-	@Synchronized private fun appendAtTail(){
-		sections.addLast(getSection(bufferToExclusive))
-		if (sections.size > sectionCount) {
-			sections.removeFirst()
-			bufferFrom += sectionSize
-		}
-	}
-	@Synchronized fun clearBuffer(){
-		sections.clear()
-	}
-	
-	abstract fun getSection(startFrom:Int):List<T>
-	
-}

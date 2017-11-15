@@ -65,7 +65,7 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/ll_titleBar"
-		tools:text="memoryState:xx\nnextTime:xx"/>
+		tools:text="@string/Note_view_info"/>
 	
 	<FrameLayout
 		android:id="@+id/fl_noteContent_container"

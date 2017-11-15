@@ -37,9 +37,11 @@ class NoteViewFragment : NoteHoldingFragment() {
 		super.onStart()
 		
 		tv_title.text = getString(R.string.Note_view_id, noteId)
+		
 		if (note.memoryState.status != NoteMemoryStatus.infant) {
+			val relativeReviewTime = (note.memoryState.reviewTime - System.currentTimeMillis()).toDouble()/(3600*1000)
 			tv_info.text = getString(R.string.Note_view_info,
-				note.memoryState.progress.toInt(), note.memoryState.load.toInt(), note.memoryState.reviewTime)
+				note.memoryState.progress.toInt(), note.memoryState.load.toInt(), relativeReviewTime)
 				.replace("\\n", "\n")
 		} else {
 			tv_info.visibility = View.GONE

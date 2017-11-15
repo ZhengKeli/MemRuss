@@ -41,7 +41,7 @@ private object NotesTable {
 	val standardColumns= arrayOf(noteId, createTime,
 		contentType, contentString, contentUpdateTime,
 		memoryStatus, memoryProgress, memoryLoad, reviewTime, memoryUpdateTime)
-	
+	val standardColumnsWithTableName = standardColumns.map { tableName+"."+it }
 	
 }
 private object UniqueTagTable {
@@ -161,7 +161,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	override fun selectByKeyword(keyword: String, count: Int, offset: Int): List<Note> {
 		return NotesTable.run {
 			val sql = """
-			SELECT DISTINCT ${standardColumns.joinToString(",")}
+			SELECT DISTINCT ${standardColumnsWithTableName.joinToString(",")}
 			FROM $tableName
 			INNER JOIN ${SearchTagTable._name}
 			ON $tableName.$noteId = ${SearchTagTable._name}.${SearchTagTable.noteId}
@@ -418,7 +418,6 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					}
 				}
 		}
-		
 	}
 	
 	override fun countNeedReviewNotes(nowTime: Long): Int {

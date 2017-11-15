@@ -1,74 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 	
 	<TextView
 		android:id="@+id/tv_question"
 		
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		
-		android:layout_weight="0"
 		android:gravity="top|start"
 		
 		android:padding="16dp"
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		
 		android:textSize="40sp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
 		tools:text="слово"/>
 	
 	<TextView
 		android:id="@+id/tv_answer"
 		
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		
-		android:layout_weight="0"
 		android:gravity="top|start"
 		
 		android:padding="16dp"
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		
 		android:textSize="20sp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintHorizontal_bias="0.0"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/tv_question"
 		tools:text="tv_answer"/>
 	
 	<Button
 		android:id="@+id/b_show"
-		android:layout_width="match_parent"
+		style="?android:attr/buttonBarStyle"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-		android:layout_weight="1"
 		android:gravity="center"
 		android:text="@string/show"
-		style="?android:attr/buttonBarStyle"/>
+		app:layout_constraintBottom_toTopOf="@+id/ll_result_bar"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/tv_answer"/>
 	
-	<LinearLayout
+	<android.support.constraint.ConstraintLayout
 		android:id="@+id/ll_result_bar"
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_weight="0"
 		android:orientation="horizontal"
 		android:visibility="invisible"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
 		tools:visibility="visible">
 		
 		<Button
 			android:id="@+id/b_remembered"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
 			android:gravity="center"
-			android:text="@string/forgot"/>
+			android:text="@string/remembered"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/b_forgot"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:layout_conversion_absoluteHeight="51dp"
+			tools:layout_conversion_absoluteWidth="192dp"/>
 		
 		<Button
 			android:id="@+id/b_forgot"
-			android:layout_width="wrap_content"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
 			android:gravity="center"
-			android:text="@string/remembered"/>
-	</LinearLayout>
+			android:text="@string/forgot"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@+id/b_remembered"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:layout_conversion_absoluteHeight="51dp"
+			tools:layout_conversion_absoluteWidth="192dp"/>
+	</android.support.constraint.ConstraintLayout>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
