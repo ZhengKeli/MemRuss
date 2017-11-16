@@ -58,13 +58,15 @@ abstract class PendingWorker<in Request : Any, Result> {
 			pendingRequest = request
 			if (!isSearching) {
 				startThread()
-				isSearching=true
+				isSearching = true
 			}
 		}
 	}
 	
 	private fun startThread(): Thread {
 		return thread {
+			var lastRequest: Request? = null
+			var lastResult: Result? = null
 			while (true) {
 				var nullableRequest: Request? = null
 				lock.withLock {
@@ -77,6 +79,11 @@ abstract class PendingWorker<in Request : Any, Result> {
 				val request = nullableRequest ?: break
 				val result = onWork(request)
 				onDone(request, result)
+				lastRequest = request
+				lastResult = result
+			}
+			if (lastRequest != null && lastResult != null) {
+				onAllDone(lastRequest, lastResult)
 			}
 		}
 	}
@@ -84,5 +91,7 @@ abstract class PendingWorker<in Request : Any, Result> {
 	abstract fun onWork(request: Request): Result
 	
 	abstract fun onDone(request: Request, result: Result)
+	
+	abstract fun onAllDone(lastRequest: Request, lastResult: Result)
 	
 }

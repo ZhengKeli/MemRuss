@@ -39,4 +39,6 @@
 	<string name="goToReview">去复习</string>
 	<string name="needReview">有%1$d个单词需要复习哦！</string>
 	<string name="notebookShelf">笔记本夹</string>
+	<string name="found_nothing">无结果</string>
+	<string name="type_to_search">请输入要搜索的内容</string>
 </resources>

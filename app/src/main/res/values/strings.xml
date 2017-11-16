@@ -44,5 +44,7 @@
 	<string name="goToReview">Go to review</string>
 	<string name="needReview">There are %1$d words to review!</string>
 	<string name="notebookShelf">Notebook Shelf</string>
+	<string name="found_nothing">found nothing</string>
+	<string name="type_to_search">type to search</string>
 
 </resources>
