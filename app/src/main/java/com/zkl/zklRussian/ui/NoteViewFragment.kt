@@ -25,13 +25,11 @@ class NoteViewFragment : NoteHoldingFragment() {
 	private lateinit var tv_title: TextView
 	private lateinit var tv_info: TextView
 	private lateinit var b_edit: Button
-	private lateinit var b_delete: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_note_view, container, false).apply {
 		tv_title = findViewById(R.id.tv_title) as TextView
 		tv_info = findViewById(R.id.tv_info) as TextView
 		b_edit = findViewById(R.id.b_edit) as Button
-		b_delete = findViewById(R.id.b_delete) as Button
 	}
 	override fun onStart() {
 		super.onStart()
@@ -51,11 +49,6 @@ class NoteViewFragment : NoteHoldingFragment() {
 		b_edit.setOnClickListener {
 			val fragment = NoteEditFragment.newInstance(notebookKey, noteId)
 			fragmentManager.jumpTo(fragment,true)
-		}
-		
-		b_delete.isEnabled = notebook is MutableNotebook
-		b_delete.setOnClickListener {
-			NoteDeleteDialog.newInstance(notebookKey,noteId).show(fragmentManager, null)
 		}
 		
 		updateNoteContent()
