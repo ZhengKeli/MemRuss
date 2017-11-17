@@ -12,7 +12,7 @@
 	
 	
 	<android.support.constraint.ConstraintLayout
-		android:id="@+id/ll_titleBar"
+		android:id="@+id/vg_titleBar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="0"
@@ -22,13 +22,15 @@
 			android:id="@+id/tv_title"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			android:layout_marginEnd="8dp"
 			android:padding="8dp"
 			android:textAppearance="@style/TextAppearance.AppCompat.Large"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/b_edit"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			tools:text="Note@99"/>
+			tools:text="Note@99"
+			android:layout_marginRight="8dp"/>
 		
 		<Button
 			android:id="@+id/b_edit"

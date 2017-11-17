@@ -18,7 +18,7 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		android:text="@string/notebookShelf"/>
+		android:text="@string/NotebookShelf"/>
 	
 	<android.support.constraint.ConstraintLayout
 		android:id="@+id/cl_buttons"
@@ -33,7 +33,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:gravity="center"
-			android:text="@string/createNotebook"
+			android:text="@string/create_Notebook"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/b_import"
 			app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:gravity="center"
-			android:text="@string/importNotebook"
+			android:text="@string/import_Notebook"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/b_export"
 			app:layout_constraintStart_toEndOf="@+id/b_create"
@@ -55,7 +55,7 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:gravity="center"
-			android:text="@string/exportNotebook"
+			android:text="@string/export_Notebook"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@+id/b_import"

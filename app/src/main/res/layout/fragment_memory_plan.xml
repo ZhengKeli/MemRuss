@@ -46,7 +46,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="0"
 				android:textAppearance="@style/TextAppearance.AppCompat.Large"
-				tools:text="@string/memoryLoad_value"/>
+				tools:text="@string/daily_review_times_value"/>
 			
 			<SeekBar
 				android:id="@+id/sb_memoryLoad"

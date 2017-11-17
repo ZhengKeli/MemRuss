@@ -51,7 +51,7 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 		sb_memoryLoad.max = memoryLoadRange.run { endInclusive - start }
 		sb_memoryLoad.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 			override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-				tv_memoryLoad.text = getString(R.string.memoryLoad_value, seekBar.memoryLoad)
+				tv_memoryLoad.text = getString(R.string.daily_review_times_value, seekBar.memoryLoad)
 			}
 			
 			override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -74,7 +74,7 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 	private fun updateViews() {
 		val memoryState = notebook.memoryState
 		tv_title.text = when (memoryState.status) {
-			NotebookMemoryStatus.infant -> getString(R.string.makeMemoryPlan)
+			NotebookMemoryStatus.infant -> getString(R.string.make_MemoryPlan)
 			NotebookMemoryStatus.learning -> getString(R.string.MemoryPlan)
 			NotebookMemoryStatus.paused -> getString(R.string.MemoryPlan_paused)
 		}

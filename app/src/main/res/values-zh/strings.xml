@@ -7,21 +7,21 @@
 	<string name="answer_colon">答案：</string>
 	<string name="question_colon">问题：</string>
 	<string name="Notebook">单词本</string>
-	<string name="CreateQuestionNote_colon">创建新的问答词条</string>
+	<string name="create_question_note">创建新的问答词条</string>
 	<string name="edit">编辑</string>
 	<string name="Note_create">新词条</string>
 	<string name="Note_edit_id">正在编辑 词条@%1$d</string>
 	<string name="Note_view_id">词条@%1$d</string>
 	<string name="question">问题</string>
 	<string name="answer">答案</string>
-	<string name="count_NotesInAll">共%1$d个词条</string>
+	<string name="count_Notes_in_all">共%1$d个词条</string>
 	<string name="add">添加</string>
 	<string name="menu">菜单</string>
-	<string name="confirmDeletion_message">你确定要删除这个词条吗？</string>
-	<string name="confirmDeletion_title">删除确认</string>
-	<string name="importNotebook">导入单词本</string>
-	<string name="exportNotebook">导出单词本</string>
-	<string name="createNotebook">新建单词本</string>
+	<string name="confirm_deletion_message">你确定要删除这个词条吗？</string>
+	<string name="confirm_deletion">删除确认</string>
+	<string name="import_Notebook">导入单词本</string>
+	<string name="export_Notebook">导出单词本</string>
+	<string name="create_Notebook">新建单词本</string>
 	<string name="view">查看</string>
 	<string name="show">显示</string>
 	<string name="remembered">记住了</string>
@@ -33,12 +33,13 @@
 		学习进度：%1$d\n学习负荷：%2$d\n复习时间：%3$f
 	</string>
 	<string name="MemoryPlan">复习计划</string>
-	<string name="makeMemoryPlan">制定复习计划</string>
+	<string name="make_MemoryPlan">制定复习计划</string>
 	<string name="MemoryPlan_paused">复习计划（已暂停）</string>
-	<string name="memoryLoad_value">每天复习的次数：%1$d</string>
-	<string name="goToReview">去复习</string>
-	<string name="needReview">有%1$d个单词需要复习哦！</string>
-	<string name="notebookShelf">笔记本夹</string>
+	<string name="daily_review_times_value">每天复习的次数：%1$d</string>
+	<string name="go_to_review">去复习</string>
+	<string name="need_review">有%1$d个单词需要复习哦！</string>
+	<string name="NotebookShelf">笔记本夹</string>
 	<string name="found_nothing">无结果</string>
 	<string name="type_to_search">请输入要搜索的内容</string>
+	<string name="conflicted_notes">冲突的词条：</string>
 </resources>

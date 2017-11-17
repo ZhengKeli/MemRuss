@@ -69,7 +69,7 @@ class NotebookFragment : NotebookHoldingFragment() {
 		}
 		
 		//info
-		tv_bookInfo.text = getString(R.string.count_NotesInAll, notebook.noteCount)
+		tv_bookInfo.text = getString(R.string.count_Notes_in_all, notebook.noteCount)
 		b_addNote.setOnClickListener {
 			val fragment = NoteEditFragment.newInstance(notebookKey, -1)
 			fragmentManager.jumpTo(fragment,true)
@@ -100,7 +100,7 @@ class NotebookFragment : NotebookHoldingFragment() {
 			val needReviewCount = notebook.countNeedReviewNotes(System.currentTimeMillis())
 			if (needReviewCount > 0) {
 				cl_review.visibility = View.VISIBLE
-				tv_review.text = getString(R.string.needReview,needReviewCount)
+				tv_review.text = getString(R.string.need_review,needReviewCount)
 			}
 		}
 	}

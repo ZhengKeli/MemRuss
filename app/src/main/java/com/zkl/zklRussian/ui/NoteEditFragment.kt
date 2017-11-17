@@ -93,6 +93,5 @@ class NoteEditFragment : NoteHoldingFragment() {
 		}
 	}
 	
-	
 }
 
