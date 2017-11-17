@@ -34,6 +34,12 @@ class NoteViewFragment : NoteHoldingFragment() {
 	override fun onStart() {
 		super.onStart()
 		
+		//刷新缓存的词条
+		if (tryLoadNote() == null) {
+			fragmentManager.popBackStack()
+			return
+		}
+		
 		tv_title.text = getString(R.string.Note_view_id, noteId)
 		
 		if (note.memoryState.status != NoteMemoryStatus.infant) {

@@ -39,6 +39,12 @@ class NoteEditFragment : NoteHoldingFragment() {
 	override fun onStart() {
 		super.onStart()
 		
+		//刷新缓存的词条
+		if (tryLoadNote() == null && !isCreateMode) {
+			fragmentManager.popBackStack()
+			return
+		}
+		
 		tv_title.text =
 			if (isCreateMode) getString(R.string.Note_create)
 			else getString(R.string.Note_edit_id, noteId)
@@ -47,7 +53,6 @@ class NoteEditFragment : NoteHoldingFragment() {
 		else b_delete.setOnClickListener {
 			NoteDeleteDialog.newInstance(notebookKey,noteId).show(fragmentManager,null)
 		}
-		
 		
 		b_ok.setOnClickListener {
 			val newNoteContent = noteContentEditFragment!!.applyChange()
