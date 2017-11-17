@@ -24,8 +24,8 @@ class NotebookShelf(workingDir: File){
 	private fun loadBookSummary(file: File): NotebookSummary? {
 		try {
 			val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
-			MutableNotebook3(database).use { notebook ->
-				return NotebookSummary(file, notebook.name)
+			return MutableNotebook3(database).use { notebook ->
+				NotebookSummary(file, notebook.name)
 			}
 		}catch (e:Exception){
 			return null
