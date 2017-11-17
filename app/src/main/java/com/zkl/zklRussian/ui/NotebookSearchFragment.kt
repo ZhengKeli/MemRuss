@@ -17,16 +17,14 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 	}
 	
 	private lateinit var sv_search:SearchView
-	private lateinit var tv_nothing:TextView
-	private lateinit var tv_typeToSearch:TextView
+	private lateinit var tv_foundNothing:TextView
 	private lateinit var pb_searching:ProgressBar
 	private lateinit var lv_notes:ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_notebook_search, container, false).apply {
 		
 		sv_search = findViewById(R.id.sv_search) as SearchView
-		tv_nothing = findViewById(R.id.tv_nothing) as TextView
-		tv_typeToSearch = findViewById(R.id.tv_typeToSearch) as TextView
+		tv_foundNothing = findViewById(R.id.tv_foundNothing) as TextView
 		pb_searching = findViewById(R.id.pb_searching) as ProgressBar
 		lv_notes = findViewById(R.id.lv_notes) as ListView
 		
@@ -45,7 +43,7 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 					return true
 				}
 				fun searchText(text:String){
-					searcher.post(text)
+					searcher.post(text.trim())
 				}
 			})
 		
@@ -78,14 +76,17 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 	private val searcher = object :PendingWorker<String, List<Note>>(){
 		override fun onWork(request: String): List<Note> {
 			val requestEmpty = request.isEmpty()
-			tv_typeToSearch.post {
-				tv_typeToSearch.visibility = if (requestEmpty) View.VISIBLE else View.GONE
+			tv_foundNothing.post {
+				if (requestEmpty) {
+					tv_foundNothing.visibility = View.VISIBLE
+					tv_foundNothing.text = getString(R.string.type_to_search)
+				}else{
+					tv_foundNothing.visibility = View.GONE
+				}
 			}
 			
 			var isDone = false
 			pb_searching.postDelayed({
-				
-				
 				pb_searching.visibility = if (!isDone) View.VISIBLE else View.GONE
 			},500)
 			
@@ -104,17 +105,15 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 		override fun onAllDone(lastRequest: String, lastResult: List<Note>) {
 			val requestEmpty = lastRequest.isEmpty()
 			val resultEmpty = lastResult.isEmpty()
-			pb_searching.post {
-				pb_searching.visibility = View.GONE
-				if (requestEmpty) {
-					tv_typeToSearch.visibility = View.VISIBLE
-					tv_nothing.visibility = View.GONE
-				}else{
-					tv_typeToSearch.visibility = View.GONE
-					tv_nothing.visibility = if (resultEmpty) View.VISIBLE else View.GONE
-				}
-			}
 			lv_notes.post {
+				pb_searching.visibility = View.GONE
+				if (resultEmpty) {
+					tv_foundNothing.visibility = View.VISIBLE
+					tv_foundNothing.text =
+						if (requestEmpty) getString(R.string.type_to_search)
+						else getString(R.string.found_nothing)
+				} else tv_foundNothing.visibility = View.GONE
+				
 				searchResult.clear()
 				searchResult.addAll(lastResult)
 				updateNoteList()
