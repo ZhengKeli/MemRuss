@@ -42,10 +42,22 @@
 	<FrameLayout
 		android:id="@+id/fl_noteContent_container"
 		android:layout_width="match_parent"
-		android:layout_height="0dp"
+		android:layout_height="wrap_content"
 		android:layout_weight="1">
 	
 	</FrameLayout>
+	
+	<CheckBox
+		android:id="@+id/cb_remainProgress"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="end"
+		android:layout_margin="8dp"
+		android:layout_weight="0"
+		android:checked="true"
+		android:text="@string/remain_memory_progress"
+		android:visibility="gone"
+		tools:visibility="visible"/>
 	
 	<android.support.constraint.ConstraintLayout
 		android:layout_width="match_parent"

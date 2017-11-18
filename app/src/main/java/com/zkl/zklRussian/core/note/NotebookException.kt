@@ -22,9 +22,9 @@ class NoteTypeNotSupportedException(
  * 对[MutableNotebook]做操作的时候，
  * 出现了词条重复的冲突时，抛出此错误
  */
-class DuplicateException(
+class ConflictException(
 	val uniqueTag: String,
-	val duplicatedNoteId: Long,
+	val conflictedNoteId: Long,
 	message: String = "The adding UniqueDraft with uniqueTag $uniqueTag duplicated with " +
-		"another existed note with id $duplicatedNoteId"
+		"another existed note with id $conflictedNoteId"
 ) : NotebookException(message)

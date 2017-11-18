@@ -20,7 +20,6 @@ class NoteDeleteDialog:NoteHoldingDialog(){
 			.setNegativeButton(android.R.string.cancel,null)
 			.setPositiveButton(android.R.string.ok,{ _, _ ->
 				mutableNotebook.deleteNote(noteId)
-				fragmentManager.popBackStack()
 			})
 			.create()
 	}

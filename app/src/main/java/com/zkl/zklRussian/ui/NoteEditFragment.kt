@@ -6,11 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
+import com.zkl.zklRussian.core.note.ConflictException
 import com.zkl.zklRussian.core.note.NoteContent
+import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
+import org.jetbrains.anko.support.v4.toast
 
 class NoteEditFragment : NoteHoldingFragment() {
 	
@@ -24,6 +28,7 @@ class NoteEditFragment : NoteHoldingFragment() {
 	//view
 	private lateinit var tv_title: TextView
 	private lateinit var b_delete: Button
+	private lateinit var cb_remainProgress:CheckBox
 	private lateinit var b_ok: Button
 	private lateinit var b_cancel: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
@@ -32,6 +37,8 @@ class NoteEditFragment : NoteHoldingFragment() {
 		tv_title = findViewById(R.id.tv_title) as TextView
 		b_delete = findViewById(R.id.b_delete) as Button
 		
+		cb_remainProgress = findViewById(R.id.cb_remainProgress) as CheckBox
+		
 		b_ok = findViewById(R.id.b_ok) as Button
 		b_cancel = findViewById(R.id.b_cancel) as Button
 		
@@ -39,39 +46,62 @@ class NoteEditFragment : NoteHoldingFragment() {
 	override fun onStart() {
 		super.onStart()
 		
-		//刷新缓存的词条
-		if (tryLoadNote() == null && !isCreateMode) {
-			fragmentManager.popBackStack()
-			return
-		}
-		
-		tv_title.text =
-			if (isCreateMode) getString(R.string.Note_create)
-			else getString(R.string.Note_edit_id, noteId)
-		
-		if (isCreateMode) b_delete.visibility=View.GONE
-		else b_delete.setOnClickListener {
-			NoteDeleteDialog.newInstance(notebookKey,noteId).show(fragmentManager,null)
-		}
-		
-		b_ok.setOnClickListener {
-			val newNoteContent = noteContentEditFragment!!.applyChange()
+		if (isCreateMode) {
+			tv_title.text = getString(R.string.Note_create)
+			b_delete.visibility=View.GONE
 			
-			if (isCreateMode) mutableNotebook.addNote(newNoteContent)
-			else mutableNotebook.modifyNoteContent(noteId, newNoteContent)
+			updateNoteContent(QuestionContent("", ""))
 			
-			fragmentManager.popBackStack()
+			cb_remainProgress.visibility = View.GONE
+			
+			b_ok.setOnClickListener {
+				val newNoteContent = noteContentEditFragment!!.applyChange()
+				try {
+					mutableNotebook.addNote(newNoteContent)
+					fragmentManager.popBackStack()
+				} catch (e: ConflictException) {
+					toast(getString(R.string.there_are_conflicted_notes))
+				}
+			}
+			b_cancel.setOnClickListener {
+				fragmentManager.popBackStack()
+			}
+			
 		}
-		b_cancel.setOnClickListener {
-			fragmentManager.popBackStack()
+		else{
+			
+			if (tryLoadNote() == null) {
+				fragmentManager.popBackStack()
+				return
+			}
+			
+			tv_title.text = getString(R.string.Note_edit_id, noteId)
+			b_delete.setOnClickListener {
+				NoteDeleteDialog.newInstance(notebookKey,noteId).show(fragmentManager,null)
+			}
+			
+			updateNoteContent()
+			
+			cb_remainProgress.visibility = View.VISIBLE
+			
+			b_ok.setOnClickListener {
+				val newNoteContent = noteContentEditFragment!!.applyChange()
+				try {
+					mutableNotebook.modifyNoteContent(noteId, newNoteContent)
+					if (!cb_remainProgress.isChecked)
+						mutableNotebook.modifyNoteMemory(noteId, NoteMemoryState.beginningState())
+					fragmentManager.popBackStack()
+				} catch (e: ConflictException) {
+					toast(getString(R.string.there_are_conflicted_notes))
+				}
+			}
+			b_cancel.setOnClickListener {
+				fragmentManager.popBackStack()
+			}
+			
 		}
-		
-		//update noteContent
-		if (isCreateMode) updateNoteContent(QuestionContent("", ""))
-		else updateNoteContent()
 		
 	}
-	
 	
 	//noteContent
 	private var noteContentEditFragment: NoteContentEditFragment? = null

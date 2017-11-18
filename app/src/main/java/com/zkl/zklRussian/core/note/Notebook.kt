@@ -59,11 +59,11 @@ interface Notebook:Closeable {
 	/**
 	 * 批量搜索是否存在某些 uniqueTag
 	 */
-	@Throws(DuplicateException::class)
+	@Throws(ConflictException::class)
 	fun throwIfDuplicated(uniqueTags: Collection<String>,exceptId: Long=-1L){
 		uniqueTags.forEach { uniqueTag ->
 			val id = checkUniqueTag(uniqueTag,exceptId)
-			if (id != -1L) throw DuplicateException(uniqueTag, id)
+			if (id != -1L) throw ConflictException(uniqueTag, id)
 		}
 	}
 	
@@ -123,13 +123,13 @@ interface MutableNotebook : Notebook {
 	 * 添加一个词条
 	 * @return 返回刚加入的词条的 noteId
 	 */
-	@Throws(DuplicateException::class)
+	@Throws(ConflictException::class)
 	fun addNote(content: NoteContent, memoryState: NoteMemoryState? = null): Long
 	
 	/**
 	 * 添加一堆词条
 	 */
-	@Throws(DuplicateException::class)
+	@Throws(ConflictException::class)
 	fun addNotes(drafts: Collection<NoteContent>) {
 		drafts.forEach { addNote(it) }
 	}
@@ -142,6 +142,7 @@ interface MutableNotebook : Notebook {
 	/**
 	 * 修改 note 的内容
 	 */
+	@Throws(ConflictException::class)
 	fun modifyNoteContent(noteId: Long, content: NoteContent)
 	
 	/**

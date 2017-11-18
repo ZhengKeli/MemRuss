@@ -1,5 +1,6 @@
 package com.zkl.zklRussian.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -47,16 +48,10 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 				}
 			})
 		
-		lv_notes.adapter = object : BaseAdapter() {
-			override fun getItem(position: Int) = searchResult[getItemId(position).toInt()]
-			override fun getItemId(position: Int) = position.toLong()
-			
+		lv_notes.adapter = object :NoteListAdapter(){
 			override fun getCount() = searchResult.size
-			override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-				val view = (convertView as? NoteItemView) ?: NoteItemView(activity)
-				view.note = getItem(position)
-				return view
-			}
+			override fun getItem(position: Int) = searchResult[position]
+			override val context: Context get() = activity
 		}
 		lv_notes.setOnItemClickListener { _, view, _, _ ->
 			view as NoteItemView

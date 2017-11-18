@@ -46,6 +46,7 @@
 	<string name="NotebookShelf">Notebook Shelf</string>
 	<string name="found_nothing">found nothing</string>
 	<string name="type_to_search">type to search</string>
-	<string name="conflicted_notes">Conflicted Note(s):</string>
+	<string name="there_are_conflicted_notes">There are conflicted Note(s)</string>
+	<string name="remain_memory_progress">Remain Memory Progress</string>
 
 </resources>

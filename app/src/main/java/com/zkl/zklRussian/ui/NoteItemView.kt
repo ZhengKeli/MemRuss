@@ -2,6 +2,9 @@ package com.zkl.zklRussian.ui
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.zkl.zklRussian.R
@@ -36,4 +39,18 @@ class NoteItemView(context: Context) : LinearLayout(context) {
 			}
 			
 		}
+}
+
+
+abstract class NoteListAdapter:BaseAdapter(){
+	abstract override fun getCount() :Int
+	abstract override fun getItem(position: Int):Note
+	override fun getItemId(position: Int): Long = 0L
+	
+	abstract val context:Context
+	override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+		val view = (convertView as? NoteItemView) ?: NoteItemView(context)
+		view.note = getItem(position)
+		return view
+	}
 }
