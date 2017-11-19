@@ -20,7 +20,11 @@
 		android:textSize="40sp"
 		
 		android:hint="@string/question"
-		tools:text="слово"/>
+		tools:text="слово">
+		
+		<requestFocus/>
+		
+	</EditText>
 	
 	<EditText
 		android:id="@+id/et_answer"

@@ -1,11 +1,11 @@
 package com.zkl.zklRussian.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
@@ -21,10 +21,13 @@ class NoteReviewFragment : NoteHoldingFragment() {
 	//view
 	private lateinit var tv_title: TextView
 	private lateinit var b_view: Button
+	private lateinit var fl_noteContent:FrameLayout
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_note_review, container, false).apply {
 		tv_title = findViewById(R.id.tv_title) as TextView
 		b_view = findViewById(R.id.b_view) as Button
+		fl_noteContent = findViewById(R.id.fl_noteContent) as FrameLayout
+		noteContentReviewHolder = null
 	}
 	override fun onStart() {
 		super.onStart()
@@ -63,24 +66,20 @@ class NoteReviewFragment : NoteHoldingFragment() {
 	
 	
 	//noteContent
-	private var noteContentReviewFragment: NoteContentReviewFragment? = null
-	override fun onAttachFragment(childFragment: Fragment) {
-		super.onAttachFragment(childFragment)
-		noteContentReviewFragment = childFragment as? NoteContentReviewFragment
-	}
+	private var noteContentReviewHolder:NoteContentReviewHolder? = null
 	private fun updateNoteContent(){
 		val noteContent = note.content
-		if (noteContentReviewFragment?.isCompatible(noteContent) == true) {
-			noteContentReviewFragment?.noteContent = noteContent
+		val oldHolder = noteContentReviewHolder
+		if (oldHolder?.isCompatible(noteContent) == true) {
+			oldHolder.noteContent = noteContent
 		} else {
-			val fragment = typedNoteContentReviewFragments[noteContent.typeTag]?.newInstance()
+			val holder = typedNoteContentReviewHolders[noteContent.typeTag]?.invoke(context,fl_noteContent)
 				?: throw RuntimeException("The noteContent type \"${noteContent.typeTag}\" is not supported.")
-			childFragmentManager.beginTransaction()
-				.replace(R.id.fl_noteContent_container, fragment)
-				.commit()
-			fragment.noteContent = noteContent
-			fragment.onResultListener = this::onResult
-			noteContentReviewFragment = fragment
+			holder.noteContent = noteContent
+			holder.onResultListener = this::onResult
+			fl_noteContent.removeAllViews()
+			fl_noteContent.addView(holder.view)
+			noteContentReviewHolder = holder
 		}
 	}
 	

@@ -1,11 +1,11 @@
 package com.zkl.zklRussian.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
@@ -23,13 +23,16 @@ class NoteViewFragment : NoteHoldingFragment() {
 	
 	//view
 	private lateinit var tv_title: TextView
-	private lateinit var tv_info: TextView
 	private lateinit var b_edit: Button
+	private lateinit var tv_info: TextView
+	private lateinit var fl_noteContent:FrameLayout
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_note_view, container, false).apply {
 		tv_title = findViewById(R.id.tv_title) as TextView
-		tv_info = findViewById(R.id.tv_info) as TextView
 		b_edit = findViewById(R.id.b_edit) as Button
+		tv_info = findViewById(R.id.tv_info) as TextView
+		fl_noteContent = findViewById(R.id.fl_noteContent) as FrameLayout
+		noteContentViewHolder = null
 	}
 	override fun onStart() {
 		super.onStart()
@@ -63,23 +66,19 @@ class NoteViewFragment : NoteHoldingFragment() {
 	
 	
 	//noteContent
-	private var noteContentViewFragment: NoteContentViewFragment? = null
-	override fun onAttachFragment(childFragment: Fragment) {
-		super.onAttachFragment(childFragment)
-		noteContentViewFragment = childFragment as? NoteContentViewFragment
-	}
+	private var noteContentViewHolder:NoteContentViewHolder? = null
 	private fun updateNoteContent() {
 		val noteContent = note.content
-		if (noteContentViewFragment?.isCompatible(noteContent) == true) {
-			noteContentViewFragment?.noteContent = noteContent
+		val oldHolder = noteContentViewHolder
+		if (oldHolder?.isCompatible(noteContent) == true) {
+			oldHolder.noteContent = noteContent
 		} else {
-			val fragment = typedNoteContentViewFragments[noteContent.typeTag]?.newInstance()
+			val holder = typedNoteContentViewHolders[noteContent.typeTag]?.invoke(activity, fl_noteContent)
 				?: throw RuntimeException("The noteContent type \"${noteContent.typeTag}\" is not supported.")
-			childFragmentManager.beginTransaction()
-				.replace(R.id.fl_noteContent_container, fragment)
-				.commit()
-			fragment.noteContent = noteContent
-			noteContentViewFragment = fragment
+			holder.noteContent = noteContent
+			fl_noteContent.removeAllViews()
+			fl_noteContent.addView(holder.view)
+			noteContentViewHolder = holder
 		}
 	}
 	

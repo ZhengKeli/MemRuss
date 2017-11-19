@@ -1,12 +1,12 @@
 package com.zkl.zklRussian.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.FrameLayout
 import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
@@ -28,6 +28,7 @@ class NoteEditFragment : NoteHoldingFragment() {
 	//view
 	private lateinit var tv_title: TextView
 	private lateinit var b_delete: Button
+	private lateinit var fl_noteContent:FrameLayout
 	private lateinit var cb_remainProgress:CheckBox
 	private lateinit var b_ok: Button
 	private lateinit var b_cancel: Button
@@ -36,12 +37,12 @@ class NoteEditFragment : NoteHoldingFragment() {
 		
 		tv_title = findViewById(R.id.tv_title) as TextView
 		b_delete = findViewById(R.id.b_delete) as Button
-		
+		fl_noteContent = findViewById(R.id.fl_noteContent) as FrameLayout
 		cb_remainProgress = findViewById(R.id.cb_remainProgress) as CheckBox
-		
 		b_ok = findViewById(R.id.b_ok) as Button
 		b_cancel = findViewById(R.id.b_cancel) as Button
 		
+		noteContentEditHolder = null
 	}
 	override fun onStart() {
 		super.onStart()
@@ -55,7 +56,7 @@ class NoteEditFragment : NoteHoldingFragment() {
 			cb_remainProgress.visibility = View.GONE
 			
 			b_ok.setOnClickListener {
-				val newNoteContent = noteContentEditFragment!!.applyChange()
+				val newNoteContent = noteContentEditHolder!!.applyChange()
 				try {
 					mutableNotebook.addNote(newNoteContent)
 					fragmentManager.popBackStack()
@@ -85,7 +86,7 @@ class NoteEditFragment : NoteHoldingFragment() {
 			cb_remainProgress.visibility = View.VISIBLE
 			
 			b_ok.setOnClickListener {
-				val newNoteContent = noteContentEditFragment!!.applyChange()
+				val newNoteContent = noteContentEditHolder!!.applyChange()
 				try {
 					mutableNotebook.modifyNoteContent(noteId, newNoteContent)
 					if (!cb_remainProgress.isChecked)
@@ -103,23 +104,24 @@ class NoteEditFragment : NoteHoldingFragment() {
 		
 	}
 	
-	//noteContent
-	private var noteContentEditFragment: NoteContentEditFragment? = null
-	override fun onAttachFragment(childFragment: Fragment) {
-		super.onAttachFragment(childFragment)
-		noteContentEditFragment = childFragment as? NoteContentEditFragment
+	override fun onResume() {
+		super.onResume()
+		noteContentEditHolder?.requestFocus()
 	}
+	
+	//noteContent
+	private var noteContentEditHolder:NoteContentEditHolder? =null
 	private fun updateNoteContent(noteContent: NoteContent=note.content){
-		if (noteContentEditFragment?.isCompatible(noteContent) == true) {
-			noteContentEditFragment?.noteContent = noteContent
+		val oldHolder = noteContentEditHolder
+		if (oldHolder?.isCompatible(noteContent) == true) {
+			oldHolder.noteContent = noteContent
 		} else {
-			val fragment = typedNoteContentEditFragments[noteContent.typeTag]?.newInstance()
+			val holder = typedNoteContentEditHolders[noteContent.typeTag]?.invoke(activity, fl_noteContent)
 				?: throw RuntimeException("The noteContent type \"${noteContent.typeTag}\" is not supported.")
-			childFragmentManager.beginTransaction()
-				.replace(R.id.fl_noteContent_container, fragment)
-				.commit()
-			fragment.noteContent = noteContent
-			noteContentEditFragment = fragment
+			holder.noteContent = noteContent
+			fl_noteContent.removeAllViews()
+			fl_noteContent.addView(holder.view)
+			noteContentEditHolder = holder
 		}
 	}
 	

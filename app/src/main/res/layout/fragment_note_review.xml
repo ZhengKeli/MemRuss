@@ -45,7 +45,7 @@
 	</android.support.constraint.ConstraintLayout>
 	
 	<FrameLayout
-		android:id="@+id/fl_noteContent_container"
+		android:id="@+id/fl_noteContent"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layout_weight="1">
