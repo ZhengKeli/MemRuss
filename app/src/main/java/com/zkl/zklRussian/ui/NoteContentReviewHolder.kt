@@ -55,9 +55,8 @@ class QuestionContentReviewHolder(context: Context, container: ViewGroup? = null
 		tv_answer = findViewById(R.id.tv_answer) as TextView
 		b_show = findViewById(R.id.b_show) as Button
 		cl_resultBar = findViewById(R.id.cl_result_bar) as ConstraintLayout
-		b_remembered = findViewById(R.id.b_forgot) as Button
-		b_forgot = findViewById(R.id.b_remembered) as Button
-		
+		b_forgot = findViewById(R.id.b_forgot) as Button
+		b_remembered = findViewById(R.id.b_remembered) as Button
 		
 		b_show.setOnClickListener{
 			b_show.visibility = View.GONE
