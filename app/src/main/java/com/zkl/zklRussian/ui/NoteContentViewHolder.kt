@@ -14,6 +14,9 @@ interface NoteContentViewHolder {
 	var noteContent: NoteContent?
 	fun isCompatible(noteContent: NoteContent):Boolean
 }
+
+
+
 val typedNoteContentViewHolders = hashMapOf<String,(Context, ViewGroup?)->NoteContentViewHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentViewHolder
 )

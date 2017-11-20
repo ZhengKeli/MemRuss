@@ -34,6 +34,8 @@ interface ReviewResult{
 	}
 }
 
+
+
 val typedNoteContentReviewHolders = hashMapOf<String,(Context, ViewGroup?)->NoteContentReviewHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentReviewHolder
 )

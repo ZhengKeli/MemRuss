@@ -20,6 +20,9 @@ interface NoteContentEditHolder{
 	fun isCompatible(noteContent: NoteContent):Boolean
 	fun applyChange(): NoteContent
 }
+
+
+
 val typedNoteContentEditHolders = hashMapOf<String,(Context, ViewGroup?)->NoteContentEditHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentEditHolder
 )

@@ -103,11 +103,11 @@ class NoteEditFragment : NoteHoldingFragment() {
 		}
 		
 	}
-	
 	override fun onResume() {
 		super.onResume()
 		noteContentEditHolder?.requestFocus()
 	}
+	
 	
 	//noteContent
 	private var noteContentEditHolder:NoteContentEditHolder? =null

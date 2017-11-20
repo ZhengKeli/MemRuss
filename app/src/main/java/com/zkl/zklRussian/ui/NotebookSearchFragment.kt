@@ -53,9 +53,9 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 			override fun getItem(position: Int) = searchResult[position]
 			override val context: Context get() = activity
 		}
-		lv_notes.setOnItemClickListener { _, view, _, _ ->
-			view as NoteItemView
-			val fragment = NoteViewFragment.newInstance(notebookKey, view.note!!.id)
+		lv_notes.setOnItemClickListener { _, _, position, _ ->
+			val note = searchResult[position]
+			val fragment = NoteViewFragment.newInstance(notebookKey, note.id)
 			fragmentManager.jumpTo(fragment,true)
 		}
 		
