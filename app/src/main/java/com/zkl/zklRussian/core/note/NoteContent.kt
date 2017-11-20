@@ -1,7 +1,9 @@
 package com.zkl.zklRussian.core.note
 
+import java.io.Serializable
 
-interface NoteContent {
+
+interface NoteContent:Serializable {
 	/**
 	 * 不同种类的[NoteContent]的类型标签
 	 */

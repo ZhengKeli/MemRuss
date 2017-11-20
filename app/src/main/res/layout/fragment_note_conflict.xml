@@ -1,0 +1,35 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:paddingEnd="8dp"
+	android:paddingLeft="8dp"
+	android:paddingRight="8dp"
+	android:paddingStart="8dp">
+	
+	
+	<ListView
+		android:id="@+id/lv_conflict"
+		android:layout_width="match_parent"
+		android:layout_height="150dp"
+		android:layout_marginBottom="8dp"
+		android:layout_marginTop="8dp"
+		/>
+	
+	<CheckBox
+		android:id="@+id/cb_remainProgress"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="end"
+		android:layout_marginBottom="8dp"
+		android:layout_marginEnd="8dp"
+		android:layout_marginRight="8dp"
+		android:checked="true"
+		android:text="@string/remain_memory_progress"
+		android:visibility="gone"
+		tools:visibility="visible"/>
+
+
+</LinearLayout>

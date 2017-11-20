@@ -14,7 +14,6 @@ import com.zkl.zklRussian.core.note.ConflictException
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
-import org.jetbrains.anko.support.v4.toast
 
 class NoteEditFragment : NoteHoldingFragment() {
 	
@@ -22,8 +21,6 @@ class NoteEditFragment : NoteHoldingFragment() {
 		fun newInstance(notebookKey: NotebookKey, noteId: Long)
 			= NoteEditFragment::class.java.newInstance(notebookKey, noteId)
 	}
-	
-	private val isCreateMode get() = noteId==-1L
 	
 	//view
 	private lateinit var tv_title: TextView
@@ -47,7 +44,7 @@ class NoteEditFragment : NoteHoldingFragment() {
 	override fun onStart() {
 		super.onStart()
 		
-		if (isCreateMode) {
+		if (noteId == -1L) {
 			tv_title.text = getString(R.string.Note_create)
 			b_delete.visibility=View.GONE
 			
@@ -61,7 +58,8 @@ class NoteEditFragment : NoteHoldingFragment() {
 					mutableNotebook.addNote(newNoteContent)
 					fragmentManager.popBackStack()
 				} catch (e: ConflictException) {
-					toast(getString(R.string.there_are_conflicted_notes))
+					val modifyRequest = NoteConflictDialog.ModifyRequest(-1, newNoteContent, false)
+					NoteConflictDialog.newInstance(notebookKey, modifyRequest).show(fragmentManager,null)
 				}
 			}
 			b_cancel.setOnClickListener {
@@ -69,7 +67,7 @@ class NoteEditFragment : NoteHoldingFragment() {
 			}
 			
 		}
-		else{
+		else {
 			
 			if (tryLoadNote() == null) {
 				fragmentManager.popBackStack()
@@ -90,10 +88,11 @@ class NoteEditFragment : NoteHoldingFragment() {
 				try {
 					mutableNotebook.modifyNoteContent(noteId, newNoteContent)
 					if (!cb_remainProgress.isChecked)
-						mutableNotebook.modifyNoteMemory(noteId, NoteMemoryState.beginningState())
+						mutableNotebook.modifyNoteMemory(noteId, NoteMemoryState.infantState())
 					fragmentManager.popBackStack()
 				} catch (e: ConflictException) {
-					toast(getString(R.string.there_are_conflicted_notes))
+					val modifyRequest = NoteConflictDialog.ModifyRequest(noteId, newNoteContent, cb_remainProgress.isChecked)
+					NoteConflictDialog.newInstance(notebookKey, modifyRequest).show(fragmentManager,null)
 				}
 			}
 			b_cancel.setOnClickListener {

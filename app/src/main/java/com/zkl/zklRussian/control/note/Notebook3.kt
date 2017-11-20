@@ -233,7 +233,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		
 		val nowTime = System.currentTimeMillis()
 		val noteContentString = contentEncoder.encode(content)
-		val noteMemory = memoryState ?: NoteMemoryState()
+		val noteMemory = memoryState ?: NoteMemoryState.infantState()
 		
 		var newNoteId: Long = -1L
 		database.beginTransaction()
@@ -293,7 +293,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			UniqueTagTable.run { delete(tableName, "${UniqueTagTable.noteId} = $noteId") }
 			SearchTagTable.run { delete(tableName, "${SearchTagTable.noteId} = $noteId") }
 			
-			//添加note
+			//修改note
 			NotesTable.run {
 				val newContentCoder = noteContentCoders[content.typeTag] ?:
 					throw NoteTypeNotSupportedException(content.typeTag)
