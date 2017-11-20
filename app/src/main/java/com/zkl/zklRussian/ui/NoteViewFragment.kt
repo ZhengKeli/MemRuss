@@ -33,14 +33,11 @@ class NoteViewFragment : NoteHoldingFragment() {
 		tv_info = findViewById(R.id.tv_info) as TextView
 		fl_noteContent = findViewById(R.id.fl_noteContent) as FrameLayout
 		noteContentViewHolder = null
-	}
-	override fun onStart() {
-		super.onStart()
 		
 		//刷新缓存的词条
 		if (tryLoadNote() == null) {
 			fragmentManager.popBackStack()
-			return
+			return@apply
 		}
 		
 		tv_title.text = getString(R.string.Note_view_id, noteId)

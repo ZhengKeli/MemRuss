@@ -27,10 +27,8 @@ class NoteReviewFragment : NoteHoldingFragment() {
 		tv_title = findViewById(R.id.tv_title) as TextView
 		b_view = findViewById(R.id.b_view) as Button
 		fl_noteContent = findViewById(R.id.fl_noteContent) as FrameLayout
+		
 		noteContentReviewHolder = null
-	}
-	override fun onStart() {
-		super.onStart()
 		
 		if (tryLoadNote() == null) jumpToNextNote()
 		

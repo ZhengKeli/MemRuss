@@ -22,30 +22,21 @@ class NotebookShelfFragment:Fragment(){
 				arg_autoJump to autoJumpToFirst
 			)
 		}
+		private var NotebookShelfFragment.autoJump:Boolean
+			get() = arguments!!.getBoolean(arg_autoJump)
+			set(value) {
+				arguments!!.putBoolean(arg_autoJump,value)
+			}
 	}
 	
-	private var autoJump:Boolean
-		get() = arguments!!.getBoolean(arg_autoJump)
-		set(value) {
-			arguments!!.putBoolean(arg_autoJump,value)
-		}
 	
-	
-	lateinit var b_create:Button
-	lateinit var b_import:Button
-	lateinit var b_export:Button
-	lateinit var lv_notebooks:ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_notebook_shelf,container,false).apply {
 		
-		b_create = findViewById(R.id.b_create) as Button
-		b_import = findViewById(R.id.b_import) as Button
-		b_export = findViewById(R.id.b_export) as Button
-		lv_notebooks = findViewById(R.id.lv_notebooks) as ListView
-	}
-	
-	override fun onStart() {
-		super.onStart()
+		val b_create = findViewById(R.id.b_create) as Button
+		val b_import = findViewById(R.id.b_import) as Button
+		val b_export = findViewById(R.id.b_export) as Button
+		val lv_notebooks = findViewById(R.id.lv_notebooks) as ListView
 		
 		val summaries = myApp.notebookShelf.loadBookSummaries()
 		if (summaries.isEmpty()) fragmentManager.jumpTo(NotebookInfantFragment(),false)

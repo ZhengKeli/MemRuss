@@ -40,9 +40,6 @@ class NoteEditFragment : NoteHoldingFragment() {
 		b_cancel = findViewById(R.id.b_cancel) as Button
 		
 		noteContentEditHolder = null
-	}
-	override fun onStart() {
-		super.onStart()
 		
 		if (noteId == -1L) {
 			tv_title.text = getString(R.string.Note_create)
@@ -71,7 +68,7 @@ class NoteEditFragment : NoteHoldingFragment() {
 			
 			if (tryLoadNote() == null) {
 				fragmentManager.popBackStack()
-				return
+				return@apply
 			}
 			
 			tv_title.text = getString(R.string.Note_edit_id, noteId)
