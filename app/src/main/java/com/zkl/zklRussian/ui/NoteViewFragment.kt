@@ -20,7 +20,6 @@ class NoteViewFragment : NoteHoldingFragment() {
 			= NoteViewFragment::class.java.newInstance(notebookKey, noteId)
 	}
 	
-	
 	//view
 	private lateinit var tv_title: TextView
 	private lateinit var b_edit: Button
