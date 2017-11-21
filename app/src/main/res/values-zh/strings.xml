@@ -20,7 +20,7 @@
 	<string name="confirm_deletion_message">你确定要删除这个词条吗？</string>
 	<string name="confirm_deletion">删除确认</string>
 	<string name="import_Notebook">导入单词本</string>
-	<string name="export_Notebook">导出单词本</string>
+	<string name="merge_Notebook">合并单词本</string>
 	<string name="create_Notebook">新建单词本</string>
 	<string name="view">查看</string>
 	<string name="show">显示</string>

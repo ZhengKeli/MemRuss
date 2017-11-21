@@ -52,8 +52,7 @@ class NoteViewFragment : NoteHoldingFragment() {
 		
 		b_edit.isEnabled = notebook is MutableNotebook
 		b_edit.setOnClickListener {
-			val fragment = NoteEditFragment.newInstance(notebookKey, noteId)
-			fragmentManager.jumpTo(fragment,true)
+			NoteEditFragment.newInstance(notebookKey, noteId).jump(fragmentManager, true)
 		}
 		
 		updateNoteContent()

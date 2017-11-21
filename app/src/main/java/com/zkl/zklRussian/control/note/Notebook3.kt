@@ -204,9 +204,10 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
-	private fun Cursor.parseNoteList(): List<Note> = parseList(rowParser { noteId: Long, createTime: Long,
-	                                                                       contentType: String, contentString: String, contentUpdateTime: Long,
-	                                                                       memoryState: String, memoryProgress: Double, memoryLoad: Double, reviewTime: Long, memoryUpdateTime: Long ->
+	private fun Cursor.parseNoteList(): List<Note> = parseList(rowParser {
+		noteId: Long, createTime: Long,
+		contentType: String, contentString: String, contentUpdateTime: Long,
+		memoryState: String, memoryProgress: Double, memoryLoad: Double, reviewTime: Long, memoryUpdateTime: Long ->
 		
 		val noteContentCoder = noteContentCoders[contentType] ?: throw NoteTypeNotSupportedException(contentType)
 		val noteContent = noteContentCoder.decode(contentString)

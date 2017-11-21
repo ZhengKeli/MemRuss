@@ -28,25 +28,38 @@ class NotebookShelfFragment:Fragment(){
 				arguments!!.putBoolean(arg_autoJump,value)
 			}
 	}
+	private class NotebookItemView(context: Context):LinearLayout(context){
+		private val tv_notebookName:TextView
+		init {
+			LayoutInflater.from(context).inflate(R.layout.adapter_notebook_item, this, true)
+			tv_notebookName= findViewById(R.id.tv_notebookName) as TextView
+		}
+		
+		var notebookSummary: NotebookShelf.NotebookSummary? = null
+			set(value) {
+				field = value
+				tv_notebookName.text = value?.bookName ?: ""
+			}
+	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_notebook_shelf,container,false).apply {
 		
 		val b_create = findViewById(R.id.b_create) as Button
 		val b_import = findViewById(R.id.b_import) as Button
-		val b_export = findViewById(R.id.b_export) as Button
+		val b_export = findViewById(R.id.b_merge) as Button
 		val lv_notebooks = findViewById(R.id.lv_notebooks) as ListView
 		
 		val summaries = myApp.notebookShelf.loadBookSummaries()
-		if (summaries.isEmpty()) fragmentManager.jumpTo(NotebookInfantFragment(),false)
+		if (summaries.isEmpty()) NotebookInfantFragment().jump(fragmentManager, false)
 		else if (autoJump) {
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(summaries.first().file)
-			fragmentManager.jumpTo(NotebookFragment.newInstance(key), true)
+			NotebookFragment.newInstance(key).jump(fragmentManager, true)
 			autoJump = false
 		}
 		
 		b_create.setOnClickListener{
-			fragmentManager.jumpTo(NotebookCreationFragment(),true)
+			NotebookCreationFragment().jump(fragmentManager, true)
 		}
 		b_import.setOnClickListener {
 			TODO()
@@ -66,29 +79,18 @@ class NotebookShelfFragment:Fragment(){
 			override fun getItemId(position: Int) = 0L
 			
 		}
-		
 		lv_notebooks.setOnItemClickListener { parent, _, position, _ ->
 			val summary = parent.adapter.getItem(position) as NotebookShelf.NotebookSummary
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(summary.file)
-			fragmentManager.jumpTo(NotebookFragment.newInstance(key),true)
+			NotebookFragment.newInstance(key).jump(fragmentManager, true)
+		}
+		lv_notebooks.setOnItemLongClickListener { parent, _, position, _ ->
+			val summary = parent.adapter.getItem(position) as NotebookShelf.NotebookSummary
+			//todo 弹出菜单
+			true
 		}
 	}
 	
-	
 }
 
-
-class NotebookItemView(context: Context):LinearLayout(context){
-	private val tv_notebookName:TextView
-	init {
-		LayoutInflater.from(context).inflate(R.layout.adapter_notebook_item, this, true)
-		tv_notebookName= findViewById(R.id.tv_notebookName) as TextView
-	}
-	
-	var notebookSummary: NotebookShelf.NotebookSummary? = null
-		set(value) {
-			field = value
-			tv_notebookName.text = value?.bookName ?: ""
-		}
-}
 

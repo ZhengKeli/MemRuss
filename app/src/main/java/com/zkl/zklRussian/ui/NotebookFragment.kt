@@ -39,7 +39,7 @@ class NotebookFragment : NotebookHoldingFragment() {
 		}
 		tv_title.text = notebook.name
 		sv_search.setOnSearchClickListener {
-			fragmentManager.jumpTo(NotebookSearchFragment.newInstance(notebookKey),true)
+			NotebookSearchFragment.newInstance(notebookKey).jump(fragmentManager, true)
 			sv_search.isIconified = true
 		}
 		
@@ -48,12 +48,11 @@ class NotebookFragment : NotebookHoldingFragment() {
 		if (notebook is MutableNotebook) {
 			b_addNote.visibility = View.VISIBLE
 			b_addNote.setOnClickListener {
-				val fragment = NoteEditFragment.newInstance(notebookKey, -1)
-				fragmentManager.jumpTo(fragment,true)
+				NoteEditFragment.newInstance(notebookKey, -1).jump(fragmentManager, true)
 			}
 			b_memoryPlan.visibility = View.VISIBLE
 			b_memoryPlan.setOnClickListener{
-				fragmentManager.jumpTo(MemoryPlanFragment.newInstance(notebookKey),true)
+				MemoryPlanFragment.newInstance(notebookKey).jump(fragmentManager, true)
 			}
 		}
 		else {
@@ -74,12 +73,17 @@ class NotebookFragment : NotebookHoldingFragment() {
 		}
 		if(notebook is MutableNotebook){
 			b_review.setOnClickListener {
-				fragmentManager.jumpTo(NoteReviewFragment.newInstance(notebookKey),true)
+				NoteReviewFragment.newInstance(notebookKey).jump(fragmentManager, true)
 			}
 			updateNeedReview()
 		}
 		
 		//list
+		val notesBuffer = object : SectionBufferList<Note>(){
+			override fun getSection(startFrom: Int): List<Note>
+				= notebook.selectLatestNotes(sectionSize, startFrom)
+			override val size: Int get() = notebook.noteCount
+		}
 		notesBuffer.clearBuffer()
 		lv_notes.adapter = object :NoteListAdapter(){
 			override fun getCount() = notesBuffer.size
@@ -88,18 +92,14 @@ class NotebookFragment : NotebookHoldingFragment() {
 		}
 		lv_notes.setOnItemClickListener { _, _, position, _ ->
 			val note = notesBuffer[position]
-			val fragment = NoteViewFragment.newInstance(notebookKey, note.id)
-			fragmentManager.jumpTo(fragment,true)
+			NoteViewFragment.newInstance(notebookKey, note.id).jump(fragmentManager, true)
+		}
+		lv_notes.setOnItemLongClickListener { _, _, position, _ ->
+			//todo 弹出菜单
+			true
 		}
 	}
 	
-	//notes buffer
-	private val notesBuffer = object : SectionBufferList<Note>(){
-		override fun getSection(startFrom: Int): List<Note>
-			= notebook.selectLatestNotes(sectionSize, startFrom)
-		override val size: Int
-			get() = notebook.noteCount
-	}
 	
 }
 

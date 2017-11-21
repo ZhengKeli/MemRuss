@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_main)
 		
 		if (getShowingFragment() == null) {
-			supportFragmentManager.jumpTo(NotebookShelfFragment.newInstance(true),false)
+			NotebookShelfFragment.newInstance(true).jump(supportFragmentManager, false)
 		}
 	}
 	
@@ -34,9 +34,9 @@ interface BackPressedHandler{
 }
 
 val Fragment.mainActivity get() = activity as MainActivity
-fun FragmentManager.jumpTo(fragment: Fragment, addToBackStack:Boolean) {
-	val transaction=beginTransaction()
-	transaction.replace(R.id.fragment_container, fragment)
+fun Fragment.jump(fragmentManager: FragmentManager, addToBackStack: Boolean) {
+	val transaction= fragmentManager.beginTransaction()
+	transaction.replace(R.id.fragment_container, this)
 	if(addToBackStack) transaction.addToBackStack(null)
 	transaction.commit()
 }

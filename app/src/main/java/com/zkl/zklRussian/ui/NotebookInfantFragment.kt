@@ -12,7 +12,7 @@ class NotebookInfantFragment: Fragment() {
 		
 		val b_newNoteBook = ll_root.findViewById(R.id.b_newNoteBook)
 		b_newNoteBook.setOnClickListener {
-			fragmentManager.jumpTo(NotebookCreationFragment(),true)
+			NotebookCreationFragment().jump(fragmentManager, true)
 		}
 		
 	}
