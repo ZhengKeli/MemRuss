@@ -34,6 +34,7 @@
 	<string name="import_Notebook">Import Notebook</string>
 	<string name="merge_Notebook">Merge Notebook</string>
 	<string name="create_Notebook">Create Notebook</string>
+	<string name="export_Notebook">Export Notebook</string>
 	<string name="show">show</string>
 	<string name="remembered">remembered</string>
 	<string name="forgot">forgot</string>

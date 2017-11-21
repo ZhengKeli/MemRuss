@@ -44,4 +44,5 @@
 	<string name="there_are_conflicted_notes">有冲突的词条！</string>
 	<string name="remain_memory_progress">保留复习记录</string>
 	<string name="override">覆盖</string>
+	<string name="export_Notebook">导出单词本</string>
 </resources>

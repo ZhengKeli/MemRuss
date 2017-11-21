@@ -95,7 +95,8 @@ class NotebookFragment : NotebookHoldingFragment() {
 			NoteViewFragment.newInstance(notebookKey, note.id).jump(fragmentManager, true)
 		}
 		lv_notes.setOnItemLongClickListener { _, _, position, _ ->
-			//todo 弹出菜单
+			val note = notesBuffer[position]
+			NoteMenuDialog.newInstance(notebookKey,note.id).show(fragmentManager,null)
 			true
 		}
 	}
