@@ -93,7 +93,7 @@ class NotebookShelfFragment : Fragment() {
 		}
 		lv_notebooks.setOnItemLongClickListener { parent, _, position, _ ->
 			val summary = parent.adapter.getItem(position) as NotebookShelf.NotebookSummary
-			//todo 弹出菜单
+			NotebookMenuDialog.newInstance(summary).show(fragmentManager, null)
 			true
 		}
 	}
