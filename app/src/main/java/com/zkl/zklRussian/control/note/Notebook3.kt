@@ -3,6 +3,7 @@ package com.zkl.zklRussian.control.note
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.zkl.zklRussian.control.tools.createIndex
+import com.zkl.zklRussian.control.tools.use
 import com.zkl.zklRussian.core.note.*
 import org.jetbrains.anko.db.*
 
@@ -171,10 +172,9 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			ORDER BY $tableName.$contentUpdateTime DESC
 			"""
 		}
-		val cursor = database.rawQuery(sql, null)
-		val result = cursor.parseNoteList()
-		cursor.close()
-		return result
+		return database.rawQuery(sql, null).use {
+			it.parseNoteList()
+		}
 	}
 	
 	override fun selectLatestNotes(count: Int, offset: Int): List<Note> {
@@ -204,10 +204,9 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
-	private fun Cursor.parseNoteList(): List<Note> = parseList(rowParser {
-		noteId: Long, createTime: Long,
-		contentType: String, contentString: String, contentUpdateTime: Long,
-		memoryState: String, memoryProgress: Double, memoryLoad: Double, reviewTime: Long, memoryUpdateTime: Long ->
+	private fun Cursor.parseNoteList(): List<Note> = parseList(rowParser { noteId: Long, createTime: Long,
+	                                                                       contentType: String, contentString: String, contentUpdateTime: Long,
+	                                                                       memoryState: String, memoryProgress: Double, memoryLoad: Double, reviewTime: Long, memoryUpdateTime: Long ->
 		
 		val noteContentCoder = noteContentCoders[contentType] ?: throw NoteTypeNotSupportedException(contentType)
 		val noteContent = noteContentCoder.decode(contentString)
@@ -398,7 +397,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	
 	override val sumMemoryLoad: Double
 		get() = NotesTable.run {
-			database.select(tableName, columns = "sum($memoryLoad)")
+			database.select(tableName, "sum($memoryLoad)")
 				.exec {
 					moveToFirst()
 					getDouble(0)
