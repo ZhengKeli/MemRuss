@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
+import org.jetbrains.anko.find
 
 
 class NoteReviewFinishedFragment : NotebookHoldingFragment() {
@@ -20,7 +21,7 @@ class NoteReviewFinishedFragment : NotebookHoldingFragment() {
 	lateinit var b_back: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_note_review_finished, container, false).apply {
-		b_back = findViewById(R.id.b_back)
+		b_back = find(R.id.b_back)
 	}.apply {
 		b_back.setOnClickListener {
 			fragmentManager.popBackStack()

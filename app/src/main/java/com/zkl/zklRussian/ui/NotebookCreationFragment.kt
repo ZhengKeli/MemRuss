@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
+import org.jetbrains.anko.find
 
 class NotebookCreationFragment : Fragment() {
 	
@@ -18,9 +19,9 @@ class NotebookCreationFragment : Fragment() {
 	lateinit var b_cancel: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_notebook_creation, container, false).apply {
-		et_newBookName = findViewById(R.id.et_newBookName)
-		b_ok = findViewById(R.id.b_ok)
-		b_cancel = findViewById(R.id.b_cancel)
+		et_newBookName = find(R.id.et_newBookName)
+		b_ok = find(R.id.b_ok)
+		b_cancel = find(R.id.b_cancel)
 	}.apply {
 		b_ok.setOnClickListener {
 			val (key, _) = myApp.notebookShelf.createNotebook(et_newBookName.text.toString())

@@ -11,6 +11,7 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.Note
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
+import org.jetbrains.anko.find
 
 interface NoteContentItemHolder {
 	val view: View
@@ -53,9 +54,9 @@ class QuestionContentItemHolder(context: Context, container: ViewGroup? = null) 
 	private lateinit var cb_selected: CheckBox
 	override val view: View = LayoutInflater.from(context)
 		.inflate(R.layout.cv_note_content_item_question, container, false).apply {
-		tv_question = findViewById(R.id.tv_question)
-		tv_answer = findViewById(R.id.tv_answer)
-		cb_selected = findViewById(R.id.cb_selected)
+		tv_question = find(R.id.tv_question)
+		tv_answer = find(R.id.tv_answer)
+		cb_selected = find(R.id.cb_selected)
 	}
 	
 	private fun updateViews() {

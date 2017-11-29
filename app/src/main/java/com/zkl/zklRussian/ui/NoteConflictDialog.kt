@@ -14,6 +14,7 @@ import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.NoteMemoryStatus
 import org.jetbrains.anko.bundleOf
+import org.jetbrains.anko.find
 import java.io.Serializable
 
 
@@ -40,8 +41,8 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 			val conflictNotes = getConflictNotes(request.targetNoteId, request.noteContent)
 			
 			//find views
-			val lv_conflict = findViewById<ListView>(R.id.lv_conflict)
-			val cb_remainProgress = findViewById<CheckBox>(R.id.cb_remainProgress)
+			val lv_conflict:ListView = find(R.id.lv_conflict)
+			val cb_remainProgress:CheckBox = find(R.id.cb_remainProgress)
 			
 			//prepare views
 			dialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.cancel)) { _, _ -> }

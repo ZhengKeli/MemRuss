@@ -9,6 +9,7 @@ import android.widget.*
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.Note
+import org.jetbrains.anko.find
 
 class NotebookSearchFragment : NotebookHoldingFragment() {
 	
@@ -23,10 +24,10 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 	lateinit var lv_notes: ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_notebook_search, container, false).apply {
-		sv_search = findViewById(R.id.sv_search)
-		tv_foundNothing = findViewById(R.id.tv_foundNothing)
-		pb_searching = findViewById(R.id.pb_searching)
-		lv_notes = findViewById(R.id.lv_notes)
+		sv_search = find(R.id.sv_search)
+		tv_foundNothing = find(R.id.tv_foundNothing)
+		pb_searching = find(R.id.pb_searching)
+		lv_notes = find(R.id.lv_notes)
 	}.apply {
 		
 		sv_search.isIconified = false

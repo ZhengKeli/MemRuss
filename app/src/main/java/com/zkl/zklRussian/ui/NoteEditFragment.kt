@@ -14,6 +14,7 @@ import com.zkl.zklRussian.core.note.ConflictException
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
+import org.jetbrains.anko.find
 
 class NoteEditFragment : NoteHoldingFragment() {
 	
@@ -31,12 +32,12 @@ class NoteEditFragment : NoteHoldingFragment() {
 	private lateinit var b_cancel: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_note_edit, container, false).apply {
-		tv_title = findViewById(R.id.tv_title)
-		b_delete = findViewById(R.id.b_delete)
-		fl_noteContent = findViewById(R.id.fl_noteContent)
-		cb_remainProgress = findViewById(R.id.cb_remainProgress)
-		b_ok = findViewById(R.id.b_ok)
-		b_cancel = findViewById(R.id.b_cancel)
+		tv_title = find(R.id.tv_title)
+		b_delete = find(R.id.b_delete)
+		fl_noteContent = find(R.id.fl_noteContent)
+		cb_remainProgress = find(R.id.cb_remainProgress)
+		b_ok = find(R.id.b_ok)
+		b_cancel = find(R.id.b_cancel)
 	}.apply {
 		if (noteId == -1L) initViewsCreateMode()
 		else initViewsEditMode()

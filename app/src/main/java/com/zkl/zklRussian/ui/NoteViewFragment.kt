@@ -11,6 +11,7 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.NoteMemoryStatus
+import org.jetbrains.anko.find
 
 
 class NoteViewFragment : NoteHoldingFragment() {
@@ -27,10 +28,10 @@ class NoteViewFragment : NoteHoldingFragment() {
 	private lateinit var fl_noteContent: FrameLayout
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_note_view, container, false).apply {
-		tv_title = findViewById(R.id.tv_title)
-		b_edit = findViewById(R.id.b_edit)
-		tv_info = findViewById(R.id.tv_info)
-		fl_noteContent = findViewById(R.id.fl_noteContent)
+		tv_title = find(R.id.tv_title)
+		b_edit = find(R.id.b_edit)
+		tv_info = find(R.id.tv_info)
+		fl_noteContent = find(R.id.fl_noteContent)
 	}.apply {
 		
 		//刷新缓存的词条

@@ -11,6 +11,7 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.control.note.NotebookShelf
 import org.jetbrains.anko.bundleOf
+import org.jetbrains.anko.find
 
 class NotebookShelfFragment : Fragment() {
 	
@@ -35,7 +36,7 @@ class NotebookShelfFragment : Fragment() {
 		
 		init {
 			LayoutInflater.from(context).inflate(R.layout.adapter_notebook_item, this, true)
-			tv_notebookName = findViewById(R.id.tv_notebookName)
+			tv_notebookName = find(R.id.tv_notebookName)
 		}
 		
 		var notebookSummary: NotebookShelf.NotebookSummary? = null
@@ -52,10 +53,10 @@ class NotebookShelfFragment : Fragment() {
 	lateinit var lv_notebooks: ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_notebook_shelf, container, false).apply {
-		b_create = findViewById<Button>(R.id.b_create)
-		b_import = findViewById<Button>(R.id.b_import)
-		b_export = findViewById<Button>(R.id.b_merge)
-		lv_notebooks = findViewById<ListView>(R.id.lv_notebooks)
+		b_create = find<Button>(R.id.b_create)
+		b_import = find<Button>(R.id.b_import)
+		b_export = find<Button>(R.id.b_merge)
+		lv_notebooks = find<ListView>(R.id.lv_notebooks)
 	}.apply {
 		val summaries = myApp.notebookShelf.loadBookSummaries()
 		if (summaries.isEmpty()) NotebookInfantFragment().jump(fragmentManager, false)

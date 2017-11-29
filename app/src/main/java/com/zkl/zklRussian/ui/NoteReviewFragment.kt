@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
+import org.jetbrains.anko.find
 
 
 class NoteReviewFragment : NoteHoldingFragment() {
@@ -24,9 +25,9 @@ class NoteReviewFragment : NoteHoldingFragment() {
 	private lateinit var fl_noteContent: FrameLayout
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_note_review, container, false).apply {
-		tv_title = findViewById(R.id.tv_title)
-		b_view = findViewById(R.id.b_view)
-		fl_noteContent = findViewById(R.id.fl_noteContent)
+		tv_title = find(R.id.tv_title)
+		b_view = find(R.id.b_view)
+		fl_noteContent = find(R.id.fl_noteContent)
 		
 		if (tryLoadNote() == null) jumpToNextNote()
 		

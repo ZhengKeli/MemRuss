@@ -12,6 +12,7 @@ import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
 import com.zkl.zklRussian.core.note.getNextReviewTime
+import org.jetbrains.anko.find
 
 interface NoteContentReviewHolder {
 	val view: View
@@ -51,12 +52,12 @@ class QuestionContentReviewHolder(context: Context, container: ViewGroup? = null
 	private lateinit var b_forgot: Button
 	override val view: View = LayoutInflater.from(context)
 		.inflate(R.layout.cv_note_content_review_question, container, false).apply {
-		tv_question = findViewById(R.id.tv_question)
-		tv_answer = findViewById(R.id.tv_answer)
-		b_show = findViewById(R.id.b_show)
-		cl_resultBar = findViewById(R.id.cl_result_bar)
-		b_forgot = findViewById(R.id.b_forgot)
-		b_remembered = findViewById(R.id.b_remembered)
+		tv_question = find(R.id.tv_question)
+		tv_answer = find(R.id.tv_answer)
+		b_show = find(R.id.b_show)
+		cl_resultBar = find(R.id.cl_result_bar)
+		b_forgot = find(R.id.b_forgot)
+		b_remembered = find(R.id.b_remembered)
 	}.apply {
 		b_show.setOnClickListener {
 			b_show.visibility = View.GONE

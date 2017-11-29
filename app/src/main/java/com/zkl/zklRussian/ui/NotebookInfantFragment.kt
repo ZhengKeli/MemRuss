@@ -7,13 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.zkl.zklRussian.R
+import org.jetbrains.anko.find
 
 class NotebookInfantFragment : Fragment() {
 	
 	lateinit var b_newNoteBook: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_notebook_infant, container, false).apply {
-		b_newNoteBook = findViewById(R.id.b_newNoteBook)
+		b_newNoteBook = find(R.id.b_newNoteBook)
 	}.apply {
 		b_newNoteBook.setOnClickListener {
 			NotebookCreationFragment().jump(fragmentManager, true)

@@ -11,6 +11,7 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MemoryPlan
 import com.zkl.zklRussian.core.note.NotebookMemoryStatus
+import org.jetbrains.anko.find
 
 class MemoryPlanFragment : NotebookHoldingFragment() {
 	
@@ -33,11 +34,11 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 	lateinit var b_ok: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_memory_plan, container, false).apply {
-		tv_title = findViewById(R.id.tv_title)
-		tv_memoryLoad = findViewById(R.id.tv_memoryLoad)
-		sb_memoryLoad = findViewById(R.id.sb_memoryLoad)
-		b_cancel = findViewById(R.id.b_cancel)
-		b_ok = findViewById(R.id.b_ok)
+		tv_title = find(R.id.tv_title)
+		tv_memoryLoad = find(R.id.tv_memoryLoad)
+		sb_memoryLoad = find(R.id.sb_memoryLoad)
+		b_cancel = find(R.id.b_cancel)
+		b_ok = find(R.id.b_ok)
 	}.apply {
 		sb_memoryLoad.max = memoryLoadRange.run { endInclusive - start }
 		sb_memoryLoad.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {

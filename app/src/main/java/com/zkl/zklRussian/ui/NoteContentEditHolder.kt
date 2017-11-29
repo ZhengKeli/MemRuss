@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
+import org.jetbrains.anko.find
 import org.jetbrains.anko.inputMethodManager
 
 interface NoteContentEditHolder {
@@ -33,8 +34,8 @@ class QuestionContentEditHolder(context: Context, container: ViewGroup? = null) 
 	private lateinit var et_answer: EditText
 	override val view: View = LayoutInflater.from(context)
 		.inflate(R.layout.cv_note_content_edit_question, container, false).apply {
-		et_question = findViewById(R.id.et_question)
-		et_answer = findViewById(R.id.et_answer)
+		et_question = find(R.id.et_question)
+		et_answer = find(R.id.et_answer)
 	}
 	
 	private fun updateViews() {

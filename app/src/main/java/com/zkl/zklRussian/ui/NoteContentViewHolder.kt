@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
+import org.jetbrains.anko.find
 
 interface NoteContentViewHolder {
 	val view: View
@@ -27,8 +28,8 @@ class QuestionContentViewHolder(context: Context, container: ViewGroup? = null) 
 	private lateinit var tv_answer: TextView
 	override val view: View = LayoutInflater.from(context)
 		.inflate(R.layout.cv_note_content_view_question, container, false).apply {
-		tv_question = findViewById(R.id.tv_question)
-		tv_answer = findViewById(R.id.tv_answer)
+		tv_question = find(R.id.tv_question)
+		tv_answer = find(R.id.tv_answer)
 	}
 	
 	private fun updateViews() {

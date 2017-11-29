@@ -11,6 +11,7 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Note
+import org.jetbrains.anko.find
 
 class NotebookFragment : NotebookHoldingFragment() {
 	
@@ -31,16 +32,16 @@ class NotebookFragment : NotebookHoldingFragment() {
 	lateinit var lv_notes: ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_notebook, container, false).apply {
-		b_back = findViewById(R.id.b_back)
-		tv_title = findViewById(R.id.tv_title)
-		sv_search = findViewById(R.id.sv_search)
-		tv_bookInfo = findViewById(R.id.tv_bookInfo)
-		b_memoryPlan = findViewById(R.id.b_memoryPlan)
-		b_addNote = findViewById(R.id.b_addNote)
-		cl_review = findViewById(R.id.cl_review)
-		tv_review = findViewById(R.id.tv_review)
-		b_review = findViewById(R.id.b_review)
-		lv_notes = findViewById(R.id.lv_notes)
+		b_back = find(R.id.b_back)
+		tv_title = find(R.id.tv_title)
+		sv_search = find(R.id.sv_search)
+		tv_bookInfo = find(R.id.tv_bookInfo)
+		b_memoryPlan = find(R.id.b_memoryPlan)
+		b_addNote = find(R.id.b_addNote)
+		cl_review = find(R.id.cl_review)
+		tv_review = find(R.id.tv_review)
+		b_review = find(R.id.b_review)
+		lv_notes = find(R.id.lv_notes)
 	}.apply {
 		//top bar
 		b_back.setOnClickListener {
