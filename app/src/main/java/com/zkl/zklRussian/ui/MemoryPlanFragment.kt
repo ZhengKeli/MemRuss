@@ -19,23 +19,26 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 			= MemoryPlanFragment::class.java.newInstance(notebookKey)
 	}
 	
-	val memoryLoadRange = 0..500
-	var SeekBar.memoryLoad: Int
+	private val memoryLoadRange = 0..500
+	private var SeekBar.memoryLoad: Int
 		get() = progress + memoryLoadRange.start
 		set(value) {
 			progress = value
 		}
 	
+	lateinit var tv_title: TextView
+	lateinit var tv_memoryLoad: TextView
+	lateinit var sb_memoryLoad: SeekBar
+	lateinit var b_cancel: Button
+	lateinit var b_ok: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_memory_plan, container, false).apply {
-		
-		val tv_title = findViewById(R.id.tv_title) as TextView
-		val tv_memoryLoad = findViewById(R.id.tv_memoryLoad) as TextView
-		val sb_memoryLoad = findViewById(R.id.sb_memoryLoad) as SeekBar
-		val b_cancel = findViewById(R.id.b_cancel) as Button
-		val b_ok = findViewById(R.id.b_ok) as Button
-		
-		
+		tv_title = findViewById(R.id.tv_title)
+		tv_memoryLoad = findViewById(R.id.tv_memoryLoad)
+		sb_memoryLoad = findViewById(R.id.sb_memoryLoad)
+		b_cancel = findViewById(R.id.b_cancel)
+		b_ok = findViewById(R.id.b_ok)
+	}.apply {
 		sb_memoryLoad.max = memoryLoadRange.run { endInclusive - start }
 		sb_memoryLoad.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 			override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -62,7 +65,7 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 			NotebookMemoryStatus.learning -> getString(R.string.MemoryPlan)
 			NotebookMemoryStatus.paused -> getString(R.string.MemoryPlan_paused)
 		}
-		val memoryPlan = notebook.memoryPlan?: MemoryPlan.default
+		val memoryPlan = notebook.memoryPlan ?: MemoryPlan.default
 		sb_memoryLoad.memoryLoad = Math.round(memoryPlan.targetLoad).toInt()
 	}
 	

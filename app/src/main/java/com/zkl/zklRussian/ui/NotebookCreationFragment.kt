@@ -10,23 +10,25 @@ import android.widget.EditText
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
 
-class NotebookCreationFragment: Fragment() {
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		return inflater.inflate(R.layout.fragment_notebook_creation,container,false).also { rootView->
-			
-			val et_newBookName = rootView.findViewById(R.id.et_newBookName) as EditText
-			val b_ok = rootView.findViewById(R.id.b_ok) as Button
-			val b_cancel = rootView.findViewById(R.id.b_cancel) as Button
-			
-			b_ok.setOnClickListener {
-				val (key, _) = myApp.notebookShelf.createNotebook(et_newBookName.text.toString())
-				fragmentManager.popBackStack()
-				NotebookFragment.newInstance(key).jump(fragmentManager, false)
-			}
-			b_cancel.setOnClickListener {
-				fragmentManager.popBackStack()
-			}
-			
+class NotebookCreationFragment : Fragment() {
+	
+	
+	lateinit var et_newBookName: EditText
+	lateinit var b_ok: Button
+	lateinit var b_cancel: Button
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+		= inflater.inflate(R.layout.fragment_notebook_creation, container, false).apply {
+		et_newBookName = findViewById(R.id.et_newBookName)
+		b_ok = findViewById(R.id.b_ok)
+		b_cancel = findViewById(R.id.b_cancel)
+	}.apply {
+		b_ok.setOnClickListener {
+			val (key, _) = myApp.notebookShelf.createNotebook(et_newBookName.text.toString())
+			fragmentManager.popBackStack()
+			NotebookFragment.newInstance(key).jump(fragmentManager, false)
+		}
+		b_cancel.setOnClickListener {
+			fragmentManager.popBackStack()
 		}
 	}
 }

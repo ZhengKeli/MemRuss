@@ -19,20 +19,29 @@ class NotebookFragment : NotebookHoldingFragment() {
 			= NotebookFragment::class.java.newInstance(notebookKey)
 	}
 	
+	lateinit var b_back: ImageButton
+	lateinit var tv_title: TextView
+	lateinit var sv_search: SearchView
+	lateinit var tv_bookInfo: TextView
+	lateinit var b_memoryPlan: ImageButton
+	lateinit var b_addNote: ImageButton
+	lateinit var cl_review: ConstraintLayout
+	lateinit var tv_review: TextView
+	lateinit var b_review: Button
+	lateinit var lv_notes: ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_notebook, container, false).apply {
-		
-		val b_back = findViewById(R.id.b_back) as ImageButton
-		val tv_title = findViewById(R.id.tv_title) as TextView
-		val sv_search = findViewById(R.id.sv_search) as SearchView
-		val tv_bookInfo = findViewById(R.id.tv_bookInfo) as TextView
-		val b_memoryPlan = findViewById(R.id.b_memoryPlan) as ImageButton
-		val b_addNote = findViewById(R.id.b_addNote) as ImageButton
-		val cl_review = findViewById(R.id.cl_review) as ConstraintLayout
-		val tv_review = findViewById(R.id.tv_review) as TextView
-		val b_review = findViewById(R.id.b_review) as Button
-		val lv_notes = findViewById(R.id.lv_notes) as ListView
-		
+		b_back = findViewById(R.id.b_back)
+		tv_title = findViewById(R.id.tv_title)
+		sv_search = findViewById(R.id.sv_search)
+		tv_bookInfo = findViewById(R.id.tv_bookInfo)
+		b_memoryPlan = findViewById(R.id.b_memoryPlan)
+		b_addNote = findViewById(R.id.b_addNote)
+		cl_review = findViewById(R.id.cl_review)
+		tv_review = findViewById(R.id.tv_review)
+		b_review = findViewById(R.id.b_review)
+		lv_notes = findViewById(R.id.lv_notes)
+	}.apply {
 		//top bar
 		b_back.setOnClickListener {
 			fragmentManager.popBackStack()
@@ -51,27 +60,16 @@ class NotebookFragment : NotebookHoldingFragment() {
 				NoteEditFragment.newInstance(notebookKey, -1).jump(fragmentManager, true)
 			}
 			b_memoryPlan.visibility = View.VISIBLE
-			b_memoryPlan.setOnClickListener{
+			b_memoryPlan.setOnClickListener {
 				MemoryPlanFragment.newInstance(notebookKey).jump(fragmentManager, true)
 			}
-		}
-		else {
+		} else {
 			b_addNote.visibility = View.GONE
 			b_memoryPlan.visibility = View.GONE
 		}
 		
 		//review bar
-		fun updateNeedReview(){
-			if (notebook is MutableNotebook) {
-				mutableNotebook.fillNotesByPlan()
-				val needReviewCount = notebook.countNeedReviewNotes(System.currentTimeMillis())
-				if (needReviewCount > 0) {
-					cl_review.visibility = View.VISIBLE
-					tv_review.text = getString(R.string.need_review,needReviewCount)
-				}
-			}
-		}
-		if(notebook is MutableNotebook){
+		if (notebook is MutableNotebook) {
 			b_review.setOnClickListener {
 				NoteReviewFragment.newInstance(notebookKey).jump(fragmentManager, true)
 			}
@@ -79,13 +77,8 @@ class NotebookFragment : NotebookHoldingFragment() {
 		}
 		
 		//list
-		val notesBuffer = object : SectionBufferList<Note>(){
-			override fun getSection(startFrom: Int): List<Note>
-				= notebook.selectLatestNotes(sectionSize, startFrom)
-			override val size: Int get() = notebook.noteCount
-		}
 		notesBuffer.clearBuffer()
-		lv_notes.adapter = object :NoteListAdapter(){
+		lv_notes.adapter = object : NoteListAdapter() {
 			override fun getCount() = notesBuffer.size
 			override fun getItem(position: Int) = notesBuffer[position]
 			override val context: Context get() = activity
@@ -96,11 +89,27 @@ class NotebookFragment : NotebookHoldingFragment() {
 		}
 		lv_notes.setOnItemLongClickListener { _, _, position, _ ->
 			val note = notesBuffer[position]
-			NoteMenuDialog.newInstance(notebookKey,note.id).show(fragmentManager,null)
+			NoteMenuDialog.newInstance(notebookKey, note.id).show(fragmentManager, null)
 			true
 		}
 	}
 	
+	private fun updateNeedReview() {
+		if (notebook is MutableNotebook) {
+			mutableNotebook.fillNotesByPlan()
+			val needReviewCount = notebook.countNeedReviewNotes(System.currentTimeMillis())
+			if (needReviewCount > 0) {
+				cl_review.visibility = View.VISIBLE
+				tv_review.text = getString(R.string.need_review, needReviewCount)
+			}
+		}
+	}
 	
+	private val notesBuffer = object : SectionBufferList<Note>() {
+		override fun getSection(startFrom: Int): List<Note>
+			= notebook.selectLatestNotes(sectionSize, startFrom)
+		
+		override val size: Int get() = notebook.noteCount
+	}
 }
 

@@ -12,7 +12,7 @@ class NotebookMenuDialog:DialogFragment() {
 	
 	companion object {
 		val arg_notebookSummary="notebookSummary"
-		fun newInstance(notebookSummary: NotebookShelf.NotebookSummary)
+		fun newInstance(notebookSummary: NotebookShelf.NotebookSummary): NotebookMenuDialog
 			= NotebookMenuDialog::class.java.newInstance().apply {
 			arguments+= bundleOf(arg_notebookSummary to notebookSummary)
 		}

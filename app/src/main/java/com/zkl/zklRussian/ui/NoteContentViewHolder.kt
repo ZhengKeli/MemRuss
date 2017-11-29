@@ -10,14 +10,13 @@ import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
 
 interface NoteContentViewHolder {
-	val view:View
+	val view: View
 	var noteContent: NoteContent?
-	fun isCompatible(noteContent: NoteContent):Boolean
+	fun isCompatible(noteContent: NoteContent): Boolean
 }
 
 
-
-val typedNoteContentViewHolders = hashMapOf<String,(Context, ViewGroup?)->NoteContentViewHolder>(
+val typedNoteContentViewHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentViewHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentViewHolder
 )
 
@@ -27,9 +26,9 @@ class QuestionContentViewHolder(context: Context, container: ViewGroup? = null) 
 	private lateinit var tv_question: TextView
 	private lateinit var tv_answer: TextView
 	override val view: View = LayoutInflater.from(context)
-		.inflate(R.layout.cv_note_content_view_question, container,false).apply {
-		tv_question = findViewById(R.id.tv_question) as TextView
-		tv_answer = findViewById(R.id.tv_answer) as TextView
+		.inflate(R.layout.cv_note_content_view_question, container, false).apply {
+		tv_question = findViewById(R.id.tv_question)
+		tv_answer = findViewById(R.id.tv_answer)
 	}
 	
 	private fun updateViews() {

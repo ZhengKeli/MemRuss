@@ -25,80 +25,78 @@ class NoteEditFragment : NoteHoldingFragment() {
 	//view
 	private lateinit var tv_title: TextView
 	private lateinit var b_delete: Button
-	private lateinit var fl_noteContent:FrameLayout
-	private lateinit var cb_remainProgress:CheckBox
+	private lateinit var fl_noteContent: FrameLayout
+	private lateinit var cb_remainProgress: CheckBox
 	private lateinit var b_ok: Button
 	private lateinit var b_cancel: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_note_edit, container, false).apply {
+		tv_title = findViewById(R.id.tv_title)
+		b_delete = findViewById(R.id.b_delete)
+		fl_noteContent = findViewById(R.id.fl_noteContent)
+		cb_remainProgress = findViewById(R.id.cb_remainProgress)
+		b_ok = findViewById(R.id.b_ok)
+		b_cancel = findViewById(R.id.b_cancel)
+	}.apply {
+		if (noteId == -1L) initViewsCreateMode()
+		else initViewsEditMode()
+	}
+	
+	private fun initViewsEditMode() {
+		if (tryLoadNote() == null) {
+			fragmentManager.popBackStack()
+			return
+		}
 		
-		tv_title = findViewById(R.id.tv_title) as TextView
-		b_delete = findViewById(R.id.b_delete) as Button
-		fl_noteContent = findViewById(R.id.fl_noteContent) as FrameLayout
-		cb_remainProgress = findViewById(R.id.cb_remainProgress) as CheckBox
-		b_ok = findViewById(R.id.b_ok) as Button
-		b_cancel = findViewById(R.id.b_cancel) as Button
+		tv_title.text = getString(R.string.Note_edit_id, noteId)
+		b_delete.setOnClickListener {
+			NoteDeleteDialog.newInstance(notebookKey, noteId).show(fragmentManager, null)
+		}
 		
 		noteContentEditHolder = null
+		updateNoteContent()
+		cb_remainProgress.visibility = View.VISIBLE
 		
-		if (noteId == -1L) {
-			tv_title.text = getString(R.string.Note_create)
-			b_delete.visibility=View.GONE
-			
-			updateNoteContent(QuestionContent("", ""))
-			
-			cb_remainProgress.visibility = View.GONE
-			
-			b_ok.setOnClickListener {
-				val newNoteContent = noteContentEditHolder!!.applyChange()
-				try {
-					mutableNotebook.addNote(newNoteContent)
-					fragmentManager.popBackStack()
-				} catch (e: ConflictException) {
-					val modifyRequest = NoteConflictDialog.ModifyRequest(-1, newNoteContent, false)
-					NoteConflictDialog.newInstance(notebookKey, modifyRequest).show(fragmentManager,null)
-				}
-			}
-			b_cancel.setOnClickListener {
+		b_ok.setOnClickListener {
+			val newNoteContent = noteContentEditHolder!!.applyChange()
+			try {
+				mutableNotebook.modifyNoteContent(noteId, newNoteContent)
+				if (!cb_remainProgress.isChecked)
+					mutableNotebook.modifyNoteMemory(noteId, NoteMemoryState.infantState())
 				fragmentManager.popBackStack()
+			} catch (e: ConflictException) {
+				val modifyRequest = NoteConflictDialog.ModifyRequest(noteId, newNoteContent, cb_remainProgress.isChecked)
+				NoteConflictDialog.newInstance(notebookKey, modifyRequest).show(fragmentManager, null)
 			}
-			
 		}
-		else {
-			
-			if (tryLoadNote() == null) {
-				fragmentManager.popBackStack()
-				return@apply
-			}
-			
-			tv_title.text = getString(R.string.Note_edit_id, noteId)
-			b_delete.setOnClickListener {
-				NoteDeleteDialog.newInstance(notebookKey,noteId).show(fragmentManager,null)
-			}
-			
-			updateNoteContent()
-			
-			cb_remainProgress.visibility = View.VISIBLE
-			
-			b_ok.setOnClickListener {
-				val newNoteContent = noteContentEditHolder!!.applyChange()
-				try {
-					mutableNotebook.modifyNoteContent(noteId, newNoteContent)
-					if (!cb_remainProgress.isChecked)
-						mutableNotebook.modifyNoteMemory(noteId, NoteMemoryState.infantState())
-					fragmentManager.popBackStack()
-				} catch (e: ConflictException) {
-					val modifyRequest = NoteConflictDialog.ModifyRequest(noteId, newNoteContent, cb_remainProgress.isChecked)
-					NoteConflictDialog.newInstance(notebookKey, modifyRequest).show(fragmentManager,null)
-				}
-			}
-			b_cancel.setOnClickListener {
-				fragmentManager.popBackStack()
-			}
-			
+		b_cancel.setOnClickListener {
+			fragmentManager.popBackStack()
 		}
-		
 	}
+	
+	private fun initViewsCreateMode() {
+		tv_title.text = getString(R.string.Note_create)
+		b_delete.visibility = View.GONE
+		
+		noteContentEditHolder = null
+		updateNoteContent(QuestionContent("", ""))
+		cb_remainProgress.visibility = View.GONE
+		
+		b_ok.setOnClickListener {
+			val newNoteContent = noteContentEditHolder!!.applyChange()
+			try {
+				mutableNotebook.addNote(newNoteContent)
+				fragmentManager.popBackStack()
+			} catch (e: ConflictException) {
+				val modifyRequest = NoteConflictDialog.ModifyRequest(-1, newNoteContent, false)
+				NoteConflictDialog.newInstance(notebookKey, modifyRequest).show(fragmentManager, null)
+			}
+		}
+		b_cancel.setOnClickListener {
+			fragmentManager.popBackStack()
+		}
+	}
+	
 	override fun onResume() {
 		super.onResume()
 		noteContentEditHolder?.requestFocus()
@@ -106,8 +104,9 @@ class NoteEditFragment : NoteHoldingFragment() {
 	
 	
 	//noteContent
-	private var noteContentEditHolder:NoteContentEditHolder? =null
-	private fun updateNoteContent(noteContent: NoteContent=note.content){
+	private var noteContentEditHolder: NoteContentEditHolder? = null
+	
+	private fun updateNoteContent(noteContent: NoteContent = note.content) {
 		val oldHolder = noteContentEditHolder
 		if (oldHolder?.isCompatible(noteContent) == true) {
 			oldHolder.noteContent = noteContent

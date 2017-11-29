@@ -17,17 +17,18 @@ import org.jetbrains.anko.bundleOf
 import java.io.Serializable
 
 
-class NoteConflictDialog : NotebookHoldingDialog(){
+class NoteConflictDialog : NotebookHoldingDialog() {
 	
-	data class ModifyRequest(val targetNoteId:Long,val noteContent: NoteContent,val remainProgress: Boolean):Serializable
+	data class ModifyRequest(val targetNoteId: Long, val noteContent: NoteContent, val remainProgress: Boolean) : Serializable
 	companion object {
 		val arg_modifyRequest = "modifyRequest"
 		fun newInstance(notebookKey: NotebookKey, modifyRequest: ModifyRequest)
 			= NoteConflictDialog::class.java.newInstance(notebookKey).apply {
-			arguments+= bundleOf(
+			arguments += bundleOf(
 				arg_modifyRequest to modifyRequest)
 		}
-		val NoteConflictDialog.modifyRequest get()= arguments.getSerializable(arg_modifyRequest) as ModifyRequest
+		
+		val NoteConflictDialog.modifyRequest get() = arguments.getSerializable(arg_modifyRequest) as ModifyRequest
 	}
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
@@ -39,12 +40,12 @@ class NoteConflictDialog : NotebookHoldingDialog(){
 			val conflictNotes = getConflictNotes(request.targetNoteId, request.noteContent)
 			
 			//find views
-			val lv_conflict = findViewById(R.id.lv_conflict) as ListView
-			val cb_remainProgress = findViewById(R.id.cb_remainProgress) as CheckBox
+			val lv_conflict = findViewById<ListView>(R.id.lv_conflict)
+			val cb_remainProgress = findViewById<CheckBox>(R.id.cb_remainProgress)
 			
 			//prepare views
-			dialog.setButton(Dialog.BUTTON_NEGATIVE,getString(android.R.string.cancel)){ _, _ -> }
-			lv_conflict.adapter = object :NoteListAdapter(){
+			dialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.cancel)) { _, _ -> }
+			lv_conflict.adapter = object : NoteListAdapter() {
 				override fun getCount(): Int = conflictNotes.size
 				override fun getItem(position: Int): Note = conflictNotes[position]
 				override val context: Context get() = activity
@@ -53,22 +54,22 @@ class NoteConflictDialog : NotebookHoldingDialog(){
 				val conflictNote = conflictNotes.first()
 				if (request.targetNoteId == -1L) {
 					// create
-					if(conflictNote.memoryState.status!=NoteMemoryStatus.infant)
+					if (conflictNote.memoryState.status != NoteMemoryStatus.infant)
 						cb_remainProgress.visibility = View.VISIBLE
 					
-					dialog.setButton(Dialog.BUTTON_POSITIVE,getString(R.string.override)){ _, _ ->
+					dialog.setButton(Dialog.BUTTON_POSITIVE, getString(R.string.override)) { _, _ ->
 						mutableNotebook.modifyNoteContent(conflictNote.id, request.noteContent)
-						if(!cb_remainProgress.isChecked)
+						if (!cb_remainProgress.isChecked)
 							mutableNotebook.modifyNoteMemory(conflictNote.id, NoteMemoryState.infantState())
 						fragmentManager.popBackStack()
 					}
 					
-				}else{
+				} else {
 					//modify
-					dialog.setButton(Dialog.BUTTON_POSITIVE,getString(R.string.override)){ _, _ ->
+					dialog.setButton(Dialog.BUTTON_POSITIVE, getString(R.string.override)) { _, _ ->
 						mutableNotebook.deleteNote(conflictNote.id)
 						mutableNotebook.modifyNoteContent(request.targetNoteId, request.noteContent)
-						if(!request.remainProgress)
+						if (!request.remainProgress)
 							mutableNotebook.modifyNoteMemory(request.targetNoteId, NoteMemoryState.infantState())
 						fragmentManager.popBackStack()
 					}
@@ -81,9 +82,9 @@ class NoteConflictDialog : NotebookHoldingDialog(){
 	}
 	
 	private fun getConflictNotes(targetNoteId: Long, noteContent: NoteContent)
-		= noteContent.uniqueTags.mapNotNull { uniqueTag->
-		val noteId = notebook.checkUniqueTag(uniqueTag,targetNoteId)
-		if(noteId!=-1L) notebook.getNote(noteId) else null
+		= noteContent.uniqueTags.mapNotNull { uniqueTag ->
+		val noteId = notebook.checkUniqueTag(uniqueTag, targetNoteId)
+		if (noteId != -1L) notebook.getNote(noteId) else null
 	}
 	
 }

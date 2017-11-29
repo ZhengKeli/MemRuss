@@ -13,15 +13,16 @@ import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
 import com.zkl.zklRussian.core.note.getNextReviewTime
 
-interface NoteContentReviewHolder{
-	val view:View
+interface NoteContentReviewHolder {
+	val view: View
 	var noteContent: NoteContent?
-	fun isCompatible(noteContent: NoteContent):Boolean
-	var onResultListener:((ReviewResult)->Unit)?
+	fun isCompatible(noteContent: NoteContent): Boolean
+	var onResultListener: ((ReviewResult) -> Unit)?
 }
 
-interface ReviewResult{
-	fun updateNoteMemory(oldMemoryState: NoteMemoryState, nowTime:Long=System.currentTimeMillis()): NoteMemoryState
+interface ReviewResult {
+	fun updateNoteMemory(oldMemoryState: NoteMemoryState, nowTime: Long = System.currentTimeMillis()): NoteMemoryState
+	
 	companion object {
 		val standardIncrease = object : ReviewResult {
 			override fun updateNoteMemory(oldMemoryState: NoteMemoryState, nowTime: Long)
@@ -35,8 +36,7 @@ interface ReviewResult{
 }
 
 
-
-val typedNoteContentReviewHolders = hashMapOf<String,(Context, ViewGroup?)->NoteContentReviewHolder>(
+val typedNoteContentReviewHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentReviewHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentReviewHolder
 )
 
@@ -50,15 +50,15 @@ class QuestionContentReviewHolder(context: Context, container: ViewGroup? = null
 	private lateinit var b_remembered: Button
 	private lateinit var b_forgot: Button
 	override val view: View = LayoutInflater.from(context)
-		.inflate(R.layout.cv_note_content_review_question, container,false).apply {
-		tv_question = findViewById(R.id.tv_question) as TextView
-		tv_answer = findViewById(R.id.tv_answer) as TextView
-		b_show = findViewById(R.id.b_show) as Button
-		cl_resultBar = findViewById(R.id.cl_result_bar) as ConstraintLayout
-		b_forgot = findViewById(R.id.b_forgot) as Button
-		b_remembered = findViewById(R.id.b_remembered) as Button
-		
-		b_show.setOnClickListener{
+		.inflate(R.layout.cv_note_content_review_question, container, false).apply {
+		tv_question = findViewById(R.id.tv_question)
+		tv_answer = findViewById(R.id.tv_answer)
+		b_show = findViewById(R.id.b_show)
+		cl_resultBar = findViewById(R.id.cl_result_bar)
+		b_forgot = findViewById(R.id.b_forgot)
+		b_remembered = findViewById(R.id.b_remembered)
+	}.apply {
+		b_show.setOnClickListener {
 			b_show.visibility = View.GONE
 			tv_answer.visibility = View.VISIBLE
 			cl_resultBar.visibility = View.VISIBLE
@@ -96,6 +96,6 @@ class QuestionContentReviewHolder(context: Context, container: ViewGroup? = null
 	override fun isCompatible(noteContent: NoteContent)
 		= noteContent is QuestionContent
 	
-	override var onResultListener: ((reviewResult:ReviewResult) -> Unit)? = null
+	override var onResultListener: ((reviewResult: ReviewResult) -> Unit)? = null
 	
 }

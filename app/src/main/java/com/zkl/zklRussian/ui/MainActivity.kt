@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		(getSystemService(Context.UI_MODE_SERVICE) as UiModeManager).nightMode=UiModeManager.MODE_NIGHT_AUTO
+		(getSystemService(Context.UI_MODE_SERVICE) as UiModeManager).nightMode = UiModeManager.MODE_NIGHT_AUTO
 		setContentView(R.layout.activity_main)
 		
 		if (getShowingFragment() == null) {
@@ -26,22 +26,24 @@ class MainActivity : AppCompatActivity() {
 		if (!absorbed) super.onBackPressed()
 	}
 	
-	private fun getShowingFragment():Fragment? = supportFragmentManager.findFragmentById(R.id.fragment_container)
+	private fun getShowingFragment(): Fragment? = supportFragmentManager.findFragmentById(R.id.fragment_container)
 }
 
-interface BackPressedHandler{
-	fun onBackPressed():Boolean
+interface BackPressedHandler {
+	fun onBackPressed(): Boolean
 }
 
 val Fragment.mainActivity get() = activity as MainActivity
+
 fun Fragment.jump(fragmentManager: FragmentManager, addToBackStack: Boolean) {
-	val transaction= fragmentManager.beginTransaction()
+	val transaction = fragmentManager.beginTransaction()
 	transaction.replace(R.id.fragment_container, this)
-	if(addToBackStack) transaction.addToBackStack(null)
+	if (addToBackStack) transaction.addToBackStack(null)
 	transaction.commit()
 }
-fun FragmentManager.popAllBackStack(){
-	if(this.backStackEntryCount==0) return
+
+fun FragmentManager.popAllBackStack() {
+	if (this.backStackEntryCount == 0) return
 	val id = this.getBackStackEntryAt(0).id
-	this.popBackStack(id,FragmentManager.POP_BACK_STACK_INCLUSIVE)
+	this.popBackStack(id, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 }

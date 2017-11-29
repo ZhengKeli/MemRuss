@@ -24,14 +24,14 @@ class NoteViewFragment : NoteHoldingFragment() {
 	private lateinit var tv_title: TextView
 	private lateinit var b_edit: Button
 	private lateinit var tv_info: TextView
-	private lateinit var fl_noteContent:FrameLayout
+	private lateinit var fl_noteContent: FrameLayout
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_note_view, container, false).apply {
-		tv_title = findViewById(R.id.tv_title) as TextView
-		b_edit = findViewById(R.id.b_edit) as Button
-		tv_info = findViewById(R.id.tv_info) as TextView
-		fl_noteContent = findViewById(R.id.fl_noteContent) as FrameLayout
-		noteContentViewHolder = null
+		tv_title = findViewById(R.id.tv_title)
+		b_edit = findViewById(R.id.b_edit)
+		tv_info = findViewById(R.id.tv_info)
+		fl_noteContent = findViewById(R.id.fl_noteContent)
+	}.apply {
 		
 		//刷新缓存的词条
 		if (tryLoadNote() == null) {
@@ -42,7 +42,7 @@ class NoteViewFragment : NoteHoldingFragment() {
 		tv_title.text = getString(R.string.Note_view_id, noteId)
 		
 		if (note.memoryState.status != NoteMemoryStatus.infant) {
-			val relativeReviewTime = (note.memoryState.reviewTime - System.currentTimeMillis()).toDouble()/(3600*1000)
+			val relativeReviewTime = (note.memoryState.reviewTime - System.currentTimeMillis()).toDouble() / (3600 * 1000)
 			tv_info.text = getString(R.string.Note_view_info,
 				note.memoryState.progress.toInt(), note.memoryState.load.toInt(), relativeReviewTime)
 				.replace("\\n", "\n")
@@ -55,13 +55,15 @@ class NoteViewFragment : NoteHoldingFragment() {
 			NoteEditFragment.newInstance(notebookKey, noteId).jump(fragmentManager, true)
 		}
 		
+		noteContentViewHolder = null
 		updateNoteContent()
 		
 	}
 	
 	
 	//noteContent
-	private var noteContentViewHolder:NoteContentViewHolder? = null
+	private var noteContentViewHolder: NoteContentViewHolder? = null
+	
 	private fun updateNoteContent() {
 		val noteContent = note.content
 		val oldHolder = noteContentViewHolder

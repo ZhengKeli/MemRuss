@@ -12,35 +12,34 @@ import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
 import org.jetbrains.anko.inputMethodManager
 
-interface NoteContentEditHolder{
-	val view:View
+interface NoteContentEditHolder {
+	val view: View
 	fun requestFocus()
 	
 	var noteContent: NoteContent?
-	fun isCompatible(noteContent: NoteContent):Boolean
+	fun isCompatible(noteContent: NoteContent): Boolean
 	fun applyChange(): NoteContent
 }
 
 
-
-val typedNoteContentEditHolders = hashMapOf<String,(Context, ViewGroup?)->NoteContentEditHolder>(
+val typedNoteContentEditHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentEditHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentEditHolder
 )
 
-class QuestionContentEditHolder(context: Context, container: ViewGroup? = null) : NoteContentEditHolder{
+class QuestionContentEditHolder(context: Context, container: ViewGroup? = null) : NoteContentEditHolder {
 	
 	//views
 	private lateinit var et_question: EditText
 	private lateinit var et_answer: EditText
 	override val view: View = LayoutInflater.from(context)
-		.inflate(R.layout.cv_note_content_edit_question, container,false).apply {
-		et_question = findViewById(R.id.et_question) as EditText
-		et_answer = findViewById(R.id.et_answer) as EditText
+		.inflate(R.layout.cv_note_content_edit_question, container, false).apply {
+		et_question = findViewById(R.id.et_question)
+		et_answer = findViewById(R.id.et_answer)
 	}
 	
 	private fun updateViews() {
-		et_question.setText(questionContent?.question?:"", TextView.BufferType.NORMAL)
-		et_answer.setText(questionContent?.answer?:"", TextView.BufferType.NORMAL)
+		et_question.setText(questionContent?.question ?: "", TextView.BufferType.NORMAL)
+		et_answer.setText(questionContent?.answer ?: "", TextView.BufferType.NORMAL)
 	}
 	
 	override fun requestFocus() {
@@ -65,6 +64,6 @@ class QuestionContentEditHolder(context: Context, container: ViewGroup? = null) 
 		= noteContent is QuestionContent
 	
 	override fun applyChange()
-		= QuestionContent(et_question.text.toString(), et_answer.text.toString()).also { questionContent=it }
+		= QuestionContent(et_question.text.toString(), et_answer.text.toString()).also { questionContent = it }
 	
 }

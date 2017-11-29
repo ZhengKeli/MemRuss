@@ -6,7 +6,7 @@ import android.support.v7.app.AlertDialog
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 
-class NoteMenuDialog: NoteHoldingDialog() {
+class NoteMenuDialog : NoteHoldingDialog() {
 	
 	companion object {
 		fun newInstance(notebookKey: NotebookKey, noteId: Long)
@@ -27,10 +27,10 @@ class NoteMenuDialog: NoteHoldingDialog() {
 			}
 		)
 		val itemNames = itemPairs.map { it.first }.toTypedArray<String>()
-		val itemOperations = itemPairs.map { it.second }.toTypedArray<()->Unit>()
+		val itemOperations = itemPairs.map { it.second }.toTypedArray<() -> Unit>()
 		
 		return AlertDialog.Builder(activity)
-			.setItems(itemNames){ _, which ->
+			.setItems(itemNames) { _, which ->
 				itemOperations[which].invoke()
 			}
 			.create()
