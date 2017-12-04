@@ -103,7 +103,7 @@ class NotebookShelfFragment : Fragment()
 	
 	override fun onNotebookListChanged() {
 		briefs = myApp.notebookShelf.loadBookSummaries()
-		if (briefs.isEmpty()) NotebookInfantFragment().jump(fragmentManager, false)
+		if (briefs.isEmpty()) NotebookInfantFragment().jump(fragmentManager, true)
 		(lv_notebooks.adapter as? BaseAdapter)?.notifyDataSetChanged()
 	}
 	
