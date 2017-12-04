@@ -3,7 +3,6 @@ package com.zkl.zklRussian.control.note
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.zkl.zklRussian.control.tools.createIndex
-import com.zkl.zklRussian.control.tools.use
 import com.zkl.zklRussian.core.note.*
 import org.jetbrains.anko.db.*
 
