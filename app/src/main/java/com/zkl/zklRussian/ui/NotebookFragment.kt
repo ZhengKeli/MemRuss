@@ -13,7 +13,7 @@ import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Note
 import org.jetbrains.anko.find
 
-class NotebookFragment : NotebookHoldingFragment() {
+class NotebookFragment : NotebookHoldingFragment(),NoteMenuDialog.NoteListChangedListener {
 	
 	companion object {
 		fun newInstance(notebookKey: NotebookKey)
@@ -90,9 +90,19 @@ class NotebookFragment : NotebookHoldingFragment() {
 		}
 		lv_notes.setOnItemLongClickListener { _, _, position, _ ->
 			val note = notesBuffer[position]
-			NoteMenuDialog.newInstance(notebookKey, note.id).show(fragmentManager, null)
+			NoteMenuDialog.newInstance(notebookKey, note.id, this@NotebookFragment).show(fragmentManager, null)
 			true
 		}
+	}
+	
+	override fun onNoteListChanged() {
+		updateList()
+	}
+	
+	private fun updateList(){
+		notesBuffer.clearBuffer()
+		(lv_notes.adapter as? BaseAdapter)?.notifyDataSetChanged()
+		updateNeedReview()
 	}
 	
 	private fun updateNeedReview() {
@@ -112,5 +122,7 @@ class NotebookFragment : NotebookHoldingFragment() {
 		
 		override val size: Int get() = notebook.noteCount
 	}
+	
+	
 }
 

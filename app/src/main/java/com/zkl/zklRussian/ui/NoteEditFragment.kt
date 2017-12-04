@@ -16,7 +16,9 @@ import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
 import org.jetbrains.anko.find
 
-class NoteEditFragment : NoteHoldingFragment() {
+class NoteEditFragment : NoteHoldingFragment(),
+	NoteDeleteDialog.DeletionConfirmedListener,
+	NoteConflictDialog.ConflictSolvedListener {
 	
 	companion object {
 		fun newInstance(notebookKey: NotebookKey, noteId: Long)
@@ -51,7 +53,7 @@ class NoteEditFragment : NoteHoldingFragment() {
 		
 		tv_title.text = getString(R.string.Note_edit_id, noteId)
 		b_delete.setOnClickListener {
-			NoteDeleteDialog.newInstance(notebookKey, noteId).show(fragmentManager, null)
+			NoteDeleteDialog.newInstance(notebookKey, noteId,this).show(fragmentManager, null)
 		}
 		
 		noteContentEditHolder = null
@@ -67,7 +69,7 @@ class NoteEditFragment : NoteHoldingFragment() {
 				fragmentManager.popBackStack()
 			} catch (e: ConflictException) {
 				val modifyRequest = NoteConflictDialog.ModifyRequest(noteId, newNoteContent, cb_remainProgress.isChecked)
-				NoteConflictDialog.newInstance(notebookKey, modifyRequest).show(fragmentManager, null)
+				NoteConflictDialog.newInstance(notebookKey, modifyRequest,this).show(fragmentManager, null)
 			}
 		}
 		b_cancel.setOnClickListener {
@@ -90,7 +92,7 @@ class NoteEditFragment : NoteHoldingFragment() {
 				fragmentManager.popBackStack()
 			} catch (e: ConflictException) {
 				val modifyRequest = NoteConflictDialog.ModifyRequest(-1, newNoteContent, false)
-				NoteConflictDialog.newInstance(notebookKey, modifyRequest).show(fragmentManager, null)
+				NoteConflictDialog.newInstance(notebookKey, modifyRequest,this).show(fragmentManager, null)
 			}
 		}
 		b_cancel.setOnClickListener {
@@ -103,6 +105,13 @@ class NoteEditFragment : NoteHoldingFragment() {
 		noteContentEditHolder?.requestFocus()
 	}
 	
+	override fun onDeletionConfirmed() {
+		fragmentManager.popBackStack()
+	}
+	
+	override fun onConflictSolved() {
+		fragmentManager.popBackStack()
+	}
 	
 	//noteContent
 	private var noteContentEditHolder: NoteContentEditHolder? = null

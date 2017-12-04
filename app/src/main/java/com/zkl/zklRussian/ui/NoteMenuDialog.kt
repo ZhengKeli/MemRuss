@@ -2,15 +2,23 @@ package com.zkl.zklRussian.ui
 
 import android.app.Dialog
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 
-class NoteMenuDialog : NoteHoldingDialog() {
+class NoteMenuDialog : NoteHoldingDialog(),NoteDeleteDialog.DeletionConfirmedListener {
+	
+	interface NoteListChangedListener {
+		fun onNoteListChanged()
+	}
 	
 	companion object {
-		fun newInstance(notebookKey: NotebookKey, noteId: Long)
-			= NoteMenuDialog::class.java.newInstance(notebookKey, noteId)
+		fun <T>newInstance(notebookKey: NotebookKey, noteId: Long, changedListener: T?)
+			where T : NoteListChangedListener, T : Fragment
+			= NoteMenuDialog::class.java.newInstance(notebookKey, noteId).apply {
+			setTargetFragment(changedListener,0)
+		}
 	}
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -23,7 +31,7 @@ class NoteMenuDialog : NoteHoldingDialog() {
 				NoteEditFragment.newInstance(notebookKey, noteId).jump(fragmentManager, true)
 			},
 			getString(R.string.delete) to {
-				NoteDeleteDialog.newInstance(notebookKey, noteId, false).show(fragmentManager, null)
+				NoteDeleteDialog.newInstance(notebookKey, noteId,this).show(fragmentManager, null)
 			}
 		)
 		val itemNames = itemPairs.map { it.first }.toTypedArray<String>()
@@ -35,4 +43,9 @@ class NoteMenuDialog : NoteHoldingDialog() {
 			}
 			.create()
 	}
+	
+	override fun onDeletionConfirmed() {
+		(targetFragment as? NoteListChangedListener)?.onNoteListChanged()
+	}
+	
 }

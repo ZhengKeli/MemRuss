@@ -13,7 +13,7 @@ import com.zkl.zklRussian.control.note.NotebookShelf
 import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.find
 
-class NotebookShelfFragment : Fragment() {
+class NotebookShelfFragment : Fragment(),NotebookMenuDialog.NotebookListChangedListener {
 	
 	companion object {
 		private val arg_autoJump: String = "autoJump"
@@ -46,7 +46,6 @@ class NotebookShelfFragment : Fragment() {
 			}
 	}
 	
-	
 	lateinit var b_create: Button
 	lateinit var b_import: Button
 	lateinit var b_export: Button
@@ -58,7 +57,7 @@ class NotebookShelfFragment : Fragment() {
 		b_export = find<Button>(R.id.b_merge)
 		lv_notebooks = find<ListView>(R.id.lv_notebooks)
 	}.apply {
-		val summaries = myApp.notebookShelf.loadBookSummaries()
+		summaries = myApp.notebookShelf.loadBookSummaries()
 		if (summaries.isEmpty()) NotebookInfantFragment().jump(fragmentManager, false)
 		else if (autoJump) {
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(summaries.first().file)
@@ -94,10 +93,19 @@ class NotebookShelfFragment : Fragment() {
 		}
 		lv_notebooks.setOnItemLongClickListener { parent, _, position, _ ->
 			val summary = parent.adapter.getItem(position) as NotebookShelf.NotebookSummary
-			NotebookMenuDialog.newInstance(summary).show(fragmentManager, null)
+			NotebookMenuDialog.newInstance(summary,this@NotebookShelfFragment).show(fragmentManager, null)
 			true
 		}
 	}
+	
+	override fun onNotebookListChanged() {
+		summaries = myApp.notebookShelf.loadBookSummaries()
+		if (summaries.isEmpty()) NotebookInfantFragment().jump(fragmentManager, false)
+		(lv_notebooks.adapter as? BaseAdapter)?.notifyDataSetChanged()
+	}
+	
+	//summaries
+	var summaries:List<NotebookShelf.NotebookSummary> = emptyList()
 	
 }
 

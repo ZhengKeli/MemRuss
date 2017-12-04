@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.View
 import android.widget.CheckBox
 import android.widget.ListView
@@ -21,12 +22,16 @@ import java.io.Serializable
 class NoteConflictDialog : NotebookHoldingDialog() {
 	
 	data class ModifyRequest(val targetNoteId: Long, val noteContent: NoteContent, val remainProgress: Boolean) : Serializable
+	interface ConflictSolvedListener {
+		fun onConflictSolved()
+	}
 	companion object {
-		val arg_modifyRequest = "modifyRequest"
-		fun newInstance(notebookKey: NotebookKey, modifyRequest: ModifyRequest)
+		private val arg_modifyRequest = "modifyRequest"
+		fun <T>newInstance(notebookKey: NotebookKey, modifyRequest: ModifyRequest, solvedListener: T)
+			where T: ConflictSolvedListener, T:Fragment
 			= NoteConflictDialog::class.java.newInstance(notebookKey).apply {
-			arguments += bundleOf(
-				arg_modifyRequest to modifyRequest)
+			arguments += bundleOf(arg_modifyRequest to modifyRequest)
+			setTargetFragment(solvedListener, 0)
 		}
 		
 		val NoteConflictDialog.modifyRequest get() = arguments.getSerializable(arg_modifyRequest) as ModifyRequest
@@ -62,7 +67,7 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 						mutableNotebook.modifyNoteContent(conflictNote.id, request.noteContent)
 						if (!cb_remainProgress.isChecked)
 							mutableNotebook.modifyNoteMemory(conflictNote.id, NoteMemoryState.infantState())
-						fragmentManager.popBackStack()
+						(targetFragment as? ConflictSolvedListener)?.onConflictSolved()
 					}
 					
 				} else {
@@ -72,7 +77,7 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 						mutableNotebook.modifyNoteContent(request.targetNoteId, request.noteContent)
 						if (!request.remainProgress)
 							mutableNotebook.modifyNoteMemory(request.targetNoteId, NoteMemoryState.infantState())
-						fragmentManager.popBackStack()
+						(targetFragment as? ConflictSolvedListener)?.onConflictSolved()
 					}
 				}
 			}
