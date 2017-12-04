@@ -39,7 +39,7 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
 		val dialog = AlertDialog.Builder(context).setTitle(R.string.there_are_conflicted_notes).create()
-		val view = View.inflate(context, R.layout.fragment_note_conflict, null).apply {
+		val view = View.inflate(context, R.layout.dialog_note_conflict, null).apply {
 			
 			//prepare data
 			val request = modifyRequest
