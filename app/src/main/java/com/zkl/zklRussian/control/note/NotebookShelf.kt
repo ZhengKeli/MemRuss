@@ -9,26 +9,23 @@ import java.io.Serializable
 import java.util.*
 
 class NotebookShelf(workingDir: File){
+	
 	init { workingDir.mkdirs() }
 	private val booksDir = workingDir.resolve("books").apply { mkdirs() }
 	
-	
 	//summary
-	data class NotebookSummary(val file: File, val bookName: String):Serializable
-	fun loadBookSummaries(): List<NotebookSummary> {
+	fun loadBookSummaries(): List<NotebookBrief> {
 		return booksDir.takeIf { it.exists() }
 			?.listFiles { _, name -> name.endsWith(".zrb") }
 			?.mapNotNull { loadBookSummary(it) }
 			?: emptyList()
 	}
-	private fun loadBookSummary(file: File): NotebookSummary? {
-		try {
+	private fun loadBookSummary(file: File): NotebookBrief? {
+		return try {
 			val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
-			return MutableNotebook3(database).use { notebook ->
-				NotebookSummary(file, notebook.name)
-			}
+			MutableNotebook3(database).use { notebook -> NotebookBrief(file, notebook.name) }
 		}catch (e:Exception){
-			return null
+			null
 		}
 	}
 	
@@ -78,7 +75,11 @@ class NotebookShelf(workingDir: File){
 			if (key.mutable) openMutableNotebook(File(key.canonicalPath)).second
 			else openNotebook(File(key.canonicalPath)).second
 	}
+	@Synchronized fun deleteNotebook(file: File): Boolean {
+		return SQLiteDatabase.deleteDatabase(file)
+	}
 	
 }
 
+data class NotebookBrief(val file: File, val bookName: String): Serializable
 data class NotebookKey internal constructor(val canonicalPath: String, val mutable: Boolean) : Serializable

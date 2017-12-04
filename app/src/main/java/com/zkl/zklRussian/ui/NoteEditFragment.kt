@@ -17,7 +17,7 @@ import com.zkl.zklRussian.core.note.QuestionContent
 import org.jetbrains.anko.find
 
 class NoteEditFragment : NoteHoldingFragment(),
-	NoteDeleteDialog.DeletionConfirmedListener,
+	NoteDeleteDialog.NoteDeletedListener,
 	NoteConflictDialog.ConflictSolvedListener {
 	
 	companion object {
@@ -105,7 +105,7 @@ class NoteEditFragment : NoteHoldingFragment(),
 		noteContentEditHolder?.requestFocus()
 	}
 	
-	override fun onDeletionConfirmed() {
+	override fun onNoteDeleted() {
 		fragmentManager.popBackStack()
 	}
 	

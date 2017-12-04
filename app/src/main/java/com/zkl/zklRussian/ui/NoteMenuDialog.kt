@@ -7,7 +7,7 @@ import android.support.v7.app.AlertDialog
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 
-class NoteMenuDialog : NoteHoldingDialog(),NoteDeleteDialog.DeletionConfirmedListener {
+class NoteMenuDialog : NoteHoldingDialog(),NoteDeleteDialog.NoteDeletedListener {
 	
 	interface NoteListChangedListener {
 		fun onNoteListChanged()
@@ -44,7 +44,7 @@ class NoteMenuDialog : NoteHoldingDialog(),NoteDeleteDialog.DeletionConfirmedLis
 			.create()
 	}
 	
-	override fun onDeletionConfirmed() {
+	override fun onNoteDeleted() {
 		(targetFragment as? NoteListChangedListener)?.onNoteListChanged()
 	}
 	

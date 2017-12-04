@@ -17,7 +17,7 @@
 	<string name="count_Notes_in_all">共%1$d个词条</string>
 	<string name="add">添加</string>
 	<string name="menu">菜单</string>
-	<string name="confirm_deletion_message">你确定要删除这个词条吗？</string>
+	<string name="confirm_note_deletion_message">你确定要删除这个词条吗？</string>
 	<string name="confirm_deletion">删除确认</string>
 	<string name="import_Notebook">导入单词本</string>
 	<string name="merge_Notebook">合并单词本</string>
@@ -45,4 +45,7 @@
 	<string name="remain_memory_progress">保留复习记录</string>
 	<string name="override">覆盖</string>
 	<string name="export_Notebook">导出单词本</string>
+	<string name="delete_Notebook">删除单词本</string>
+	<string name="confirm_notebook_deletion_message">你确定要删除这个笔记本吗？</string>
+	<string name="error">出错了！</string>
 </resources>

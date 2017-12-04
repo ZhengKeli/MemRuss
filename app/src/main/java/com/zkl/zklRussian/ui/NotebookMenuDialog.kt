@@ -6,35 +6,35 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import com.zkl.zklRussian.R
-import com.zkl.zklRussian.control.note.NotebookShelf
+import com.zkl.zklRussian.control.note.NotebookBrief
 import org.jetbrains.anko.bundleOf
 
-class NotebookMenuDialog : DialogFragment() {
+class NotebookMenuDialog : DialogFragment(),NotebookDeleteDialog.NotebookDeletedListener {
 	
 	interface NotebookListChangedListener {
 		fun onNotebookListChanged()
 	}
 	
 	companion object {
-		val arg_notebookSummary = "notebookSummary"
-		fun <T>newInstance(notebookSummary: NotebookShelf.NotebookSummary,changedListener: T?): NotebookMenuDialog
-			where T: NotebookListChangedListener, T:Fragment
+		val arg_notebookBrief = "notebookBrief"
+		fun <T>newInstance(notebookBrief: NotebookBrief, changedListener: T?): NotebookMenuDialog
+			where T : NotebookListChangedListener, T : Fragment
 			= NotebookMenuDialog::class.java.newInstance().apply {
-			arguments += bundleOf(arg_notebookSummary to notebookSummary)
+			arguments += bundleOf(arg_notebookBrief to notebookBrief)
 			setTargetFragment(changedListener, 0)
 		}
 	}
 	
-	private val notebookSummary get() = arguments.getSerializable(arg_notebookSummary) as NotebookShelf.NotebookSummary
+	private val notebookBrief get() = arguments.getSerializable(arg_notebookBrief) as NotebookBrief
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		
 		val itemPairs = arrayOf(
 			getString(R.string.export_Notebook) to {
-				NotebookExportFragment.newInstance(notebookSummary).jump(fragmentManager, true)
+				NotebookExportFragment.newInstance(notebookBrief).jump(fragmentManager, true)
 			},
-			getString(R.string.delete) to {
-				TODO("Notebook delete Dialog")
+			getString(R.string.delete_Notebook) to {
+				NotebookDeleteDialog.newInstance(notebookBrief,this).show(fragmentManager,null)
 			}
 		)
 		val itemNames = itemPairs.map { it.first }.toTypedArray<String>()
@@ -46,4 +46,9 @@ class NotebookMenuDialog : DialogFragment() {
 			}
 			.create()
 	}
+	
+	override fun onNotebookDeleted() {
+		(targetFragment as? NotebookListChangedListener)?.onNotebookListChanged()
+	}
+	
 }

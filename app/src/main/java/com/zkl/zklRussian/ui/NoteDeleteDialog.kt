@@ -9,26 +9,26 @@ import com.zkl.zklRussian.control.note.NotebookKey
 
 class NoteDeleteDialog : NoteHoldingDialog() {
 	
-	interface DeletionConfirmedListener {
-		fun onDeletionConfirmed()
+	interface NoteDeletedListener {
+		fun onNoteDeleted()
 	}
 	
 	companion object {
-		fun <T> newInstance(notebookKey: NotebookKey, noteId: Long, confirmedListener: T?)
-			where T : DeletionConfirmedListener, T : Fragment
+		fun <T> newInstance(notebookKey: NotebookKey, noteId: Long, deletedListener: T?)
+			where T : NoteDeletedListener, T : Fragment
 			= NoteDeleteDialog::class.java.newInstance(notebookKey, noteId).apply {
-			setTargetFragment(confirmedListener, 0)
+			setTargetFragment(deletedListener, 0)
 		}
 	}
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		return AlertDialog.Builder(context)
 			.setTitle(R.string.confirm_deletion)
-			.setMessage(R.string.confirm_deletion_message)
+			.setMessage(R.string.confirm_note_deletion_message)
 			.setNegativeButton(android.R.string.cancel, null)
 			.setPositiveButton(android.R.string.ok, { _, _ ->
 				mutableNotebook.deleteNote(noteId)
-				(targetFragment as? DeletionConfirmedListener)?.onDeletionConfirmed()
+				(targetFragment as? NoteDeletedListener)?.onNoteDeleted()
 			})
 			.create()
 	}

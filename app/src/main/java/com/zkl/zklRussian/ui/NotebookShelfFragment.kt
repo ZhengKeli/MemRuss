@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
-import com.zkl.zklRussian.control.note.NotebookShelf
+import com.zkl.zklRussian.control.note.NotebookBrief
 import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.find
 
@@ -39,7 +39,7 @@ class NotebookShelfFragment : Fragment(),NotebookMenuDialog.NotebookListChangedL
 			tv_notebookName = find(R.id.tv_notebookName)
 		}
 		
-		var notebookSummary: NotebookShelf.NotebookSummary? = null
+		var notebookBrief: NotebookBrief? = null
 			set(value) {
 				field = value
 				tv_notebookName.text = value?.bookName ?: ""
@@ -51,16 +51,18 @@ class NotebookShelfFragment : Fragment(),NotebookMenuDialog.NotebookListChangedL
 	lateinit var b_export: Button
 	lateinit var lv_notebooks: ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_notebook_shelf, container, false).apply {
+		= inflater.inflate(R.layout.fragment_notebook_shelf, container, false)
+		.apply {
 		b_create = find<Button>(R.id.b_create)
 		b_import = find<Button>(R.id.b_import)
 		b_export = find<Button>(R.id.b_merge)
 		lv_notebooks = find<ListView>(R.id.lv_notebooks)
-	}.apply {
-		summaries = myApp.notebookShelf.loadBookSummaries()
-		if (summaries.isEmpty()) NotebookInfantFragment().jump(fragmentManager, false)
+	}
+		.apply {
+		briefs = myApp.notebookShelf.loadBookSummaries()
+		if (briefs.isEmpty()) NotebookInfantFragment().jump(fragmentManager, false)
 		else if (autoJump) {
-			val (key, _) = myApp.notebookShelf.openMutableNotebook(summaries.first().file)
+			val (key, _) = myApp.notebookShelf.openMutableNotebook(briefs.first().file)
 			NotebookFragment.newInstance(key).jump(fragmentManager, true)
 			autoJump = false
 		}
@@ -77,35 +79,35 @@ class NotebookShelfFragment : Fragment(),NotebookMenuDialog.NotebookListChangedL
 		
 		lv_notebooks.adapter = object : BaseAdapter() {
 			override fun getView(position: Int, convertView: View?, parent: ViewGroup?): NotebookItemView
-				= ((convertView as? NotebookItemView) ?: NotebookItemView(context)).apply { notebookSummary = getItem(position) }
+				= ((convertView as? NotebookItemView) ?: NotebookItemView(context)).apply { notebookBrief = getItem(position) }
 			
-			override fun getCount() = summaries.size
+			override fun getCount() = briefs.size
 			
-			override fun getItem(position: Int) = summaries[position]
+			override fun getItem(position: Int) = briefs[position]
 			
 			override fun getItemId(position: Int) = 0L
 			
 		}
 		lv_notebooks.setOnItemClickListener { parent, _, position, _ ->
-			val summary = parent.adapter.getItem(position) as NotebookShelf.NotebookSummary
+			val summary = parent.adapter.getItem(position) as NotebookBrief
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(summary.file)
 			NotebookFragment.newInstance(key).jump(fragmentManager, true)
 		}
 		lv_notebooks.setOnItemLongClickListener { parent, _, position, _ ->
-			val summary = parent.adapter.getItem(position) as NotebookShelf.NotebookSummary
+			val summary = parent.adapter.getItem(position) as NotebookBrief
 			NotebookMenuDialog.newInstance(summary,this@NotebookShelfFragment).show(fragmentManager, null)
 			true
 		}
 	}
 	
 	override fun onNotebookListChanged() {
-		summaries = myApp.notebookShelf.loadBookSummaries()
-		if (summaries.isEmpty()) NotebookInfantFragment().jump(fragmentManager, false)
+		briefs = myApp.notebookShelf.loadBookSummaries()
+		if (briefs.isEmpty()) NotebookInfantFragment().jump(fragmentManager, false)
 		(lv_notebooks.adapter as? BaseAdapter)?.notifyDataSetChanged()
 	}
 	
 	//summaries
-	var summaries:List<NotebookShelf.NotebookSummary> = emptyList()
+	var briefs:List<NotebookBrief> = emptyList()
 	
 }
 
