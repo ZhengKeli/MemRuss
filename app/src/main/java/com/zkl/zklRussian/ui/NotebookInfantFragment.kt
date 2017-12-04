@@ -7,9 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.zkl.zklRussian.R
+import com.zkl.zklRussian.control.note.NotebookKey
 import org.jetbrains.anko.find
 
-class NotebookInfantFragment : Fragment() {
+class NotebookInfantFragment : Fragment(),NotebookCreationDialog.NotebookCreatedListener {
 	
 	lateinit var b_newNoteBook: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
@@ -17,8 +18,13 @@ class NotebookInfantFragment : Fragment() {
 		b_newNoteBook = find(R.id.b_newNoteBook)
 	}.apply {
 		b_newNoteBook.setOnClickListener {
-			NotebookCreationFragment().jump(fragmentManager, true)
+			NotebookCreationDialog.newInstance(this@NotebookInfantFragment).show(fragmentManager,null)
 		}
+	}
+	
+	override fun onNotebookCreated(notebookKey: NotebookKey) {
+		fragmentManager.popBackStack()
+		NotebookFragment.newInstance(notebookKey).jump(fragmentManager, true)
 	}
 	
 }

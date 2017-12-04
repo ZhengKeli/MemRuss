@@ -2,8 +2,6 @@
 	<string name="ZKLRussian">ZKLRussian</string>
 	<string name="Notebook">Notebook</string>
 	
-	<string name="newBook">new book</string>
-	
 	<string name="question_colon">question:</string>
 	<string name="answer_colon">answer:</string>
 	<string name="create_question_note">Create question note:</string>
@@ -53,5 +51,7 @@
 	<string name="remain_memory_progress">Remain Memory Progress</string>
 	<string name="override">Override</string>
 	<string name="error">Error!</string>
+	<string name="new_notebook">new notebook</string>
+	<string name="new_notebook_name">Name of the new Notebook</string>
 
 </resources>

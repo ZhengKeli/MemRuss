@@ -3,7 +3,6 @@
 	<string name="ZKLRussian">ZKLRussian</string>
 	<string name="confirm">确认</string>
 	<string name="delete">删除</string>
-	<string name="newBook">新单词本</string>
 	<string name="answer_colon">答案：</string>
 	<string name="question_colon">问题：</string>
 	<string name="Notebook">单词本</string>
@@ -48,4 +47,7 @@
 	<string name="delete_Notebook">删除单词本</string>
 	<string name="confirm_notebook_deletion_message">你确定要删除这个笔记本吗？</string>
 	<string name="error">出错了！</string>
+	<string name="new_notebook">新单词本</string>
+	<string name="new_notebook_name">新单词本名称：</string>
+	
 </resources>

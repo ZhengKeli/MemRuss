@@ -10,10 +10,13 @@ import android.widget.*
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.control.note.NotebookBrief
+import com.zkl.zklRussian.control.note.NotebookKey
 import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.find
 
-class NotebookShelfFragment : Fragment(),NotebookMenuDialog.NotebookListChangedListener {
+class NotebookShelfFragment : Fragment()
+	, NotebookMenuDialog.NotebookListChangedListener
+	, NotebookCreationDialog.NotebookCreatedListener {
 	
 	companion object {
 		private val arg_autoJump: String = "autoJump"
@@ -51,16 +54,14 @@ class NotebookShelfFragment : Fragment(),NotebookMenuDialog.NotebookListChangedL
 	lateinit var b_export: Button
 	lateinit var lv_notebooks: ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_notebook_shelf, container, false)
-		.apply {
+		= inflater.inflate(R.layout.fragment_notebook_shelf, container, false).apply {
 		b_create = find<Button>(R.id.b_create)
 		b_import = find<Button>(R.id.b_import)
 		b_export = find<Button>(R.id.b_merge)
 		lv_notebooks = find<ListView>(R.id.lv_notebooks)
-	}
-		.apply {
+	}.apply {
 		briefs = myApp.notebookShelf.loadBookSummaries()
-		if (briefs.isEmpty()) NotebookInfantFragment().jump(fragmentManager, false)
+		if (briefs.isEmpty()) NotebookInfantFragment().jump(fragmentManager, true)
 		else if (autoJump) {
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(briefs.first().file)
 			NotebookFragment.newInstance(key).jump(fragmentManager, true)
@@ -68,7 +69,7 @@ class NotebookShelfFragment : Fragment(),NotebookMenuDialog.NotebookListChangedL
 		}
 		
 		b_create.setOnClickListener {
-			NotebookCreationFragment().jump(fragmentManager, true)
+			NotebookCreationDialog.newInstance(this@NotebookShelfFragment).show(fragmentManager, null)
 		}
 		b_import.setOnClickListener {
 			TODO()
@@ -95,7 +96,7 @@ class NotebookShelfFragment : Fragment(),NotebookMenuDialog.NotebookListChangedL
 		}
 		lv_notebooks.setOnItemLongClickListener { parent, _, position, _ ->
 			val summary = parent.adapter.getItem(position) as NotebookBrief
-			NotebookMenuDialog.newInstance(summary,this@NotebookShelfFragment).show(fragmentManager, null)
+			NotebookMenuDialog.newInstance(summary, this@NotebookShelfFragment).show(fragmentManager, null)
 			true
 		}
 	}
@@ -106,8 +107,12 @@ class NotebookShelfFragment : Fragment(),NotebookMenuDialog.NotebookListChangedL
 		(lv_notebooks.adapter as? BaseAdapter)?.notifyDataSetChanged()
 	}
 	
+	override fun onNotebookCreated(notebookKey: NotebookKey) {
+		NotebookFragment.newInstance(notebookKey).jump(fragmentManager, true)
+	}
+	
 	//summaries
-	var briefs:List<NotebookBrief> = emptyList()
+	var briefs: List<NotebookBrief> = emptyList()
 	
 }
 

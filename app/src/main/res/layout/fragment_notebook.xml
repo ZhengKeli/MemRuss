@@ -42,7 +42,7 @@
 			app:layout_constraintEnd_toStartOf="@+id/sv_search"
 			app:layout_constraintStart_toEndOf="@+id/b_back"
 			app:layout_constraintTop_toTopOf="parent"
-			tools:text="@string/newBook"/>
+			tools:text="@string/new_notebook"/>
 		
 		<SearchView
 			android:id="@+id/sv_search"
