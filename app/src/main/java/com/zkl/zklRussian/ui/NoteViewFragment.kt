@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.NoteMemoryStatus
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.fragment_note_view.*
 
 
 class NoteViewFragment : NoteHoldingFragment() {
@@ -22,22 +19,16 @@ class NoteViewFragment : NoteHoldingFragment() {
 	}
 	
 	//view
-	private lateinit var tv_title: TextView
-	private lateinit var b_edit: Button
-	private lateinit var tv_info: TextView
-	private lateinit var fl_noteContent: FrameLayout
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_note_view, container, false).apply {
-		tv_title = find(R.id.tv_title)
-		b_edit = find(R.id.b_edit)
-		tv_info = find(R.id.tv_info)
-		fl_noteContent = find(R.id.fl_noteContent)
-	}.apply {
+		= inflater.inflate(R.layout.fragment_note_view, container, false)
+	
+	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 		
 		//刷新缓存的词条
 		if (tryLoadNote() == null) {
 			fragmentManager.popBackStack()
-			return@apply
+			return
 		}
 		
 		tv_title.text = getString(R.string.Note_view_id, noteId)
@@ -58,9 +49,7 @@ class NoteViewFragment : NoteHoldingFragment() {
 		
 		noteContentViewHolder = null
 		updateNoteContent()
-		
 	}
-	
 	
 	//noteContent
 	private var noteContentViewHolder: NoteContentViewHolder? = null

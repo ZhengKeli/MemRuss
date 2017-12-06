@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.cv_note_content_edit_question.view.*
 import org.jetbrains.anko.inputMethodManager
 
 interface NoteContentEditHolder {
@@ -22,7 +21,6 @@ interface NoteContentEditHolder {
 	fun applyChange(): NoteContent
 }
 
-
 val typedNoteContentEditHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentEditHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentEditHolder
 )
@@ -30,22 +28,19 @@ val typedNoteContentEditHolders = hashMapOf<String, (Context, ViewGroup?) -> Not
 class QuestionContentEditHolder(context: Context, container: ViewGroup? = null) : NoteContentEditHolder {
 	
 	//views
-	private lateinit var et_question: EditText
-	private lateinit var et_answer: EditText
 	override val view: View = LayoutInflater.from(context)
-		.inflate(R.layout.cv_note_content_edit_question, container, false).apply {
-		et_question = find(R.id.et_question)
-		et_answer = find(R.id.et_answer)
+		.inflate(R.layout.cv_note_content_edit_question, container, false)
+	
+	private fun updateViews() = view.run {
+		view.et_question.setText(questionContent?.question ?: "", TextView.BufferType.NORMAL)
+		view.et_answer.setText(questionContent?.answer ?: "", TextView.BufferType.NORMAL)
 	}
 	
-	private fun updateViews() {
-		et_question.setText(questionContent?.question ?: "", TextView.BufferType.NORMAL)
-		et_answer.setText(questionContent?.answer ?: "", TextView.BufferType.NORMAL)
-	}
-	
-	override fun requestFocus() {
+	override fun requestFocus() = view.run {
 		et_question.requestFocus()
-		et_question.context.inputMethodManager.showSoftInput(et_question, InputMethodManager.SHOW_IMPLICIT)
+		et_question.context.inputMethodManager
+			.showSoftInput(et_question, InputMethodManager.SHOW_IMPLICIT)
+		Unit
 	}
 	
 	
@@ -65,6 +60,6 @@ class QuestionContentEditHolder(context: Context, container: ViewGroup? = null) 
 		= noteContent is QuestionContent
 	
 	override fun applyChange()
-		= QuestionContent(et_question.text.toString(), et_answer.text.toString()).also { questionContent = it }
+		= view.run { QuestionContent(et_question.text.toString(), et_answer.text.toString()) }.also { questionContent = it }
 	
 }

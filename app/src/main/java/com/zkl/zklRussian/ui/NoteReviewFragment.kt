@@ -4,12 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.fragment_note_review.*
 
 
 class NoteReviewFragment : NoteHoldingFragment() {
@@ -20,24 +17,22 @@ class NoteReviewFragment : NoteHoldingFragment() {
 	}
 	
 	//view
-	private lateinit var tv_title: TextView
-	private lateinit var b_view: Button
-	private lateinit var fl_noteContent: FrameLayout
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_note_review, container, false).apply {
-		tv_title = find(R.id.tv_title)
-		b_view = find(R.id.b_view)
-		fl_noteContent = find(R.id.fl_noteContent)
-		
-		if (tryLoadNote() == null) jumpToNextNote()
-		
-		tv_title.text = getString(R.string.Note_review_progress, note.memoryState.progress.toInt())
-		b_view.setOnClickListener {
-			NoteViewFragment.newInstance(notebookKey, noteId).jump(fragmentManager, true)
-		}
+		= inflater.inflate(R.layout.fragment_note_review, container, false)
+	
+	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 		
 		noteContentReviewHolder = null
-		updateNoteContent()
+		if (tryLoadNote() == null) jumpToNextNote()
+		else {
+			tv_title.text = getString(R.string.Note_review_progress, note.memoryState.progress.toInt())
+			b_view.setOnClickListener {
+				NoteViewFragment.newInstance(notebookKey, noteId).jump(fragmentManager, true)
+			}
+			updateNoteContent()
+		}
+		
 	}
 	
 	private fun onResult(result: ReviewResult) {

@@ -1,18 +1,15 @@
 package com.zkl.zklRussian.ui
 
 import android.content.Context
-import android.support.constraint.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
 import com.zkl.zklRussian.core.note.getNextReviewTime
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.cv_note_content_review_question.view.*
 
 interface NoteContentReviewHolder {
 	val view: View
@@ -36,7 +33,6 @@ interface ReviewResult {
 	}
 }
 
-
 val typedNoteContentReviewHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentReviewHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentReviewHolder
 )
@@ -44,21 +40,8 @@ val typedNoteContentReviewHolders = hashMapOf<String, (Context, ViewGroup?) -> N
 class QuestionContentReviewHolder(context: Context, container: ViewGroup? = null) : NoteContentReviewHolder {
 	
 	//views
-	private lateinit var tv_question: TextView
-	private lateinit var tv_answer: TextView
-	private lateinit var b_show: Button
-	private lateinit var cl_resultBar: ConstraintLayout
-	private lateinit var b_remembered: Button
-	private lateinit var b_forgot: Button
 	override val view: View = LayoutInflater.from(context)
 		.inflate(R.layout.cv_note_content_review_question, container, false).apply {
-		tv_question = find(R.id.tv_question)
-		tv_answer = find(R.id.tv_answer)
-		b_show = find(R.id.b_show)
-		cl_resultBar = find(R.id.cl_result_bar)
-		b_forgot = find(R.id.b_forgot)
-		b_remembered = find(R.id.b_remembered)
-	}.apply {
 		b_show.setOnClickListener {
 			b_show.visibility = View.GONE
 			tv_answer.visibility = View.VISIBLE
@@ -72,7 +55,7 @@ class QuestionContentReviewHolder(context: Context, container: ViewGroup? = null
 		}
 	}
 	
-	private fun updateViews() {
+	private fun updateViews() = view.run {
 		tv_question.text = questionContent?.question ?: ""
 		tv_answer.text = questionContent?.answer ?: ""
 		

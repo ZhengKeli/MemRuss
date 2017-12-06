@@ -27,14 +27,13 @@ class NotebookDeleteDialog : DialogFragment() {
 		}
 	}
 	
-	private val notebookBrief get() = arguments.getSerializable(arg_notebookBrief) as NotebookBrief
-	
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		return AlertDialog.Builder(context)
 			.setTitle(R.string.confirm_deletion)
 			.setMessage(R.string.confirm_notebook_deletion_message)
 			.setNegativeButton(android.R.string.cancel, null)
 			.setPositiveButton(R.string.ok, { _, _ ->
+				val notebookBrief = arguments.getSerializable(arg_notebookBrief) as NotebookBrief
 				if(myApp.notebookShelf.deleteNotebook(notebookBrief.file))
 					(targetFragment as? NotebookDeletedListener)?.onNotebookDeleted()
 				else toast(getString(R.string.error))

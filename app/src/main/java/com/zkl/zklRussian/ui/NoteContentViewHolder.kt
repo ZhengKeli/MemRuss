@@ -4,18 +4,16 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.cv_note_content_view_question.view.*
 
 interface NoteContentViewHolder {
 	val view: View
 	var noteContent: NoteContent?
 	fun isCompatible(noteContent: NoteContent): Boolean
 }
-
 
 val typedNoteContentViewHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentViewHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentViewHolder
@@ -24,18 +22,14 @@ val typedNoteContentViewHolders = hashMapOf<String, (Context, ViewGroup?) -> Not
 class QuestionContentViewHolder(context: Context, container: ViewGroup? = null) : NoteContentViewHolder {
 	
 	//views
-	private lateinit var tv_question: TextView
-	private lateinit var tv_answer: TextView
 	override val view: View = LayoutInflater.from(context)
-		.inflate(R.layout.cv_note_content_view_question, container, false).apply {
-		tv_question = find(R.id.tv_question)
-		tv_answer = find(R.id.tv_answer)
-	}
+		.inflate(R.layout.cv_note_content_view_question, container, false)
 	
-	private fun updateViews() {
+	private fun updateViews() = view.run {
 		tv_question.text = questionContent?.question ?: ""
 		tv_answer.text = questionContent?.answer ?: ""
 	}
+	
 	
 	
 	//noteContent

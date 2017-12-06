@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.SearchView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.Note
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.fragment_notebook_search.*
 
 class NotebookSearchFragment : NotebookHoldingFragment() {
 	
@@ -18,18 +19,11 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 			= NotebookSearchFragment::class.java.newInstance(notebookKey)
 	}
 	
-	lateinit var sv_search: SearchView
-	lateinit var tv_foundNothing: TextView
-	lateinit var pb_searching: ProgressBar
-	lateinit var lv_notes: ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_notebook_search, container, false).apply {
-		sv_search = find(R.id.sv_search)
-		tv_foundNothing = find(R.id.tv_foundNothing)
-		pb_searching = find(R.id.pb_searching)
-		lv_notes = find(R.id.lv_notes)
-	}.apply {
-		
+		= inflater.inflate(R.layout.fragment_notebook_search, container, false)
+	
+	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 		sv_search.isIconified = false
 		sv_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 			override fun onQueryTextSubmit(query: String): Boolean {
@@ -57,7 +51,6 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 			val fragment = NoteViewFragment.newInstance(notebookKey, note.id)
 			fragment.jump(fragmentManager, true)
 		}
-		
 	}
 	
 	//search

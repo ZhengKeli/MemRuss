@@ -5,13 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.CheckBox
-import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.Note
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.cv_note_content_item_question.view.*
 
 interface NoteContentItemHolder {
 	val view: View
@@ -41,7 +39,6 @@ abstract class NoteListAdapter : BaseAdapter() {
 	}
 }
 
-
 val typedNoteContentItemHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentItemHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentItemHolder
 )
@@ -49,17 +46,10 @@ val typedNoteContentItemHolders = hashMapOf<String, (Context, ViewGroup?) -> Not
 class QuestionContentItemHolder(context: Context, container: ViewGroup? = null) : NoteContentItemHolder {
 	
 	//views
-	private lateinit var tv_question: TextView
-	private lateinit var tv_answer: TextView
-	private lateinit var cb_selected: CheckBox
 	override val view: View = LayoutInflater.from(context)
-		.inflate(R.layout.cv_note_content_item_question, container, false).apply {
-		tv_question = find(R.id.tv_question)
-		tv_answer = find(R.id.tv_answer)
-		cb_selected = find(R.id.cb_selected)
-	}
+		.inflate(R.layout.cv_note_content_item_question, container, false)
 	
-	private fun updateViews() {
+	private fun updateViews() = view.run {
 		tv_question.text = questionContent?.question ?: ""
 		tv_answer.text = questionContent?.answer ?: ""
 	}

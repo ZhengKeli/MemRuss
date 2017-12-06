@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.fragment_note_review_finished.*
 
 
 class NoteReviewFinishedFragment : NotebookHoldingFragment() {
@@ -18,14 +17,13 @@ class NoteReviewFinishedFragment : NotebookHoldingFragment() {
 			= NoteReviewFinishedFragment::class.java.newInstance(notebookKey)
 	}
 	
-	lateinit var b_back: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_note_review_finished, container, false).apply {
-		b_back = find(R.id.b_back)
-	}.apply {
+		= inflater.inflate(R.layout.fragment_note_review_finished, container, false)
+	
+	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 		b_back.setOnClickListener {
 			fragmentManager.popBackStack()
 		}
 	}
-	
 }

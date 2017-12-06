@@ -7,15 +7,14 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.DialogFragment
 import android.view.View
-import android.widget.EditText
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.control.note.NotebookBrief
+import kotlinx.android.synthetic.main.dialog_notebook_export.view.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.bundleOf
-import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
 import java.io.File
 import java.text.SimpleDateFormat
@@ -32,15 +31,13 @@ class NotebookExportDialog : DialogFragment() {
 	}
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-		val brief = arguments[arg_notebookBrief] as NotebookBrief
-		
 		val view = View.inflate(context, R.layout.dialog_notebook_export, null)
-		val et_path: EditText = view.find(R.id.et_path)
 		
+		val brief = arguments[arg_notebookBrief] as NotebookBrief
 		val format = SimpleDateFormat("YYYY-MM-dd", Locale.getDefault())
-		val targetFileName = brief.bookName+"-"+format.format(Date())+".zrb"
+		val targetFileName = brief.bookName + "-" + format.format(Date()) + ".zrb"
 		val targetFile = Environment.getExternalStorageDirectory().resolve("ZKLRussian").resolve(targetFileName)
-		et_path.setText(targetFile.path)
+		view.et_path.setText(targetFile.path)
 		
 		return AlertDialog.Builder(context)
 			.setTitle(R.string.export_Notebook)
@@ -52,7 +49,7 @@ class NotebookExportDialog : DialogFragment() {
 					if (!granted) activity.toast(R.string.no_sdcard_permission)
 					else launch(CommonPool) {
 						try {
-							val target = File(et_path.text.toString())
+							val target = File(view.et_path.text.toString())
 							bookShelf.exportNotebook(brief.file, target)
 							launch(UI) { activity.toast(R.string.export_succeed) }
 						} catch (e: Exception) {

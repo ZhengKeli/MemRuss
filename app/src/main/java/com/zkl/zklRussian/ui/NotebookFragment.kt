@@ -2,47 +2,29 @@ package com.zkl.zklRussian.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.BaseAdapter
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Note
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.fragment_notebook.*
 
-class NotebookFragment : NotebookHoldingFragment(),NoteMenuDialog.NoteListChangedListener {
+class NotebookFragment : NotebookHoldingFragment(),
+	NoteMenuDialog.NoteListChangedListener {
 	
 	companion object {
 		fun newInstance(notebookKey: NotebookKey)
 			= NotebookFragment::class.java.newInstance(notebookKey)
 	}
 	
-	lateinit var b_back: ImageButton
-	lateinit var tv_title: TextView
-	lateinit var sv_search: SearchView
-	lateinit var tv_bookInfo: TextView
-	lateinit var b_memoryPlan: ImageButton
-	lateinit var b_addNote: ImageButton
-	lateinit var cl_review: ConstraintLayout
-	lateinit var tv_review: TextView
-	lateinit var b_review: Button
-	lateinit var lv_notes: ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_notebook, container, false).apply {
-		b_back = find(R.id.b_back)
-		tv_title = find(R.id.tv_title)
-		sv_search = find(R.id.sv_search)
-		tv_bookInfo = find(R.id.tv_bookInfo)
-		b_memoryPlan = find(R.id.b_memoryPlan)
-		b_addNote = find(R.id.b_addNote)
-		cl_review = find(R.id.cl_review)
-		tv_review = find(R.id.tv_review)
-		b_review = find(R.id.b_review)
-		lv_notes = find(R.id.lv_notes)
-	}.apply {
+		= inflater.inflate(R.layout.fragment_notebook, container, false)
+	
+	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 		//top bar
 		b_back.setOnClickListener {
 			fragmentManager.popBackStack()

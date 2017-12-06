@@ -6,13 +6,15 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.LinearLayout
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.control.note.NotebookBrief
 import com.zkl.zklRussian.control.note.NotebookKey
+import kotlinx.android.synthetic.main.adapter_notebook_item.view.*
+import kotlinx.android.synthetic.main.fragment_notebook_shelf.*
 import org.jetbrains.anko.bundleOf
-import org.jetbrains.anko.find
 
 class NotebookShelfFragment : Fragment()
 	, NotebookMenuDialog.NotebookListChangedListener
@@ -35,11 +37,8 @@ class NotebookShelfFragment : Fragment()
 	}
 	
 	private class NotebookItemView(context: Context) : LinearLayout(context) {
-		private val tv_notebookName: TextView
-		
 		init {
 			LayoutInflater.from(context).inflate(R.layout.adapter_notebook_item, this, true)
-			tv_notebookName = find(R.id.tv_notebookName)
 		}
 		
 		var notebookBrief: NotebookBrief? = null
@@ -49,17 +48,11 @@ class NotebookShelfFragment : Fragment()
 			}
 	}
 	
-	lateinit var b_create: Button
-	lateinit var b_import: Button
-	lateinit var b_export: Button
-	lateinit var lv_notebooks: ListView
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_notebook_shelf, container, false).apply {
-		b_create = find<Button>(R.id.b_create)
-		b_import = find<Button>(R.id.b_import)
-		b_export = find<Button>(R.id.b_merge)
-		lv_notebooks = find<ListView>(R.id.lv_notebooks)
-	}.apply {
+		= inflater.inflate(R.layout.fragment_notebook_shelf, container, false)
+	
+	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 		briefs = myApp.notebookShelf.loadNotebookBriefs()
 		if (briefs.isEmpty()) NotebookInfantFragment().jump(fragmentManager, true)
 		else if (autoJump) {
@@ -72,9 +65,6 @@ class NotebookShelfFragment : Fragment()
 			NotebookCreationDialog.newInstance(this@NotebookShelfFragment).show(fragmentManager)
 		}
 		b_import.setOnClickListener {
-			TODO()
-		}
-		b_export.setOnClickListener {
 			TODO()
 		}
 		
@@ -110,6 +100,7 @@ class NotebookShelfFragment : Fragment()
 	override fun onNotebookCreated(notebookKey: NotebookKey) {
 		NotebookFragment.newInstance(notebookKey).jump(fragmentManager, true)
 	}
+	
 	
 	//summaries
 	var briefs: List<NotebookBrief> = emptyList()

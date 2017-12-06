@@ -9,7 +9,8 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookBrief
 import org.jetbrains.anko.bundleOf
 
-class NotebookMenuDialog : DialogFragment(),NotebookDeleteDialog.NotebookDeletedListener {
+class NotebookMenuDialog : DialogFragment(),
+	NotebookDeleteDialog.NotebookDeletedListener {
 	
 	interface NotebookListChangedListener {
 		fun onNotebookListChanged()

@@ -4,17 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.FrameLayout
-import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.ConflictException
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
-import org.jetbrains.anko.find
+import kotlinx.android.synthetic.main.fragment_note_edit.*
 
 class NoteEditFragment : NoteHoldingFragment(),
 	NoteDeleteDialog.NoteDeletedListener,
@@ -26,21 +22,11 @@ class NoteEditFragment : NoteHoldingFragment(),
 	}
 	
 	//view
-	private lateinit var tv_title: TextView
-	private lateinit var b_delete: Button
-	private lateinit var fl_noteContent: FrameLayout
-	private lateinit var cb_remainProgress: CheckBox
-	private lateinit var b_ok: Button
-	private lateinit var b_cancel: Button
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_note_edit, container, false).apply {
-		tv_title = find(R.id.tv_title)
-		b_delete = find(R.id.b_delete)
-		fl_noteContent = find(R.id.fl_noteContent)
-		cb_remainProgress = find(R.id.cb_remainProgress)
-		b_ok = find(R.id.b_ok)
-		b_cancel = find(R.id.b_cancel)
-	}.apply {
+		= inflater.inflate(R.layout.fragment_note_edit, container, false)
+	
+	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 		if (noteId == -1L) initViewsCreateMode()
 		else initViewsEditMode()
 	}
