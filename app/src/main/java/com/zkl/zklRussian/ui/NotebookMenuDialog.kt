@@ -31,10 +31,10 @@ class NotebookMenuDialog : DialogFragment(),NotebookDeleteDialog.NotebookDeleted
 		
 		val itemPairs = arrayOf(
 			getString(R.string.export_Notebook) to {
-				NotebookExportDialog.newInstance(notebookBrief).show(fragmentManager, null)
+				NotebookExportDialog.newInstance(notebookBrief).show(fragmentManager)
 			},
 			getString(R.string.delete_Notebook) to {
-				NotebookDeleteDialog.newInstance(notebookBrief,this).show(fragmentManager,null)
+				NotebookDeleteDialog.newInstance(notebookBrief,this).show(fragmentManager)
 			}
 		)
 		val itemNames = itemPairs.map { it.first }.toTypedArray<String>()

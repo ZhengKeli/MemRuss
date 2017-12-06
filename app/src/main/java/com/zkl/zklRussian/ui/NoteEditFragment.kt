@@ -53,7 +53,7 @@ class NoteEditFragment : NoteHoldingFragment(),
 		
 		tv_title.text = getString(R.string.Note_edit_id, noteId)
 		b_delete.setOnClickListener {
-			NoteDeleteDialog.newInstance(notebookKey, noteId,this).show(fragmentManager, null)
+			NoteDeleteDialog.newInstance(notebookKey, noteId,this).show(fragmentManager)
 		}
 		
 		noteContentEditHolder = null
@@ -69,7 +69,7 @@ class NoteEditFragment : NoteHoldingFragment(),
 				fragmentManager.popBackStack()
 			} catch (e: ConflictException) {
 				val modifyRequest = NoteConflictDialog.ModifyRequest(noteId, newNoteContent, cb_remainProgress.isChecked)
-				NoteConflictDialog.newInstance(notebookKey, modifyRequest,this).show(fragmentManager, null)
+				NoteConflictDialog.newInstance(notebookKey, modifyRequest,this).show(fragmentManager)
 			}
 		}
 		b_cancel.setOnClickListener {
@@ -92,7 +92,7 @@ class NoteEditFragment : NoteHoldingFragment(),
 				fragmentManager.popBackStack()
 			} catch (e: ConflictException) {
 				val modifyRequest = NoteConflictDialog.ModifyRequest(-1, newNoteContent, false)
-				NoteConflictDialog.newInstance(notebookKey, modifyRequest,this).show(fragmentManager, null)
+				NoteConflictDialog.newInstance(notebookKey, modifyRequest,this).show(fragmentManager)
 			}
 		}
 		b_cancel.setOnClickListener {

@@ -69,7 +69,7 @@ class NotebookShelfFragment : Fragment()
 		}
 		
 		b_create.setOnClickListener {
-			NotebookCreationDialog.newInstance(this@NotebookShelfFragment).show(fragmentManager, null)
+			NotebookCreationDialog.newInstance(this@NotebookShelfFragment).show(fragmentManager)
 		}
 		b_import.setOnClickListener {
 			TODO()
@@ -96,7 +96,7 @@ class NotebookShelfFragment : Fragment()
 		}
 		lv_notebooks.setOnItemLongClickListener { parent, _, position, _ ->
 			val brief = parent.adapter.getItem(position) as NotebookBrief
-			NotebookMenuDialog.newInstance(brief, this@NotebookShelfFragment).show(fragmentManager, null)
+			NotebookMenuDialog.newInstance(brief, this@NotebookShelfFragment).show(fragmentManager)
 			true
 		}
 	}

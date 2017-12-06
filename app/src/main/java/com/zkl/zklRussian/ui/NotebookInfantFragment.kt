@@ -18,7 +18,7 @@ class NotebookInfantFragment : Fragment(),NotebookCreationDialog.NotebookCreated
 		b_newNoteBook = find(R.id.b_newNoteBook)
 	}.apply {
 		b_newNoteBook.setOnClickListener {
-			NotebookCreationDialog.newInstance(this@NotebookInfantFragment).show(fragmentManager,null)
+			NotebookCreationDialog.newInstance(this@NotebookInfantFragment).show(fragmentManager)
 		}
 	}
 	

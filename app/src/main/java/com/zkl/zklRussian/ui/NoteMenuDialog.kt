@@ -31,7 +31,7 @@ class NoteMenuDialog : NoteHoldingDialog(),NoteDeleteDialog.NoteDeletedListener 
 				NoteEditFragment.newInstance(notebookKey, noteId).jump(fragmentManager, true)
 			},
 			getString(R.string.delete) to {
-				NoteDeleteDialog.newInstance(notebookKey, noteId,this).show(fragmentManager, null)
+				NoteDeleteDialog.newInstance(notebookKey, noteId,this).show(fragmentManager)
 			}
 		)
 		val itemNames = itemPairs.map { it.first }.toTypedArray<String>()

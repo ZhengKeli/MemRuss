@@ -90,7 +90,7 @@ class NotebookFragment : NotebookHoldingFragment(),NoteMenuDialog.NoteListChange
 		}
 		lv_notes.setOnItemLongClickListener { _, _, position, _ ->
 			val note = notesBuffer[position]
-			NoteMenuDialog.newInstance(notebookKey, note.id, this@NotebookFragment).show(fragmentManager, null)
+			NoteMenuDialog.newInstance(notebookKey, note.id, this@NotebookFragment).show(fragmentManager)
 			true
 		}
 	}

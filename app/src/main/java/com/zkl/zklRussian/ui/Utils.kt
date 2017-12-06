@@ -1,6 +1,8 @@
 package com.zkl.zklRussian.ui
 
+import android.util.SparseArray
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
 import kotlin.concurrent.withLock
@@ -45,7 +47,6 @@ constructor(val sectionSize: Int = 20, val sectionCount: Int = 10)
 	abstract fun getSection(startFrom: Int): List<T>
 	
 }
-
 
 abstract class PendingWorker<in Request : Any, Result> {
 	private var pendingRequest: Request? = null
@@ -93,5 +94,23 @@ abstract class PendingWorker<in Request : Any, Result> {
 	abstract fun onDone(request: Request, result: Result)
 	
 	abstract fun onAllDone(lastRequest: Request, lastResult: Result)
+	
+}
+
+class AutoIndexMap<T>{
+	private var nextKey = AtomicInteger(0)
+	private val sparseArray = SparseArray<T>()
+	
+	fun put(value: T): Int {
+		val key = nextKey.getAndAdd(1)
+		sparseArray.put(key, value)
+		return key
+	}
+	fun get(key: Int): T? = sparseArray.get(key)
+	fun remove(key: Int): T? {
+		val re = sparseArray.get(key)
+		sparseArray.remove(key)
+		return re
+	}
 	
 }
