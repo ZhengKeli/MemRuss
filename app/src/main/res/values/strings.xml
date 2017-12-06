@@ -7,7 +7,8 @@
 	<string name="create_question_note">Create question note:</string>
 	<string name="delete">delete</string>
 	<string name="view">view</string>
-	<string name="confirm">confirm</string>
+	<string name="ok">OK</string>
+	<string name="cancel">Cancel</string>
 	<string name="confirm_deletion">Confirm deletion</string>
 	<string name="confirm_note_deletion_message">Are you sure to delete this Note?</string>
 	<string name="edit">edit</string>
@@ -53,5 +54,9 @@
 	<string name="error">Error!</string>
 	<string name="new_notebook">new notebook</string>
 	<string name="new_notebook_name">Name of the new Notebook</string>
+	<string name="export_to_file">Export to file:</string>
+	<string name="export_succeed">Export succeed!</string>
+	<string name="export_failed">Export failed!</string>
+	<string name="no_sdcard_permission">I don\'t have the permission to write the SD card!</string>
 
 </resources>

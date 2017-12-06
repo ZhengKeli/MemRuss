@@ -31,7 +31,7 @@ class NotebookMenuDialog : DialogFragment(),NotebookDeleteDialog.NotebookDeleted
 		
 		val itemPairs = arrayOf(
 			getString(R.string.export_Notebook) to {
-				NotebookExportFragment.newInstance(notebookBrief).jump(fragmentManager, true)
+				NotebookExportDialog.newInstance(notebookBrief).show(fragmentManager, null)
 			},
 			getString(R.string.delete_Notebook) to {
 				NotebookDeleteDialog.newInstance(notebookBrief,this).show(fragmentManager,null)

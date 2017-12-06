@@ -25,8 +25,8 @@ class NoteDeleteDialog : NoteHoldingDialog() {
 		return AlertDialog.Builder(context)
 			.setTitle(R.string.confirm_deletion)
 			.setMessage(R.string.confirm_note_deletion_message)
-			.setNegativeButton(android.R.string.cancel, null)
-			.setPositiveButton(android.R.string.ok, { _, _ ->
+			.setNegativeButton(R.string.cancel, null)
+			.setPositiveButton(R.string.ok, { _, _ ->
 				mutableNotebook.deleteNote(noteId)
 				(targetFragment as? NoteDeletedListener)?.onNoteDeleted()
 			})

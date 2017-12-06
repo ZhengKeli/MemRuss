@@ -13,14 +13,14 @@ class NotebookShelf(workingDir: File){
 	init { workingDir.mkdirs() }
 	private val booksDir = workingDir.resolve("books").apply { mkdirs() }
 	
-	//summary
-	fun loadBookSummaries(): List<NotebookBrief> {
+	//brief
+	fun loadNotebookBriefs(): List<NotebookBrief> {
 		return booksDir.takeIf { it.exists() }
 			?.listFiles { _, name -> name.endsWith(".zrb") }
-			?.mapNotNull { loadBookSummary(it) }
+			?.mapNotNull { loadNotebookBrief(it) }
 			?: emptyList()
 	}
-	private fun loadBookSummary(file: File): NotebookBrief? {
+	private fun loadNotebookBrief(file: File): NotebookBrief? {
 		return try {
 			val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
 			MutableNotebook3(database).use { notebook -> NotebookBrief(file, notebook.name) }
@@ -33,16 +33,7 @@ class NotebookShelf(workingDir: File){
 	//book opening & creating
 	private val openedNotebooks = HookSystem<NotebookKey, Notebook>()
 	@Synchronized fun createNotebook(bookName: String): Pair<NotebookKey, MutableNotebook> {
-		val file: File = kotlin.run {
-			//find a new file name
-			val random = Random()
-			var randomFile: File
-			do {
-				val randomFileName = bookName + "_" + Math.abs(random.nextLong()) + ".zrb"
-				randomFile = File(booksDir, randomFileName)
-			} while (randomFile.exists())
-			return@run randomFile
-		}
+		val file: File = generateNotebookFile(bookName)
 		val database = SQLiteDatabase.openDatabase(file.path, null,
 			SQLiteDatabase.CREATE_IF_NECESSARY or SQLiteDatabase.OPEN_READWRITE)
 		val notebook = MutableNotebook3(database).apply { createTables(bookName) }
@@ -56,7 +47,7 @@ class NotebookShelf(workingDir: File){
 		if (opened is Notebook) return Pair(key,opened)
 		
 		val database = SQLiteDatabase.openDatabase(key.canonicalPath, null, SQLiteDatabase.OPEN_READONLY)
-		val notebook = MutableNotebook3(database) //todo change to immutableNotebook
+		val notebook = MutableNotebook3(database)
 		openedNotebooks[key] = notebook
 		return Pair(key,notebook)
 	}
@@ -78,6 +69,29 @@ class NotebookShelf(workingDir: File){
 	@Synchronized fun deleteNotebook(file: File): Boolean {
 		return SQLiteDatabase.deleteDatabase(file)
 	}
+	
+	@Synchronized fun importNotebook(file: File): Pair<NotebookKey, Notebook>{
+		val brief = loadNotebookBrief(file)?:TODO()
+		val target = generateNotebookFile(brief.bookName)
+		file.copyTo(target)
+		return openNotebook(target)
+	}
+	@Synchronized fun exportNotebook(file: File, target: File) {
+		target.parentFile.let { if (!it.exists()) it.mkdirs() }
+		file.copyTo(target,true)
+	}
+	
+	private fun generateNotebookFile(bookName: String): File {
+		//find a new file name
+		val random = Random()
+		var randomFile: File
+		do {
+			val randomFileName = bookName + "_" + Math.abs(random.nextLong()) + ".zrb"
+			randomFile = File(booksDir, randomFileName)
+		} while (randomFile.exists())
+		return randomFile
+	}
+	
 	
 }
 

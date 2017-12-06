@@ -60,7 +60,7 @@ class NotebookShelfFragment : Fragment()
 		b_export = find<Button>(R.id.b_merge)
 		lv_notebooks = find<ListView>(R.id.lv_notebooks)
 	}.apply {
-		briefs = myApp.notebookShelf.loadBookSummaries()
+		briefs = myApp.notebookShelf.loadNotebookBriefs()
 		if (briefs.isEmpty()) NotebookInfantFragment().jump(fragmentManager, true)
 		else if (autoJump) {
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(briefs.first().file)
@@ -90,19 +90,19 @@ class NotebookShelfFragment : Fragment()
 			
 		}
 		lv_notebooks.setOnItemClickListener { parent, _, position, _ ->
-			val summary = parent.adapter.getItem(position) as NotebookBrief
-			val (key, _) = myApp.notebookShelf.openMutableNotebook(summary.file)
+			val brief = parent.adapter.getItem(position) as NotebookBrief
+			val (key, _) = myApp.notebookShelf.openMutableNotebook(brief.file)
 			NotebookFragment.newInstance(key).jump(fragmentManager, true)
 		}
 		lv_notebooks.setOnItemLongClickListener { parent, _, position, _ ->
-			val summary = parent.adapter.getItem(position) as NotebookBrief
-			NotebookMenuDialog.newInstance(summary, this@NotebookShelfFragment).show(fragmentManager, null)
+			val brief = parent.adapter.getItem(position) as NotebookBrief
+			NotebookMenuDialog.newInstance(brief, this@NotebookShelfFragment).show(fragmentManager, null)
 			true
 		}
 	}
 	
 	override fun onNotebookListChanged() {
-		briefs = myApp.notebookShelf.loadBookSummaries()
+		briefs = myApp.notebookShelf.loadNotebookBriefs()
 		if (briefs.isEmpty()) NotebookInfantFragment().jump(fragmentManager, true)
 		(lv_notebooks.adapter as? BaseAdapter)?.notifyDataSetChanged()
 	}

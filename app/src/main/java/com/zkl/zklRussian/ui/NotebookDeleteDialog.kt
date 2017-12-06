@@ -34,7 +34,7 @@ class NotebookDeleteDialog : DialogFragment() {
 			.setTitle(R.string.confirm_deletion)
 			.setMessage(R.string.confirm_notebook_deletion_message)
 			.setNegativeButton(android.R.string.cancel, null)
-			.setPositiveButton(android.R.string.ok, { _, _ ->
+			.setPositiveButton(R.string.ok, { _, _ ->
 				if(myApp.notebookShelf.deleteNotebook(notebookBrief.file))
 					(targetFragment as? NotebookDeletedListener)?.onNotebookDeleted()
 				else toast(getString(R.string.error))

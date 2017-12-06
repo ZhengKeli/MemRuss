@@ -32,7 +32,7 @@ class NotebookCreationDialog : DialogFragment() {
 		return AlertDialog.Builder(context)
 			.setTitle(R.string.new_notebook_name)
 			.setView(view)
-			.setPositiveButton(R.string.confirm) { _, _ ->
+			.setPositiveButton(R.string.ok) { _, _ ->
 				val (key, _) = myApp.notebookShelf.createNotebook(et_newBookName.text.toString())
 				(targetFragment as? NotebookCreatedListener)?.onNotebookCreated(key)
 			}
