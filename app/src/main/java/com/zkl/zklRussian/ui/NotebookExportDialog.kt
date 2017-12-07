@@ -46,7 +46,7 @@ class NotebookExportDialog : DialogFragment() {
 				val activity = mainActivity
 				val bookShelf = myApp.notebookShelf
 				activity.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,true) { granted, _ ->
-					if (!granted) activity.toast(R.string.no_sdcard_permission)
+					if (!granted) activity.toast(R.string.no_sdcard_write_permission)
 					else launch(CommonPool) {
 						try {
 							val target = File(view.et_path.text.toString())
@@ -62,4 +62,5 @@ class NotebookExportDialog : DialogFragment() {
 			.setNegativeButton(R.string.cancel, null)
 			.create()
 	}
+	
 }

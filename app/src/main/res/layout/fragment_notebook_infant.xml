@@ -10,14 +10,22 @@
 		android:layout_height="wrap_content"
 		android:gravity="center_vertical|center_horizontal"
 		android:padding="5dp"
-		android:text="还没有笔记本……"
+		android:text="@string/no_notebook_yet"
 		android:textAppearance="?android:attr/textAppearanceLarge"/>
 	
 	<Button
-		android:id="@+id/b_newNoteBook"
+		android:id="@+id/b_create"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="16dp"
 		android:padding="16dp"
-		android:text="新建"/>
+		android:text="@string/create_Notebook"/>
+	
+	<Button
+		android:id="@+id/b_import"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:padding="16dp"
+		android:text="@string/import_Notebook"/>
 </LinearLayout>

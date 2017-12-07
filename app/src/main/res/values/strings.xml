@@ -57,6 +57,11 @@
 	<string name="export_to_file">Export to file:</string>
 	<string name="export_succeed">Export succeed!</string>
 	<string name="export_failed">Export failed!</string>
-	<string name="no_sdcard_permission">I don\'t have the permission to write the SD card!</string>
+	<string name="import_from_file">Import from file:</string>
+	<string name="import_succeed">Import succeed!</string>
+	<string name="import_failed">Import failed!</string>
+	<string name="no_sdcard_write_permission">I don\'t have the permission to write the SD card!</string>
+	<string name="no_sdcard_read_permission">I don\'t have the permission to read the SD card!</string>
+	<string name="no_notebook_yet">No any notebook yet …</string>
 
 </resources>

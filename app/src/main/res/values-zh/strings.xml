@@ -53,6 +53,11 @@
 	<string name="export_to_file">导出到文件：</string>
 	<string name="export_succeed">导出成功！</string>
 	<string name="export_failed">导出失败！</string>
-	<string name="no_sdcard_permission">我没有写入SD卡的权限呐！</string>
+	<string name="no_sdcard_write_permission">我没有写入SD卡的权限呐！</string>
+	<string name="no_sdcard_read_permission">我没有读取SD卡的权限呐！</string>
+	<string name="import_succeed">导入成功！</string>
+	<string name="import_failed">导入失败！</string>
+	<string name="import_from_file">从文件导入：</string>
+	<string name="no_notebook_yet">还没有笔记本……</string>
 
 </resources>

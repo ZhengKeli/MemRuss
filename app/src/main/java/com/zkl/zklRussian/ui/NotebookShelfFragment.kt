@@ -16,9 +16,10 @@ import kotlinx.android.synthetic.main.adapter_notebook_item.view.*
 import kotlinx.android.synthetic.main.fragment_notebook_shelf.*
 import org.jetbrains.anko.bundleOf
 
-class NotebookShelfFragment : Fragment()
-	, NotebookMenuDialog.NotebookListChangedListener
-	, NotebookCreationDialog.NotebookCreatedListener {
+class NotebookShelfFragment : Fragment(),
+	NotebookMenuDialog.NotebookListChangedListener,
+	NotebookCreationDialog.NotebookCreatedListener,
+	NotebookImportDialog.NotebookImportedListener {
 	
 	companion object {
 		private val arg_autoJump: String = "autoJump"
@@ -65,7 +66,7 @@ class NotebookShelfFragment : Fragment()
 			NotebookCreationDialog.newInstance(this@NotebookShelfFragment).show(fragmentManager)
 		}
 		b_import.setOnClickListener {
-			TODO()
+			NotebookImportDialog.newInstance(this).show(fragmentManager)
 		}
 		
 		lv_notebooks.adapter = object : BaseAdapter() {
@@ -101,6 +102,9 @@ class NotebookShelfFragment : Fragment()
 		NotebookFragment.newInstance(notebookKey).jump(fragmentManager, true)
 	}
 	
+	override fun onNotebookImported(notebookKey: NotebookKey) {
+		NotebookFragment.newInstance(notebookKey).jump(fragmentManager, true)
+	}
 	
 	//summaries
 	var briefs: List<NotebookBrief> = emptyList()
