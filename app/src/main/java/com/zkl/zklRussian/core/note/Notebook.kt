@@ -1,7 +1,6 @@
 package com.zkl.zklRussian.core.note
 
 import java.io.Closeable
-import kotlin.math.min
 
 interface Notebook:Closeable {
 	
@@ -42,7 +41,6 @@ interface Notebook:Closeable {
 	 */
 	fun selectLatestNotes(count: Int = 100, offset: Int = 0): List<Note>
 	
-	
 	/**
 	 * 根据关键词搜索一些词条
 	 * @param keyword 关键词，若为空则此方法等同于[selectLatestNotes]
@@ -55,17 +53,17 @@ interface Notebook:Closeable {
 	/**
 	 * 搜索是否存在某个 uniqueTag
 	 */
-	fun checkUniqueTag(tag: String,exceptId:Long=-1L): Long
+	fun checkUniqueTag(uniqueTag: String, exceptId: Long = -1L): Long
 	
 	/**
 	 * 批量搜索是否存在某些 uniqueTag
 	 */
-	@Throws(ConflictException::class)
-	fun throwIfDuplicated(uniqueTags: Collection<String>,exceptId: Long=-1L){
+	fun checkUniqueTags(uniqueTags: Collection<String>, exceptId: Long = -1L): Boolean {
 		uniqueTags.forEach { uniqueTag ->
-			val id = checkUniqueTag(uniqueTag,exceptId)
-			if (id != -1L) throw ConflictException(uniqueTag, id)
+			val id = checkUniqueTag(uniqueTag, exceptId)
+			if (id != -1L) return true
 		}
+		return false
 	}
 	
 	
@@ -90,25 +88,6 @@ interface Notebook:Closeable {
 	val sumMemoryLoad: Double
 	
 	/**
-	 * 根据复习计划统计需要激活的单词数量
-	 */
-	fun countNeedActivateNotesByPlan(nowTime: Long): Int {
-		val state = memoryState
-		if (state.status != NotebookMemoryStatus.learning) return 0
-		val plan = memoryPlan ?: return 0
-		
-		val sumLoad = sumMemoryLoad
-		val targetLoad = plan.targetLoad
-		val limitByLoad = (targetLoad - sumLoad) / MemoryAlgorithm.maxSingleLoad
-		
-		val lastActivateTime = state.lastActivateTime
-		val activateInterval = (24 * 3600 * 1000) / plan.activateFrequency
-		val limitByTime = (nowTime - lastActivateTime) / activateInterval
-		
-		return min(limitByLoad, limitByTime).toInt()
-	}
-	
-	/**
 	 * 统计有多少词条需要复习
 	 * （只有处于正在复习状态的词条会被检索出来）
 	 */
@@ -124,9 +103,9 @@ interface Notebook:Closeable {
 
 interface MutableNotebook : Notebook {
 	
-	
 	//info
 	override var name:String
+	
 	
 	
 	//notes
@@ -155,6 +134,7 @@ interface MutableNotebook : Notebook {
 	fun modifyNoteMemory(noteId: Long, memoryState: NoteMemoryState)
 	
 	
+	
 	//memory
 	
 	/**
@@ -168,7 +148,7 @@ interface MutableNotebook : Notebook {
 	 * 如果还没有计划就什么也不做
 	 * 如果有计划了就要激活一定数量的词条并更新[memoryState]
 	 */
-	fun activateNotesByPlan(nowTime: Long = System.currentTimeMillis())
+	fun activateNotesByPlan(nowTime: Long = System.currentTimeMillis()): Int
 	
 	/**
 	 * 直接激活词条

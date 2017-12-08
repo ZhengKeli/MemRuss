@@ -124,6 +124,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	}
 	
 	
+	
 	//info
 	override val version: Int = 3
 	override var name: String
@@ -144,10 +145,9 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	
 	
-	//note getters
 	
-	override val noteCount: Int
-		get() {
+	//note getters
+	override val noteCount: Int get() {
 			return database.select(NotesTable.tableName, "count(*)").exec {
 				moveToFirst()
 				getInt(0)
@@ -184,10 +184,10 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			.exec { parseNoteList() }
 	}
 	
-	override fun checkUniqueTag(tag: String, exceptId: Long): Long {
+	override fun checkUniqueTag(uniqueTag: String, exceptId: Long): Long {
 		return UniqueTagTable.run {
 			database.select(tableName, noteId)
-				.whereArgs("$uniqueTag = '$tag' and $noteId != $exceptId")
+				.whereArgs("${this.uniqueTag} = '$uniqueTag' and $noteId != $exceptId")
 				.limit(1)
 				.exec {
 					moveToFirst()
@@ -196,29 +196,6 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				}
 		}
 	}
-	
-	//private note getters
-	private fun SQLiteDatabase.selectNotes(): SelectQueryBuilder {
-		return NotesTable.run {
-			this@selectNotes.select(tableName, *standardColumns)
-		}
-	}
-	
-	private fun Cursor.parseNoteList(): List<Note> = parseList(rowParser { noteId: Long, createTime: Long,
-	                                                                       contentType: String, contentString: String, contentUpdateTime: Long,
-	                                                                       memoryState: String, memoryProgress: Double, memoryLoad: Double, reviewTime: Long, memoryUpdateTime: Long ->
-		
-		val noteContentCoder = noteContentCoders[contentType] ?: throw NoteTypeNotSupportedException(contentType)
-		val noteContent = noteContentCoder.decode(contentString)
-		val noteMemory = NoteMemoryState(NoteMemoryStatus.valueOf(memoryState), memoryProgress, memoryLoad, reviewTime)
-		
-		Note(noteId, createTime,
-			content = noteContent,
-			contentUpdateTime = contentUpdateTime,
-			memoryState = noteMemory,
-			memoryUpdateTime = memoryUpdateTime)
-	})
-	
 	
 	//note setters
 	override fun addNote(content: NoteContent, memoryState: NoteMemoryState?): Long {
@@ -336,6 +313,37 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
+	//private methods for getters and setters
+	private fun SQLiteDatabase.selectNotes(): SelectQueryBuilder {
+		return NotesTable.run {
+			this@selectNotes.select(tableName, *standardColumns)
+		}
+	}
+	
+	private fun Cursor.parseNoteList(): List<Note> = parseList(rowParser { noteId: Long, createTime: Long,
+	                                                                       contentType: String, contentString: String, contentUpdateTime: Long,
+	                                                                       memoryState: String, memoryProgress: Double, memoryLoad: Double, reviewTime: Long, memoryUpdateTime: Long ->
+		
+		val noteContentCoder = noteContentCoders[contentType] ?: throw NoteTypeNotSupportedException(contentType)
+		val noteContent = noteContentCoder.decode(contentString)
+		val noteMemory = NoteMemoryState(NoteMemoryStatus.valueOf(memoryState), memoryProgress, memoryLoad, reviewTime)
+		
+		Note(noteId, createTime,
+			content = noteContent,
+			contentUpdateTime = contentUpdateTime,
+			memoryState = noteMemory,
+			memoryUpdateTime = memoryUpdateTime)
+	})
+	
+	@Throws(ConflictException::class)
+	private fun throwIfDuplicated(uniqueTags: Collection<String>, exceptId: Long = -1L) {
+		uniqueTags.forEach { uniqueTag ->
+			val id = checkUniqueTag(uniqueTag, exceptId)
+			if (id != -1L) throw ConflictException(uniqueTag, id)
+		}
+	}
+	
+	
 	
 	//memory
 	override var memoryPlan: MemoryPlan?
@@ -441,10 +449,10 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			}
 	}
 	
-	override fun activateNotesByPlan(nowTime: Long) {
+	override fun activateNotesByPlan(nowTime: Long): Int {
 		val state = memoryState
-		if (state.status != NotebookMemoryStatus.learning) return
-		val plan = memoryPlan ?: return
+		if (state.status != NotebookMemoryStatus.learning) return 0
+		val plan = memoryPlan ?: return 0
 		
 		val sumLoad = sumMemoryLoad
 		val targetLoad = plan.targetLoad
@@ -455,11 +463,12 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		val limitByTime = (nowTime - lastActivateTime) / activateInterval
 		
 		val limit = min(limitByLoad, limitByTime).toInt()
-		if (limit <= 0) return
+		if (limit <= 0) return 0
 		val activated = activateNotes(limit)
-		if (activated <= 0) return
+		if (activated <= 0) return 0
 		val newLastActivateTime = nowTime - (nowTime - lastActivateTime) % activateInterval.toLong()
 		memoryState = state.copy(lastActivateTime = newLastActivateTime)
+		return activated
 	}
 	
 	override fun countNeedReviewNotes(nowTime: Long): Int {
