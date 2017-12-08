@@ -1,6 +1,7 @@
 package com.zkl.zklRussian.core.note
 
 import java.io.Closeable
+import kotlin.math.min
 
 interface Notebook:Closeable {
 	
@@ -153,21 +154,36 @@ interface MutableNotebook : Notebook {
 	
 	//memory
 	
+	override var memoryState: NotebookMemoryState
+	
 	/**
 	 * 复习计划
 	 * 若将其设为 null 则会重设所有单词的状态
 	 */
 	override var memoryPlan: MemoryPlan?
 	
-	fun fillNotes(count: Int = 1, nowTime: Long=System.currentTimeMillis())
+	fun fillNotes(count: Int = 1, nowTime: Long = System.currentTimeMillis()): Int
 	
 	fun fillNotesByPlan() {
-		if (memoryState.status != NotebookMemoryStatus.learning) return
-		val targetLoad = memoryPlan?.targetLoad ?: 0.0
-		//todo check last fill time
+		val state = memoryState
+		if (state.status != NotebookMemoryStatus.learning) return
+		val plan = memoryPlan ?: return
+		
 		val sumLoad = sumMemoryLoad
-		val addCount = ((targetLoad - sumLoad) / MemoryAlgorithm.maxSingleLoad).toInt()
-		if(addCount>0) fillNotes(addCount)
+		val targetLoad = plan.targetLoad
+		val limitByLoad = (targetLoad - sumLoad) / MemoryAlgorithm.maxSingleLoad
+		
+		val nowTime = System.currentTimeMillis()
+		val lastFillTime = state.lastFillTime
+		val fillInterval = (24 * 3600 * 1000) / plan.fillFrequency
+		val limitByTime = (nowTime - lastFillTime) / fillInterval
+		
+		val limit = min(limitByLoad, limitByTime).toInt()
+		if (limit <= 0) return
+		val filled = fillNotes(limit)
+		if (filled <= 0) return
+		val newLastFillTime = nowTime - (nowTime - lastFillTime) % fillInterval.toLong()
+		memoryState = state.copy(lastFillTime = newLastFillTime)
 	}
 	
 }

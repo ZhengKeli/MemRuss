@@ -11,7 +11,7 @@ object NotebookMemoryStateCoder {
 		 = memoryState.let {
 		 JSONObject(mapOf(
 			 it::status.run { name to get().name },
-			 it::lastRefillTime.run { name to get() },
+			 it::lastFillTime.run { name to get() },
 			 it::lastResumeTime.run { name to get() },
 			 it::lastPauseTime.run { name to get() }
 		 )).toString()
@@ -22,7 +22,7 @@ object NotebookMemoryStateCoder {
 		NotebookMemoryState(
 			status = NotebookMemoryStatus.valueOf(
 				getString(NotebookMemoryState::status.name)),
-			lastRefillTime = getLong(NotebookMemoryState::lastRefillTime.name),
+			lastFillTime = getLong(NotebookMemoryState::lastFillTime.name),
 			lastResumeTime = getLong(NotebookMemoryState::lastResumeTime.name),
 			lastPauseTime = getLong(NotebookMemoryState::lastPauseTime.name)
 		)
@@ -33,14 +33,16 @@ object MemoryPlanCoder {
 	fun encode(memory: MemoryPlan)
 		= memory.let {
 		JSONObject(mapOf(
-			it::targetLoad.run { name to get() }
+			it::targetLoad.run { name to get() },
+			it::fillFrequency.run { name to get() }
 		)).toString()
 	}
 	
 	fun decode(string: String): MemoryPlan
 		= JSONObject(string).run {
 		MemoryPlan(
-			targetLoad = getDouble(MemoryPlan::targetLoad.name)
+			targetLoad = getDouble(MemoryPlan::targetLoad.name),
+			fillFrequency = getDouble(MemoryPlan::fillFrequency.name)
 		)
 	}
 }

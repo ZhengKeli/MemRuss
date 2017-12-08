@@ -403,7 +403,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					else NotebookMemoryState.infantState
 				}
 		}
-		private set(value) = ConfsTable.run {
+		set(value) = ConfsTable.run {
 			val nowTime = System.currentTimeMillis()
 			val encoded = NotebookMemoryStateCoder.encode(value)
 			val updated = database.update(tableName,
@@ -429,19 +429,20 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				}
 		}
 	
-	override fun fillNotes(count: Int, nowTime: Long) {
-		NotesTable.run {
-			database.select(tableName, noteId)
-				.whereArgs("$memoryStatus='${NoteMemoryStatus.infant}'")
-				.limit(count)
-				.exec {
-					moveToPosition(-1)
-					while (moveToNext()) {
-						val noteId = getLong(0)
-						modifyNoteMemory(noteId, NoteMemoryState.beginningState(nowTime))
-					}
+	override fun fillNotes(count: Int, nowTime: Long) = NotesTable.run {
+		database.select(tableName, noteId)
+			.whereArgs("$memoryStatus='${NoteMemoryStatus.infant}'")
+			.limit(count)
+			.exec {
+				moveToPosition(-1)
+				var added = 0
+				while (moveToNext()) {
+					val noteId = getLong(0)
+					modifyNoteMemory(noteId, NoteMemoryState.beginningState(nowTime))
+					added++
 				}
-		}
+				this.position
+			}
 	}
 	
 	override fun countNeedReviewNotes(nowTime: Long): Int {
