@@ -10,8 +10,10 @@ import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MemoryPlan
 import com.zkl.zklRussian.core.note.NotebookMemoryStatus
 import kotlinx.android.synthetic.main.fragment_memory_plan.*
+import kotlin.math.roundToInt
 
-class MemoryPlanFragment : NotebookHoldingFragment() {
+class MemoryPlanFragment : NotebookHoldingFragment(),
+	MemoryPlanDropDialog.MemoryPlanDroppedListener {
 	
 	companion object {
 		fun newInstance(notebookKey: NotebookKey)
@@ -21,10 +23,10 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 	private val dailyReviewsRange = 0..500
 	private val dailyNewWordsRange = 0..100
 	private fun SeekBar.getValueInRange(range: IntRange): Int {
-		return range.run { start + progress / max * (endInclusive - start) }
+		return range.run { start + (endInclusive - start) * progress / max }
 	}
 	private fun SeekBar.setValueInRange(range: IntRange, value: Int) {
-		progress = range.run { (value - start) / (endInclusive - start) } * max
+		progress = range.run { max * (value - start) / (endInclusive - start) }
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
@@ -42,6 +44,7 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 			NotebookMemoryStatus.paused -> getString(R.string.MemoryPlan_paused)
 		}
 		
+		tv_dailyReviews.text = getString(R.string.daily_reviews_SettingTitle, memoryPlan.dailyReviews.roundToInt())
 		sb_dailyReviews.max = dailyReviewsRange.run { endInclusive - start }
 		sb_dailyReviews.setValueInRange(dailyReviewsRange, Math.round(memoryPlan.dailyReviews).toInt())
 		sb_dailyReviews.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -53,6 +56,7 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 			override fun onStopTrackingTouch(seekBar: SeekBar) {}
 		})
 		
+		tv_dailyNewWords.text = getString(R.string.daily_newWords_SettingTitle, memoryPlan.dailyNewWords.roundToInt())
 		sb_dailyNewWords.max = dailyNewWordsRange.run { endInclusive - start }
 		sb_dailyNewWords.setValueInRange(dailyNewWordsRange, Math.round(memoryPlan.dailyNewWords).toInt())
 		sb_dailyNewWords.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -64,17 +68,31 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 			override fun onStopTrackingTouch(seekBar: SeekBar) {}
 		})
 		
+		b_dropMemoryPlan.setOnClickListener {
+			MemoryPlanDropDialog.newInstance(notebookKey,this).show(fragmentManager)
+		}
+		
 		b_cancel.setOnClickListener {
 			fragmentManager.popBackStack()
 		}
 		b_ok.setOnClickListener {
-			mutableNotebook.memoryPlan = MemoryPlan(
+			val isCreating = notebook.memoryPlan == null
+			val newMemoryPlan = MemoryPlan(
 				dailyReviews = sb_dailyReviews.getValueInRange(dailyReviewsRange).toDouble(),
 				dailyNewWords = sb_dailyNewWords.getValueInRange(dailyNewWordsRange).toDouble()
 			)
-			mutableNotebook.activateNotesByPlan()
+			
+			mutableNotebook.memoryPlan = newMemoryPlan
+			if (isCreating) mutableNotebook.activateNotes(newMemoryPlan.dailyNewWords.roundToInt())
+			else mutableNotebook.activateNotesByPlan()
+			
 			fragmentManager.popBackStack()
 		}
 		
 	}
+	
+	override fun onMemoryPlanDropped() {
+		fragmentManager.popBackStack()
+	}
+	
 }

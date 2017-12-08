@@ -372,7 +372,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 						memoryLoad to infantState.load,
 						reviewTime to infantState.reviewTime,
 						memoryUpdateTime to nowTime)
-						.whereArgs("$memoryStatus != ${infantState.status}")
+						.whereArgs("$memoryStatus != '${infantState.status}'")
 						.exec()
 				}
 				

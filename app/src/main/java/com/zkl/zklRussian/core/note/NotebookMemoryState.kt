@@ -74,7 +74,7 @@ data class NotebookMemoryState(
 			NotebookMemoryState(NotebookMemoryStatus.infant, -1L, -1L, -1L)
 		
 		fun beginningState(nowTime: Long = System.currentTimeMillis())
-			= NotebookMemoryState(NotebookMemoryStatus.learning, 0, nowTime, -1L)
+			= NotebookMemoryState(NotebookMemoryStatus.learning, nowTime, nowTime, -1L)
 	}
 }
 

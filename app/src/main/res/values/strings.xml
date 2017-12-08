@@ -9,8 +9,8 @@
 	<string name="view">view</string>
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
-	<string name="confirm_deletion">Confirm deletion</string>
-	<string name="confirm_note_deletion_message">Are you sure to delete this Note?</string>
+	<string name="note_deletion_ConfirmTitle">Confirm deletion</string>
+	<string name="note_deletion_ConfirmMessage">Are you sure to delete this Note?</string>
 	<string name="edit">edit</string>
 	
 	<string name="Note_view_id">Note@%1$d</string>
@@ -26,7 +26,6 @@
 	<string name="answer">answer</string>
 	<string name="question">question</string>
 	
-	
 	<string name="count_Notes_in_all">%1$d Notes in All</string>
 	<string name="menu">menu</string>
 	<string name="add">add</string>
@@ -35,15 +34,23 @@
 	<string name="create_Notebook">Create Notebook</string>
 	<string name="export_Notebook">Export Notebook</string>
 	<string name="delete_Notebook">Delete Notebook</string>
-	<string name="confirm_notebook_deletion_message">Are you sure to delete this Notebook?</string>
+	<string name="notebook_deletion_ConfirmTitle">Confirm deletion</string>
+	<string name="notebook_deletion_ConfirmMessage">Are you sure to delete this Notebook?</string>
 	<string name="show">show</string>
 	<string name="remembered">remembered</string>
 	<string name="forgot">forgot</string>
+	
 	<string name="MemoryPlan">Memory Plan</string>
 	<string name="make_MemoryPlan">Make Memory Plan</string>
 	<string name="MemoryPlan_paused">Memory Plan (Paused)</string>
 	<string name="daily_reviews_SettingTitle">Daily reviews: %1$d</string>
 	<string name="daily_newWords_SettingTitle">Daily new words: %1$d</string>
+	<string name="drop_memory_plan">Drop the memory plan</string>
+	<string name="drop_memory_plan_ConfirmTitle">Confirm the dropping</string>
+	<string name="drop_memory_plan_ConfirmMessage">Dropping the memory plan will reset the progress of all the Notes. Ary you sure to drop it?</string>
+	<string name="drop_memory_plan_Drop">Drop</string>
+	
+	
 	<string name="go_to_review">Go to review</string>
 	<string name="need_review">There are %1$d words to review!</string>
 	<string name="NotebookShelf">Notebook Shelf</string>
@@ -63,7 +70,7 @@
 	<string name="import_failed">Import failed!</string>
 	<string name="no_sdcard_write_permission">I don\'t have the permission to write the SD card!</string>
 	<string name="no_sdcard_read_permission">I don\'t have the permission to read the SD card!</string>
-	<string name="no_notebook_yet">No any notebook yet …</string>
+	<string name="no_notebook_yet">No any notebook yet</string>
 	<string name="or_import">Or:</string>
 
 </resources>

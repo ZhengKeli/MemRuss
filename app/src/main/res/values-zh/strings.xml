@@ -16,8 +16,8 @@
 	<string name="count_Notes_in_all">共%1$d个词条</string>
 	<string name="add">添加</string>
 	<string name="menu">菜单</string>
-	<string name="confirm_note_deletion_message">你确定要删除这个词条吗？</string>
-	<string name="confirm_deletion">删除确认</string>
+	<string name="note_deletion_ConfirmMessage">你确定要删除这个词条吗？</string>
+	<string name="note_deletion_ConfirmTitle">删除确认</string>
 	<string name="import_Notebook">导入单词本</string>
 	<string name="merge_Notebook">合并单词本</string>
 	<string name="create_Notebook">新建单词本</string>
@@ -45,7 +45,7 @@
 	<string name="override">覆盖</string>
 	<string name="export_Notebook">导出单词本</string>
 	<string name="delete_Notebook">删除单词本</string>
-	<string name="confirm_notebook_deletion_message">你确定要删除这个笔记本吗？</string>
+	<string name="notebook_deletion_ConfirmMessage">你确定要删除这个笔记本吗？</string>
 	<string name="error">出错了！</string>
 	<string name="new_notebook">新单词本</string>
 	<string name="new_notebook_name">新单词本名称：</string>
@@ -61,5 +61,9 @@
 	<string name="no_notebook_yet">还没有笔记本……</string>
 	<string name="daily_newWords_SettingTitle">每天的新单词数：%1$d</string>
 	<string name="or_import">或者：</string>
+	<string name="drop_memory_plan">删除复习计划</string>
+	<string name="drop_memory_plan_ConfirmTitle">删除确认</string>
+	<string name="drop_memory_plan_ConfirmMessage">删除复习计划会重置所有词条的复习进度，你确定要删除吗？</string>
+	<string name="drop_memory_plan_Drop">删除</string>
 
 </resources>
