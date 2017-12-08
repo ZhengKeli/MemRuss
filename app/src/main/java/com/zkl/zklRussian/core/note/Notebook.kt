@@ -1,6 +1,7 @@
 package com.zkl.zklRussian.core.note
 
 import java.io.Closeable
+import kotlin.math.min
 
 interface Notebook:Closeable {
 	
@@ -89,6 +90,25 @@ interface Notebook:Closeable {
 	val sumMemoryLoad: Double
 	
 	/**
+	 * 根据复习计划统计需要激活的单词数量
+	 */
+	fun countNeedActivateNotesByPlan(nowTime: Long): Int {
+		val state = memoryState
+		if (state.status != NotebookMemoryStatus.learning) return 0
+		val plan = memoryPlan ?: return 0
+		
+		val sumLoad = sumMemoryLoad
+		val targetLoad = plan.targetLoad
+		val limitByLoad = (targetLoad - sumLoad) / MemoryAlgorithm.maxSingleLoad
+		
+		val lastActivateTime = state.lastActivateTime
+		val activateInterval = (24 * 3600 * 1000) / plan.activateFrequency
+		val limitByTime = (nowTime - lastActivateTime) / activateInterval
+		
+		return min(limitByLoad, limitByTime).toInt()
+	}
+	
+	/**
 	 * 统计有多少词条需要复习
 	 * （只有处于正在复习状态的词条会被检索出来）
 	 */
@@ -148,7 +168,7 @@ interface MutableNotebook : Notebook {
 	 * 如果还没有计划就什么也不做
 	 * 如果有计划了就要激活一定数量的词条并更新[memoryState]
 	 */
-	fun activateNotesByPlan()
+	fun activateNotesByPlan(nowTime: Long = System.currentTimeMillis())
 	
 	/**
 	 * 直接激活词条

@@ -441,7 +441,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			}
 	}
 	
-	override fun activateNotesByPlan() {
+	override fun activateNotesByPlan(nowTime: Long) {
 		val state = memoryState
 		if (state.status != NotebookMemoryStatus.learning) return
 		val plan = memoryPlan ?: return
@@ -450,7 +450,6 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		val targetLoad = plan.targetLoad
 		val limitByLoad = (targetLoad - sumLoad) / MemoryAlgorithm.maxSingleLoad
 		
-		val nowTime = System.currentTimeMillis()
 		val lastActivateTime = state.lastActivateTime
 		val activateInterval = (24 * 3600 * 1000) / plan.activateFrequency
 		val limitByTime = (nowTime - lastActivateTime) / activateInterval
