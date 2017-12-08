@@ -59,7 +59,7 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 				if (conflictNote.memoryState.status != NoteMemoryStatus.infant)
 					view.cb_remainProgress.visibility = View.VISIBLE
 				
-				dialogBuilder.setPositiveButton(R.string.override){dialog, which ->
+				dialogBuilder.setPositiveButton(R.string.override){ _, _ ->
 					mutableNotebook.modifyNoteContent(conflictNote.id, request.noteContent)
 					if (!view.cb_remainProgress.isChecked)
 						mutableNotebook.modifyNoteMemory(conflictNote.id, NoteMemoryState.infantState())
