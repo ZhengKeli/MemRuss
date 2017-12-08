@@ -71,7 +71,7 @@ class NotebookShelf(workingDir: File){
 	}
 	
 	@Synchronized fun importNotebook(file: File): Pair<NotebookKey, Notebook>{
-		val brief = loadNotebookBrief(file)?:TODO()
+		val brief = loadNotebookBrief(file)?: throw FileNotCompatibleException(file)
 		val target = generateNotebookFile(brief.bookName)
 		file.copyTo(target)
 		return openNotebook(target)
