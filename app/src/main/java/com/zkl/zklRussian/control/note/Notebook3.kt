@@ -455,11 +455,11 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		val plan = memoryPlan ?: return 0
 		
 		val sumLoad = sumMemoryLoad
-		val targetLoad = plan.targetLoad
+		val targetLoad = plan.dailyReviews
 		val limitByLoad = (targetLoad - sumLoad) / MemoryAlgorithm.maxSingleLoad
 		
 		val lastActivateTime = state.lastActivateTime
-		val activateInterval = (24 * 3600 * 1000) / plan.activateFrequency
+		val activateInterval = (24 * 3600 * 1000) / plan.dailyNewWords
 		val limitByTime = (nowTime - lastActivateTime) / activateInterval
 		
 		val limit = min(limitByLoad, limitByTime).toInt()

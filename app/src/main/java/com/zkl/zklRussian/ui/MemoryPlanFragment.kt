@@ -18,12 +18,14 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 			= MemoryPlanFragment::class.java.newInstance(notebookKey)
 	}
 	
-	private val memoryLoadRange = 0..500
-	private var SeekBar.memoryLoad: Int
-		get() = progress + memoryLoadRange.start
-		set(value) {
-			progress = value
-		}
+	private val dailyReviewsRange = 0..500
+	private val dailyNewWordsRange = 0..100
+	private fun SeekBar.getValueInRange(range: IntRange): Int {
+		return range.run { start + progress / max * (endInclusive - start) }
+	}
+	private fun SeekBar.setValueInRange(range: IntRange, value: Int) {
+		progress = range.run { (value - start) / (endInclusive - start) } * max
+	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_memory_plan, container, false)
@@ -31,35 +33,48 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		
-		sb_memoryLoad.max = memoryLoadRange.run { endInclusive - start }
-		sb_memoryLoad.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-			override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-				tv_memoryLoad.text = getString(R.string.daily_review_times_value, seekBar.memoryLoad)
-			}
-			
-			override fun onStartTrackingTouch(seekBar: SeekBar) {}
-			override fun onStopTrackingTouch(seekBar: SeekBar) {}
-		})
-		b_cancel.setOnClickListener {
-			fragmentManager.popBackStack()
-		}
-		b_ok.setOnClickListener {
-			mutableNotebook.memoryPlan = MemoryPlan(
-				targetLoad = sb_memoryLoad.memoryLoad.toDouble(),
-				activateFrequency = 10.0 //todo
-			)
-			mutableNotebook.activateNotesByPlan()
-			fragmentManager.popBackStack()
-		}
-		
 		val memoryState = notebook.memoryState
+		val memoryPlan = notebook.memoryPlan ?: MemoryPlan.default
+		
 		tv_title.text = when (memoryState.status) {
 			NotebookMemoryStatus.infant -> getString(R.string.make_MemoryPlan)
 			NotebookMemoryStatus.learning -> getString(R.string.MemoryPlan)
 			NotebookMemoryStatus.paused -> getString(R.string.MemoryPlan_paused)
 		}
-		val memoryPlan = notebook.memoryPlan ?: MemoryPlan.default
-		sb_memoryLoad.memoryLoad = Math.round(memoryPlan.targetLoad).toInt()
+		
+		sb_dailyReviews.max = dailyReviewsRange.run { endInclusive - start }
+		sb_dailyReviews.setValueInRange(dailyReviewsRange, Math.round(memoryPlan.dailyReviews).toInt())
+		sb_dailyReviews.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+			override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+				tv_dailyReviews.text = getString(R.string.daily_reviews_SettingTitle, seekBar.getValueInRange(dailyReviewsRange))
+			}
+			
+			override fun onStartTrackingTouch(seekBar: SeekBar) {}
+			override fun onStopTrackingTouch(seekBar: SeekBar) {}
+		})
+		
+		sb_dailyNewWords.max = dailyNewWordsRange.run { endInclusive - start }
+		sb_dailyNewWords.setValueInRange(dailyNewWordsRange, Math.round(memoryPlan.dailyNewWords).toInt())
+		sb_dailyNewWords.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+			override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+				tv_dailyNewWords.text = getString(R.string.daily_newWords_SettingTitle,seekBar.getValueInRange(dailyNewWordsRange))
+			}
+			
+			override fun onStartTrackingTouch(seekBar: SeekBar) {}
+			override fun onStopTrackingTouch(seekBar: SeekBar) {}
+		})
+		
+		b_cancel.setOnClickListener {
+			fragmentManager.popBackStack()
+		}
+		b_ok.setOnClickListener {
+			mutableNotebook.memoryPlan = MemoryPlan(
+				dailyReviews = sb_dailyReviews.getValueInRange(dailyReviewsRange).toDouble(),
+				dailyNewWords = sb_dailyNewWords.getValueInRange(dailyNewWordsRange).toDouble()
+			)
+			mutableNotebook.activateNotesByPlan()
+			fragmentManager.popBackStack()
+		}
 		
 	}
 }

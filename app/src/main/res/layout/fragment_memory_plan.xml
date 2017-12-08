@@ -41,15 +41,30 @@
 			android:padding="8dp">
 			
 			<TextView
-				android:id="@+id/tv_memoryLoad"
+				android:id="@+id/tv_dailyReviews"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="0"
 				android:textAppearance="@style/TextAppearance.AppCompat.Large"
-				tools:text="@string/daily_review_times_value"/>
+				tools:text="@string/daily_reviews_SettingTitle"/>
 			
 			<SeekBar
-				android:id="@+id/sb_memoryLoad"
+				android:id="@+id/sb_dailyReviews"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="0"
+				android:padding="16dp"/>
+			
+			<TextView
+				android:id="@+id/tv_dailyNewWords"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="0"
+				android:textAppearance="@style/TextAppearance.AppCompat.Large"
+				tools:text="@string/daily_newWords_SettingTitle"/>
+			
+			<SeekBar
+				android:id="@+id/sb_dailyNewWords"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="0"

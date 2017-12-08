@@ -42,7 +42,8 @@
 	<string name="MemoryPlan">Memory Plan</string>
 	<string name="make_MemoryPlan">Make Memory Plan</string>
 	<string name="MemoryPlan_paused">Memory Plan (Paused)</string>
-	<string name="daily_review_times_value">Daily review times: %1$d</string>
+	<string name="daily_reviews_SettingTitle">Daily reviews: %1$d</string>
+	<string name="daily_newWords_SettingTitle">Daily new words: %1$d</string>
 	<string name="go_to_review">Go to review</string>
 	<string name="need_review">There are %1$d words to review!</string>
 	<string name="NotebookShelf">Notebook Shelf</string>
@@ -63,5 +64,6 @@
 	<string name="no_sdcard_write_permission">I don\'t have the permission to write the SD card!</string>
 	<string name="no_sdcard_read_permission">I don\'t have the permission to read the SD card!</string>
 	<string name="no_notebook_yet">No any notebook yet …</string>
+	<string name="or_import">Or:</string>
 
 </resources>

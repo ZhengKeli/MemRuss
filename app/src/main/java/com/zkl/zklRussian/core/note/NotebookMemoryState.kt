@@ -4,19 +4,18 @@ package com.zkl.zklRussian.core.note
 data class MemoryPlan(
 	
 	/**
-	 * 最大工作量
-	 * 用平均每天要复习的次数表示，
+	 * 平均每天要复习的次数表示，
 	 * 只要实际工作量低于它，
-	 * 程序就会以每天[activateFrequency]个的速度不断添加新词
+	 * 程序就会以每天[dailyNewWords]个的速度不断添加新词
 	 */
-	val targetLoad:Double,
+	val dailyReviews:Double,
 	
 	/**
 	 * 激活词条的速度
-	 * 当实际工作量低于[targetLoad]时，
-	 * 程序就会以每天[activateFrequency]个的速度不断激活新词
+	 * 当实际工作量低于[dailyReviews]时，
+	 * 程序就会以每天[dailyNewWords]个的速度不断激活新词
 	 */
-	val activateFrequency:Double
+	val dailyNewWords:Double
 
 ){
 	companion object {
@@ -41,7 +40,7 @@ enum class NotebookMemoryStatus {
 data class NotebookMemoryState(
 	
 	/**
-	 * 该单词本的学习阶段
+	 * 该单词本学习计划的状态
 	 */
 	val status: NotebookMemoryStatus,
 	
