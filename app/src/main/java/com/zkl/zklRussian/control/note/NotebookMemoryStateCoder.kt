@@ -6,7 +6,7 @@ import com.zkl.zklRussian.core.note.NotebookMemoryStatus
 import org.json.JSONObject
 
 
-object NotebookMemoryCoder {
+object NotebookMemoryStateCoder {
 	 fun encode(memoryState: NotebookMemoryState)
 		 = memoryState.let {
 		 JSONObject(mapOf(

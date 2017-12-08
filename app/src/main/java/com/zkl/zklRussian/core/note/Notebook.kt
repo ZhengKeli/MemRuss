@@ -162,7 +162,9 @@ interface MutableNotebook : Notebook {
 	fun fillNotes(count: Int = 1, nowTime: Long=System.currentTimeMillis())
 	
 	fun fillNotesByPlan() {
+		if (memoryState.status != NotebookMemoryStatus.learning) return
 		val targetLoad = memoryPlan?.targetLoad ?: 0.0
+		//todo check last fill time
 		val sumLoad = sumMemoryLoad
 		val addCount = ((targetLoad - sumLoad) / MemoryAlgorithm.maxSingleLoad).toInt()
 		if(addCount>0) fillNotes(addCount)

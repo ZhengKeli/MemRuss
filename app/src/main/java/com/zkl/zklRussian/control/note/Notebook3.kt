@@ -330,7 +330,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		val nowTime = System.currentTimeMillis()
 		NotesTable.run {
 			database.update(tableName,
-				this.memoryStatus to memoryState.status.name,
+				memoryStatus to memoryState.status.name,
 				memoryProgress to memoryState.progress,
 				memoryLoad to memoryState.load,
 				reviewTime to memoryState.reviewTime,
@@ -353,12 +353,28 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				}
 		}
 		set(value) = ConfsTable.run {
+			val nowTime = System.currentTimeMillis()
 			if (value == null) {
 				database.delete(tableName, "$confName = '$item_memoryPlan' ")
-			} else {
-				val encoded = MemoryPlanCoder.encode(value)
-				val nowTime = System.currentTimeMillis()
 				
+				memoryState = NotebookMemoryState.infantState
+				
+				//reset all MemoryState of all Notes
+				NotesTable.run {
+					val infantState = NoteMemoryState.infantState()
+					database.update(tableName,
+						memoryStatus to infantState.status.name,
+						memoryProgress to infantState.progress,
+						memoryLoad to infantState.load,
+						reviewTime to infantState.reviewTime,
+						memoryUpdateTime to nowTime)
+						.whereArgs("$memoryStatus != ${infantState.status}")
+						.exec()
+				}
+				
+			}
+			else {
+				val encoded = MemoryPlanCoder.encode(value)
 				val updated = database.update(tableName,
 					confValue to encoded,
 					confUpdateTime to nowTime)
@@ -369,6 +385,11 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					confValue to encoded,
 					confCreateTime to nowTime,
 					confUpdateTime to nowTime)
+				
+				//是否要将state设为开启
+				if (memoryState.status == NotebookMemoryStatus.infant)
+					memoryState = NotebookMemoryState.beginningState(nowTime)
+				
 			}
 		}
 	
@@ -377,20 +398,25 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			database.select(tableName, confValue, confUpdateTime)
 				.whereArgs("$confName = '$item_memoryState' ")
 				.exec {
-					//check data existence
 					moveToFirst()
-					if (!isAfterLast) NotebookMemoryCoder.decode(getString(0))
-					else NotebookMemoryState.infantInstance
+					if (!isAfterLast) NotebookMemoryStateCoder.decode(getString(0))
+					else NotebookMemoryState.infantState
 				}
 		}
 		private set(value) = ConfsTable.run {
 			val nowTime = System.currentTimeMillis()
-			val encoded = NotebookMemoryCoder.encode(value)
-			database.update(tableName,
+			val encoded = NotebookMemoryStateCoder.encode(value)
+			val updated = database.update(tableName,
 				confValue to encoded,
 				confUpdateTime to nowTime)
 				.whereArgs("$confName = '$item_memoryState' ")
-				.exec()
+				.exec() == 1
+			if (!updated) database.insert(tableName,
+				confName to item_memoryState,
+				confValue to encoded,
+				confCreateTime to nowTime,
+				confUpdateTime to nowTime)
+			
 			Unit
 		}
 	
@@ -410,11 +436,9 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				.limit(count)
 				.exec {
 					moveToPosition(-1)
-					database.transaction {
-						while (moveToNext()) {
-							val noteId = getLong(0)
-							modifyNoteMemory(noteId, NoteMemoryState.beginningState(nowTime))
-						}
+					while (moveToNext()) {
+						val noteId = getLong(0)
+						modifyNoteMemory(noteId, NoteMemoryState.beginningState(nowTime))
 					}
 				}
 		}

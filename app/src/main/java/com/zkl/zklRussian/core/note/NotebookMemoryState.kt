@@ -63,8 +63,11 @@ data class NotebookMemoryState(
 
 ){
 	companion object {
-		val infantInstance =
+		val infantState =
 			NotebookMemoryState(NotebookMemoryStatus.infant, -1L, -1L, -1L)
+		
+		fun beginningState(nowTime: Long = System.currentTimeMillis())
+			= NotebookMemoryState(NotebookMemoryStatus.learning, 0, nowTime, -1L)
 	}
 }
 
