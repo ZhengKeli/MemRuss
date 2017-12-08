@@ -89,7 +89,7 @@ class NotebookFragment : NotebookHoldingFragment(),
 	
 	private fun updateNeedReview() {
 		if (notebook is MutableNotebook) {
-			mutableNotebook.fillNotesByPlan()
+			mutableNotebook.activateNotesByPlan()
 			val needReviewCount = notebook.countNeedReviewNotes(System.currentTimeMillis())
 			if (needReviewCount > 0) {
 				cl_review.visibility = View.VISIBLE

@@ -7,16 +7,16 @@ data class MemoryPlan(
 	 * 最大工作量
 	 * 用平均每天要复习的次数表示，
 	 * 只要实际工作量低于它，
-	 * 程序就会以每天[fillFrequency]个的速度不断添加新词
+	 * 程序就会以每天[activateFrequency]个的速度不断添加新词
 	 */
 	val targetLoad:Double,
 	
 	/**
-	 * 添加新词条到计划的速度
+	 * 激活词条的速度
 	 * 当实际工作量低于[targetLoad]时，
-	 * 程序就会以每天[fillFrequency]个的速度不断添加新词
+	 * 程序就会以每天[activateFrequency]个的速度不断激活新词
 	 */
-	val fillFrequency:Double
+	val activateFrequency:Double
 
 ){
 	companion object {
@@ -46,12 +46,12 @@ data class NotebookMemoryState(
 	val status: NotebookMemoryStatus,
 	
 	/**
-	 * 上次填充新词的时间
+	 * 上次激活新词的时间
 	 * 用于计算应该添加多少新词
 	 * （为了避免因为时区变化而引起的错误，统一使用GMT+0毫秒时间)
-	 * 用 -1 表示不需要填充新词
+	 * 用 -1 表示不需要激活新词
 	 */
-	val lastFillTime:Long,
+	val lastActivateTime:Long,
 	
 	/**
 	 * 上次开始计划的时间

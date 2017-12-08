@@ -40,7 +40,7 @@ class NoteReviewFragment : NoteHoldingFragment() {
 		//apply changes of memory progress
 		val newMemory = result.updateNoteMemory(note.memoryState)
 		mutableNotebook.modifyNoteMemory(noteId, newMemory)
-		mutableNotebook.fillNotesByPlan()
+		mutableNotebook.activateNotesByPlan()
 		
 		//jump to next note or finish page
 		jumpToNextNote()

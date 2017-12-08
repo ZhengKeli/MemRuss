@@ -1,7 +1,6 @@
 package com.zkl.zklRussian.core.note
 
 import java.io.Closeable
-import kotlin.math.min
 
 interface Notebook:Closeable {
 	
@@ -105,14 +104,6 @@ interface Notebook:Closeable {
 
 interface MutableNotebook : Notebook {
 	
-	//transaction
-	
-	/**
-	 * 执行一个批量操作。若操作中抛出任何错误则会回滚。
-	 * @return 操作是否无误地成功了。
-	 */
-	fun withTransaction(action: () -> Unit)
-	
 	
 	//info
 	override var name:String
@@ -126,14 +117,6 @@ interface MutableNotebook : Notebook {
 	 */
 	@Throws(ConflictException::class)
 	fun addNote(content: NoteContent, memoryState: NoteMemoryState? = null): Long
-	
-	/**
-	 * 添加一堆词条
-	 */
-	@Throws(ConflictException::class)
-	fun addNotes(drafts: Collection<NoteContent>) {
-		drafts.forEach { addNote(it) }
-	}
 	
 	/**
 	 * 根据 noteId 删除一个词条
@@ -154,37 +137,25 @@ interface MutableNotebook : Notebook {
 	
 	//memory
 	
-	override var memoryState: NotebookMemoryState
-	
 	/**
-	 * 复习计划
+	 * 该笔记本的复习计划
 	 * 若将其设为 null 则会重设所有单词的状态
 	 */
 	override var memoryPlan: MemoryPlan?
 	
-	fun fillNotes(count: Int = 1, nowTime: Long = System.currentTimeMillis()): Int
+	/**
+	 * 按照复习计划激活词条
+	 * 如果还没有计划就什么也不做
+	 * 如果有计划了就要激活一定数量的词条并更新[memoryState]
+	 */
+	fun activateNotesByPlan()
 	
-	fun fillNotesByPlan() {
-		val state = memoryState
-		if (state.status != NotebookMemoryStatus.learning) return
-		val plan = memoryPlan ?: return
-		
-		val sumLoad = sumMemoryLoad
-		val targetLoad = plan.targetLoad
-		val limitByLoad = (targetLoad - sumLoad) / MemoryAlgorithm.maxSingleLoad
-		
-		val nowTime = System.currentTimeMillis()
-		val lastFillTime = state.lastFillTime
-		val fillInterval = (24 * 3600 * 1000) / plan.fillFrequency
-		val limitByTime = (nowTime - lastFillTime) / fillInterval
-		
-		val limit = min(limitByLoad, limitByTime).toInt()
-		if (limit <= 0) return
-		val filled = fillNotes(limit)
-		if (filled <= 0) return
-		val newLastFillTime = nowTime - (nowTime - lastFillTime) % fillInterval.toLong()
-		memoryState = state.copy(lastFillTime = newLastFillTime)
-	}
+	/**
+	 * 直接激活词条
+	 * 此操作可以无视[memoryState]
+	 * 无论是否有复习计划都会进行
+	 */
+	fun activateNotes(count: Int = 1, nowTime: Long = System.currentTimeMillis()): Int
 	
 }
 

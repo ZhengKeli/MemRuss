@@ -45,9 +45,10 @@ class MemoryPlanFragment : NotebookHoldingFragment() {
 		}
 		b_ok.setOnClickListener {
 			mutableNotebook.memoryPlan = MemoryPlan(
-				targetLoad = sb_memoryLoad.memoryLoad.toDouble()
+				targetLoad = sb_memoryLoad.memoryLoad.toDouble(),
+				activateFrequency = 10.0 //todo
 			)
-			mutableNotebook.fillNotesByPlan()
+			mutableNotebook.activateNotesByPlan()
 			fragmentManager.popBackStack()
 		}
 		

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.zkl.zklRussian.control.tools.createIndex
 import com.zkl.zklRussian.core.note.*
 import org.jetbrains.anko.db.*
+import kotlin.math.min
 
 
 private object ConfsTable {
@@ -220,9 +221,6 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	
 	
 	//note setters
-	
-	override fun withTransaction(action: () -> Unit) = database.transaction { action() }
-	
 	override fun addNote(content: NoteContent, memoryState: NoteMemoryState?): Long {
 		
 		val contentEncoder = noteContentCoders[content.typeTag] ?:
@@ -235,8 +233,6 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		val noteMemory = memoryState ?: NoteMemoryState.infantState()
 		
 		var newNoteId: Long = -1L
-		database.beginTransaction()
-		database.endTransaction()
 		database.transaction {
 			NotesTable.run {
 				newNoteId = insert(tableName,
@@ -403,7 +399,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					else NotebookMemoryState.infantState
 				}
 		}
-		set(value) = ConfsTable.run {
+		private set(value) = ConfsTable.run {
 			val nowTime = System.currentTimeMillis()
 			val encoded = NotebookMemoryStateCoder.encode(value)
 			val updated = database.update(tableName,
@@ -429,7 +425,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				}
 		}
 	
-	override fun fillNotes(count: Int, nowTime: Long) = NotesTable.run {
+	override fun activateNotes(count: Int, nowTime: Long) = NotesTable.run {
 		database.select(tableName, noteId)
 			.whereArgs("$memoryStatus='${NoteMemoryStatus.infant}'")
 			.limit(count)
@@ -443,6 +439,28 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 				}
 				this.position
 			}
+	}
+	
+	override fun activateNotesByPlan() {
+		val state = memoryState
+		if (state.status != NotebookMemoryStatus.learning) return
+		val plan = memoryPlan ?: return
+		
+		val sumLoad = sumMemoryLoad
+		val targetLoad = plan.targetLoad
+		val limitByLoad = (targetLoad - sumLoad) / MemoryAlgorithm.maxSingleLoad
+		
+		val nowTime = System.currentTimeMillis()
+		val lastActivateTime = state.lastActivateTime
+		val activateInterval = (24 * 3600 * 1000) / plan.activateFrequency
+		val limitByTime = (nowTime - lastActivateTime) / activateInterval
+		
+		val limit = min(limitByLoad, limitByTime).toInt()
+		if (limit <= 0) return
+		val activated = activateNotes(limit)
+		if (activated <= 0) return
+		val newLastActivateTime = nowTime - (nowTime - lastActivateTime) % activateInterval.toLong()
+		memoryState = state.copy(lastActivateTime = newLastActivateTime)
 	}
 	
 	override fun countNeedReviewNotes(nowTime: Long): Int {
