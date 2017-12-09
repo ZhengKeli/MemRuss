@@ -69,7 +69,7 @@ val Fragment.mainActivity get() = activity as MainActivity
 
 
 //fragment jumping
-fun Fragment.jump(fragmentManager: FragmentManager, addToBackStack: Boolean) {
+fun Fragment.jump(fragmentManager: FragmentManager, addToBackStack: Boolean = true) {
 	val transaction = fragmentManager.beginTransaction()
 	transaction.replace(R.id.fragment_container, this)
 	if (addToBackStack) transaction.addToBackStack(null)

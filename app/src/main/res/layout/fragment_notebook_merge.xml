@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:paddingEnd="8dp"
+	android:paddingLeft="8dp"
+	android:paddingRight="8dp"
+	android:paddingStart="8dp">
+	
+	<TextView
+		android:id="@+id/tv_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="0"
+		android:padding="8dp"
+		android:text="@string/merge_Notebook"
+		android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+	
+	<ScrollView
+		android:id="@+id/sv_content"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_weight="1">
+		
+		<LinearLayout
+			android:id="@+id/ll_content"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:animateLayoutChanges="true"
+			android:orientation="vertical">
+			
+			<LinearLayout
+				android:id="@+id/ll_notebook1"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:animateLayoutChanges="true"
+				android:orientation="vertical"
+				android:padding="8dp">
+				
+				<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@string/choose_merge_notebooks1"
+					android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+				
+				<Spinner
+					android:id="@+id/sp_notebook1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+				
+				<CheckBox
+					android:id="@+id/cb_keep_plan1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@string/keep_memory_progress"
+					android:visibility="gone"
+					tools:visibility="visible"/>
+				
+				<CheckBox
+					android:id="@+id/cb_delete_after_merge1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@string/delete_after_merge"
+					android:visibility="gone"
+					tools:visibility="visible"/>
+			
+			</LinearLayout>
+			
+			<LinearLayout
+				android:id="@+id/ll_notebook2"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:animateLayoutChanges="true"
+				android:orientation="vertical"
+				android:padding="8dp"
+				android:visibility="gone"
+				tools:visibility="visible">
+				
+				<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@string/choose_merge_notebooks2"
+					android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+					/>
+				
+				<Spinner
+					android:id="@+id/sp_notebook2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					/>
+				
+				<CheckBox
+					android:id="@+id/cb_keep_plan2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@string/keep_memory_progress"
+					android:visibility="gone"
+					tools:visibility="visible"/>
+				
+				<CheckBox
+					android:id="@+id/cb_delete_after_merge2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@string/delete_after_merge"
+					android:visibility="gone"
+					tools:visibility="visible"/>
+			</LinearLayout>
+			
+			<Button
+				android:id="@+id/b_merge"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:text="@string/merge"
+				android:visibility="gone"
+				tools:visibility="visible"/>
+		
+		</LinearLayout>
+	</ScrollView>
+
+</LinearLayout>

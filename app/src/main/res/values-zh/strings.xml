@@ -37,7 +37,7 @@
 	<string name="daily_reviews_SettingTitle">每天的复习次数：%1$d</string>
 	<string name="go_to_review">去复习</string>
 	<string name="need_review">有%1$d个单词需要复习哦！</string>
-	<string name="NotebookShelf">笔记本夹</string>
+	<string name="NotebookShelf">单词本夹</string>
 	<string name="found_nothing">无结果</string>
 	<string name="type_to_search">请输入要搜索的内容</string>
 	<string name="there_are_conflicted_notes">有冲突的词条！</string>
@@ -45,7 +45,7 @@
 	<string name="override">覆盖</string>
 	<string name="export_Notebook">导出单词本</string>
 	<string name="delete_Notebook">删除单词本</string>
-	<string name="notebook_deletion_ConfirmMessage">你确定要删除这个笔记本吗？</string>
+	<string name="notebook_deletion_ConfirmMessage">你确定要删除这个单词本吗？</string>
 	<string name="error">出错了！</string>
 	<string name="new_notebook">新单词本</string>
 	<string name="new_notebook_name">新单词本名称：</string>
@@ -58,12 +58,19 @@
 	<string name="import_succeed">导入成功！</string>
 	<string name="import_failed">导入失败！</string>
 	<string name="import_from_file">从文件导入：</string>
-	<string name="no_notebook_yet">还没有笔记本……</string>
+	<string name="no_notebook_yet">还没有单词本……</string>
 	<string name="daily_newWords_SettingTitle">每天的新单词数：%1$d</string>
 	<string name="or_import">或者：</string>
 	<string name="drop_memory_plan">删除复习计划</string>
 	<string name="drop_memory_plan_ConfirmTitle">删除确认</string>
 	<string name="drop_memory_plan_ConfirmMessage">删除复习计划会重置所有词条的复习进度，你确定要删除吗？</string>
 	<string name="drop_memory_plan_Drop">删除</string>
+	<string name="notebook_deletion_ConfirmTitle">删除确认</string>
+	<string name="choose_merge_notebooks1">选择一本要合并的单词本：</string>
+	<string name="choose_merge_notebooks2">选择另一本要合并的单词本：</string>
+	<string name="keep_memory_progress">保留学习进度</string>
+	<string name="delete_after_merge">合并后删除</string>
+	<string name="merge">合并</string>
+	<string name="only_one_notebook">只有一本单词本诶</string>
 
 </resources>

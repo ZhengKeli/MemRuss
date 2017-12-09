@@ -44,7 +44,7 @@ class NoteViewFragment : NoteHoldingFragment() {
 		
 		b_edit.isEnabled = notebook is MutableNotebook
 		b_edit.setOnClickListener {
-			NoteEditFragment.newInstance(notebookKey, noteId).jump(fragmentManager, true)
+			NoteEditFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
 		}
 		
 		noteContentViewHolder = null

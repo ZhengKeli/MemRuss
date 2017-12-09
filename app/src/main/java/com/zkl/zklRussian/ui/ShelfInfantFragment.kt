@@ -13,6 +13,10 @@ class ShelfInfantFragment : Fragment(),
 	NotebookCreationDialog.NotebookCreatedListener,
 	NotebookImportDialog.NotebookImportedListener{
 	
+	companion object {
+		fun newInstance(): ShelfInfantFragment = ShelfInfantFragment::class.java.newInstance()
+	}
+	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
 		= inflater.inflate(R.layout.fragment_shelf_infant, container, false)
 	
@@ -28,12 +32,12 @@ class ShelfInfantFragment : Fragment(),
 	
 	override fun onNotebookCreated(notebookKey: NotebookKey) {
 		fragmentManager.popBackStack()
-		NotebookFragment.newInstance(notebookKey).jump(fragmentManager, true)
+		NotebookFragment.newInstance(notebookKey).jump(fragmentManager)
 	}
 	
 	override fun onNotebookImported(notebookKey: NotebookKey) {
 		fragmentManager.popBackStack()
-		NotebookFragment.newInstance(notebookKey).jump(fragmentManager, true)
+		NotebookFragment.newInstance(notebookKey).jump(fragmentManager)
 	}
 	
 }

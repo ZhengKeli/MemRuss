@@ -6,7 +6,7 @@ data class Note (
 	//basic info
 	
 	/**
-	 * 在同一本笔记本中区别于其他词条的 id
+	 * 在同一本单词本中区别于其他词条的 id
 	 */
 	val id: Long,
 	

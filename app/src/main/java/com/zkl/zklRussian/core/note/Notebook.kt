@@ -106,12 +106,12 @@ interface Notebook:Closeable {
 	//memory
 	
 	/**
-	 * 该笔记本的复习状态
+	 * 该单词本的复习状态
 	 */
 	val memoryState: NotebookMemoryState
 	
 	/**
-	 * 该笔记本的复习计划
+	 * 该单词本的复习计划
 	 */
 	val memoryPlan: MemoryPlan?
 	
@@ -183,7 +183,7 @@ interface MutableNotebook : Notebook {
 	//memory
 	
 	/**
-	 * 该笔记本的复习计划
+	 * 该单词本的复习计划
 	 * 若将其设为 null 则会重设所有单词的状态
 	 */
 	override var memoryPlan: MemoryPlan?

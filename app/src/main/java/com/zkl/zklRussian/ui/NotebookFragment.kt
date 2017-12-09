@@ -31,7 +31,7 @@ class NotebookFragment : NotebookHoldingFragment(),
 		}
 		tv_title.text = notebook.name
 		sv_search.setOnSearchClickListener {
-			NotebookSearchFragment.newInstance(notebookKey).jump(fragmentManager, true)
+			NotebookSearchFragment.newInstance(notebookKey).jump(fragmentManager)
 			sv_search.isIconified = true
 		}
 		
@@ -40,11 +40,11 @@ class NotebookFragment : NotebookHoldingFragment(),
 		if (notebook is MutableNotebook) {
 			b_addNote.visibility = View.VISIBLE
 			b_addNote.setOnClickListener {
-				NoteEditFragment.newInstance(notebookKey, -1).jump(fragmentManager, true)
+				NoteEditFragment.newInstance(notebookKey, -1).jump(fragmentManager)
 			}
 			b_memoryPlan.visibility = View.VISIBLE
 			b_memoryPlan.setOnClickListener {
-				MemoryPlanFragment.newInstance(notebookKey).jump(fragmentManager, true)
+				MemoryPlanFragment.newInstance(notebookKey).jump(fragmentManager)
 			}
 		} else {
 			b_addNote.visibility = View.GONE
@@ -54,7 +54,7 @@ class NotebookFragment : NotebookHoldingFragment(),
 		//review bar
 		if (notebook is MutableNotebook) {
 			b_review.setOnClickListener {
-				NoteReviewFragment.newInstance(notebookKey).jump(fragmentManager, true)
+				NoteReviewFragment.newInstance(notebookKey).jump(fragmentManager)
 			}
 			updateNeedReview()
 		}
@@ -68,7 +68,7 @@ class NotebookFragment : NotebookHoldingFragment(),
 		}
 		lv_notes.setOnItemClickListener { _, _, position, _ ->
 			val note = notesBuffer[position]
-			NoteViewFragment.newInstance(notebookKey, note.id).jump(fragmentManager, true)
+			NoteViewFragment.newInstance(notebookKey, note.id).jump(fragmentManager)
 		}
 		lv_notes.setOnItemLongClickListener { _, _, position, _ ->
 			val note = notesBuffer[position]

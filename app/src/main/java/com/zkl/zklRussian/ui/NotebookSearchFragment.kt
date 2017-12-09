@@ -49,7 +49,7 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 		lv_notes.setOnItemClickListener { _, _, position, _ ->
 			val note = searchResult[position]
 			val fragment = NoteViewFragment.newInstance(notebookKey, note.id)
-			fragment.jump(fragmentManager, true)
+			fragment.jump(fragmentManager)
 		}
 	}
 	

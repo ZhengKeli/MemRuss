@@ -72,5 +72,11 @@
 	<string name="no_sdcard_read_permission">I don\'t have the permission to read the SD card!</string>
 	<string name="no_notebook_yet">No any notebook yet</string>
 	<string name="or_import">Or:</string>
+	<string name="choose_merge_notebooks1">Choose a notebook to merge:</string>
+	<string name="choose_merge_notebooks2">Choose another notebook to merge:</string>
+	<string name="keep_memory_progress">keep memory progress</string>
+	<string name="delete_after_merge">delete after merge</string>
+	<string name="merge">Merge</string>
+	<string name="only_one_notebook">There is only one notebook!</string>
 
 </resources>

@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.zkl.zklRussian.control.tools.HookSystem
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Notebook
+import com.zkl.zklRussian.core.note.NotebookMemoryStatus
 import java.io.File
 import java.io.Serializable
 import java.util.*
@@ -23,7 +24,10 @@ class NotebookShelf(workingDir: File){
 	private fun loadNotebookBrief(file: File): NotebookBrief? {
 		return try {
 			val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
-			MutableNotebook3(database).use { notebook -> NotebookBrief(file, notebook.name) }
+			MutableNotebook3(database).use { notebook ->
+				NotebookBrief(file, notebook.name,
+					notebook.memoryState.status != NotebookMemoryStatus.infant)
+			}
 		}catch (e:Exception){
 			null
 		}
@@ -95,5 +99,5 @@ class NotebookShelf(workingDir: File){
 	
 }
 
-data class NotebookBrief(val file: File, val bookName: String): Serializable
+data class NotebookBrief(val file: File, val bookName: String, val hasPlan: Boolean) : Serializable
 data class NotebookKey internal constructor(val canonicalPath: String, val mutable: Boolean) : Serializable

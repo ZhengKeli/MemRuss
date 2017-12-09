@@ -28,7 +28,7 @@ class NoteReviewFragment : NoteHoldingFragment() {
 		else {
 			tv_title.text = getString(R.string.Note_review_progress, note.memoryState.progress.toInt())
 			b_view.setOnClickListener {
-				NoteViewFragment.newInstance(notebookKey, noteId).jump(fragmentManager, true)
+				NoteViewFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
 			}
 			updateNoteContent()
 		}
@@ -53,7 +53,7 @@ class NoteReviewFragment : NoteHoldingFragment() {
 			updateNoteContent()
 		} else {
 			fragmentManager.popBackStack()
-			NoteReviewFinishedFragment.newInstance(notebookKey).jump(fragmentManager, true)
+			NoteReviewFinishedFragment.newInstance(notebookKey).jump(fragmentManager)
 		}
 	}
 	
