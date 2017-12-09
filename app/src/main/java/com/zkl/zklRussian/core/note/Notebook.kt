@@ -48,7 +48,7 @@ interface Notebook:Closeable {
 	 * @param offset 可以跳过最开始的几个词条，返回后面的几个
 	 * @return 返回搜索结果，按照修改日期倒序排序
 	 */
-	fun selectByKeyword(keyword: String, count: Int=100, offset: Int=0): List<Note>
+	fun selectByKeyword(keyword: String, count: Int = 100, offset: Int = 0): List<Note>
 	
 	/**
 	 * 搜索是否存在某个 uniqueTag
@@ -64,6 +64,41 @@ interface Notebook:Closeable {
 			if (id != -1L) return true
 		}
 		return false
+	}
+	
+	
+	
+	//raw
+	
+	/**
+	 * 不要求任何顺序地获取词条
+	 */
+	fun rawGetNotes(count: Int = 100, offset: Int = 0): List<Note>
+	
+	/**
+	 * 获取所有词条
+	 */
+	fun rawGetAllNotes(): Collection<Note> = object :AbstractCollection<Note>(){
+		override val size: Int = noteCount
+		override fun iterator():Iterator<Note> = object : AbstractIterator<Note>() {
+			var index = 0
+			var buffer = emptyList<Note>()
+			override fun computeNext() {
+				if (index < buffer.size) {
+					setNext(buffer[index])
+					index++
+				}else{
+					buffer = rawGetNotes(1024, index)
+					if (buffer.isNotEmpty()) {
+						setNext(buffer[0])
+						index = 1
+					} else {
+						done()
+						index = 0
+					}
+				}
+			}
+		}
 	}
 	
 	
@@ -132,6 +167,16 @@ interface MutableNotebook : Notebook {
 	 * 修改 note 的复习进度
 	 */
 	fun modifyNoteMemory(noteId: Long, memoryState: NoteMemoryState)
+	
+	
+	
+	//raw
+	
+	/**
+	 * 完全保留地添加一个词条
+	 */
+	@Throws(ConflictException::class)
+	fun rawAddNote(note: Note):Long
 	
 	
 	

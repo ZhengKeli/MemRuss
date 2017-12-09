@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.zkl.zklRussian.control.tools.createIndex
 import com.zkl.zklRussian.core.note.*
 import org.jetbrains.anko.db.*
+import org.jetbrains.anko.db.ConflictClause.ABORT
 import kotlin.math.min
 
 
@@ -112,7 +113,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			UniqueTagTable.run {
 				createTable(tableName, true,
 					noteId to INTEGER,
-					uniqueTag to TEXT + UNIQUE + PRIMARY_KEY)
+					uniqueTag to TEXT + PRIMARY_KEY + UNIQUE(ABORT))
 				createIndex("${uniqueTag}Index", tableName, true, true, uniqueTag)
 			}
 			SearchTagTable.run {
@@ -199,15 +200,14 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	
 	//note setters
 	override fun addNote(content: NoteContent, memoryState: NoteMemoryState?): Long {
+		throwIfDuplicated(content.uniqueTags)
 		
 		val contentEncoder = noteContentCoders[content.typeTag] ?:
 			throw NoteTypeNotSupportedException(content.typeTag)
 		
-		throwIfDuplicated(content.uniqueTags)
-		
 		val nowTime = System.currentTimeMillis()
 		val noteContentString = contentEncoder.encode(content)
-		val noteMemory = memoryState ?: NoteMemoryState.infantState()
+		val noteMemoryState = memoryState ?: NoteMemoryState.infantState()
 		
 		var newNoteId: Long = -1L
 		database.transaction {
@@ -220,10 +220,10 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					contentString to noteContentString,
 					contentUpdateTime to nowTime,
 					
-					memoryStatus to noteMemory.status.name,
-					memoryProgress to noteMemory.progress,
-					reviewTime to noteMemory.reviewTime,
-					memoryLoad to noteMemory.load,
+					memoryStatus to noteMemoryState.status.name,
+					memoryProgress to noteMemoryState.progress,
+					reviewTime to noteMemoryState.reviewTime,
+					memoryLoad to noteMemoryState.load,
 					memoryUpdateTime to nowTime
 				)
 				if (newNoteId == -1L) throw InternalNotebookException("failed to insert new note")
@@ -313,6 +313,62 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
+	//raw
+	override fun rawGetNotes(count: Int, offset: Int): List<Note> {
+		return database.selectNotes()
+			.limit(offset, count)
+			.exec { parseNoteList() }
+	}
+	
+	override fun rawAddNote(note: Note): Long {
+		val content = note.content
+		val noteMemoryState = note.memoryState
+		
+		throwIfDuplicated(content.uniqueTags)
+		
+		val contentEncoder = noteContentCoders[content.typeTag] ?:
+			throw NoteTypeNotSupportedException(content.typeTag)
+		val noteContentString = contentEncoder.encode(content)
+		
+		var newNoteId: Long = -1L
+		database.transaction {
+			NotesTable.run {
+				newNoteId = insert(tableName,
+					//noteId不用管
+					createTime to note.createTime,
+					
+					contentType to content.typeTag,
+					contentString to noteContentString,
+					contentUpdateTime to note.contentUpdateTime,
+					
+					memoryStatus to noteMemoryState.status.name,
+					memoryProgress to noteMemoryState.progress,
+					reviewTime to noteMemoryState.reviewTime,
+					memoryLoad to noteMemoryState.load,
+					memoryUpdateTime to note.memoryUpdateTime
+				)
+				if (newNoteId == -1L) throw InternalNotebookException("failed to insert new note")
+			}
+			UniqueTagTable.run {
+				content.uniqueTags.forEach { tag ->
+					insert(tableName,
+						UniqueTagTable.noteId to newNoteId,
+						UniqueTagTable.uniqueTag to tag
+					)
+				}
+			}
+			SearchTagTable.run {
+				content.searchTags.forEach { tag ->
+					insert(tableName,
+						noteId to newNoteId,
+						searchTag to tag
+					)
+				}
+			}
+		}
+		return newNoteId
+	}
+	
 	//private methods for getters and setters
 	private fun SQLiteDatabase.selectNotes(): SelectQueryBuilder {
 		return NotesTable.run {
@@ -342,6 +398,8 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			if (id != -1L) throw ConflictException(uniqueTag, id)
 		}
 	}
+	
+	
 	
 	
 	
