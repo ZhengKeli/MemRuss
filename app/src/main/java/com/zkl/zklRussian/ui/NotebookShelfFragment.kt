@@ -15,6 +15,7 @@ import com.zkl.zklRussian.control.note.NotebookKey
 import kotlinx.android.synthetic.main.adapter_notebook_item.view.*
 import kotlinx.android.synthetic.main.fragment_notebook_shelf.*
 import org.jetbrains.anko.bundleOf
+import org.jetbrains.anko.support.v4.toast
 
 class NotebookShelfFragment : Fragment(),
 	NotebookMenuDialog.NotebookListChangedListener,
@@ -63,10 +64,14 @@ class NotebookShelfFragment : Fragment(),
 		}
 		
 		b_create.setOnClickListener {
-			NotebookCreationDialog.newInstance(this@NotebookShelfFragment).show(fragmentManager)
+			NotebookCreationDialog.newInstance(this).show(fragmentManager)
 		}
 		b_import.setOnClickListener {
 			NotebookImportDialog.newInstance(this).show(fragmentManager)
+		}
+		b_merge.setOnClickListener{
+			toast("Not available yet!")
+			//todo implement this!
 		}
 		
 		lv_notebooks.adapter = object : BaseAdapter() {

@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.dialog_note_conflict.view.*
 import org.jetbrains.anko.bundleOf
 import java.io.Serializable
 
-
 class NoteConflictDialog : NotebookHoldingDialog() {
 	
 	data class ModifyRequest(val targetNoteId: Long, val noteContent: NoteContent, val remainProgress: Boolean) : Serializable

@@ -13,6 +13,8 @@ interface MutableNotebookCompactor : NotebookCompactor {
 	fun loadMutableNotebook(file: File): MutableNotebook
 }
 
+//todo make the compact system
+
 class FileNotCompatibleException(file: File)
 	:Exception("Can not load the file ${file.path} as a Notebook.")
 
