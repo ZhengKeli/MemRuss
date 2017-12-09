@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_main)
 		
 		if (getShowingFragment() == null) {
-			NotebookShelfFragment.newInstance(true).jump(supportFragmentManager, false)
+			ShelfFragment.newInstance(true).jump(supportFragmentManager, false)
 		}
 	}
 	

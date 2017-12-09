@@ -13,11 +13,11 @@ import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.control.note.NotebookBrief
 import com.zkl.zklRussian.control.note.NotebookKey
 import kotlinx.android.synthetic.main.adapter_notebook_item.view.*
-import kotlinx.android.synthetic.main.fragment_notebook_shelf.*
+import kotlinx.android.synthetic.main.fragment_shelf.*
 import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.support.v4.toast
 
-class NotebookShelfFragment : Fragment(),
+class ShelfFragment : Fragment(),
 	NotebookMenuDialog.NotebookListChangedListener,
 	NotebookCreationDialog.NotebookCreatedListener,
 	NotebookImportDialog.NotebookImportedListener {
@@ -25,13 +25,13 @@ class NotebookShelfFragment : Fragment(),
 	companion object {
 		private val arg_autoJump: String = "autoJump"
 		fun newInstance(autoJumpToFirst: Boolean)
-			= NotebookShelfFragment().apply {
+			= ShelfFragment().apply {
 			arguments = bundleOf(
 				arg_autoJump to autoJumpToFirst
 			)
 		}
 		
-		private var NotebookShelfFragment.autoJump: Boolean
+		private var ShelfFragment.autoJump: Boolean
 			get() = arguments!!.getBoolean(arg_autoJump)
 			set(value) {
 				arguments!!.putBoolean(arg_autoJump, value)
@@ -51,12 +51,12 @@ class NotebookShelfFragment : Fragment(),
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_notebook_shelf, container, false)
+		= inflater.inflate(R.layout.fragment_shelf, container, false)
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		briefs = myApp.notebookShelf.loadNotebookBriefs()
-		if (briefs.isEmpty()) NotebookInfantFragment().jump(fragmentManager, true)
+		if (briefs.isEmpty()) ShelfInfantFragment().jump(fragmentManager, true)
 		else if (autoJump) {
 			val (key, _) = myApp.notebookShelf.openMutableNotebook(briefs.first().file)
 			NotebookFragment.newInstance(key).jump(fragmentManager, true)
@@ -92,14 +92,14 @@ class NotebookShelfFragment : Fragment(),
 		}
 		lv_notebooks.setOnItemLongClickListener { parent, _, position, _ ->
 			val brief = parent.adapter.getItem(position) as NotebookBrief
-			NotebookMenuDialog.newInstance(brief, this@NotebookShelfFragment).show(fragmentManager)
+			NotebookMenuDialog.newInstance(brief, this@ShelfFragment).show(fragmentManager)
 			true
 		}
 	}
 	
 	override fun onNotebookListChanged() {
 		briefs = myApp.notebookShelf.loadNotebookBriefs()
-		if (briefs.isEmpty()) NotebookInfantFragment().jump(fragmentManager, true)
+		if (briefs.isEmpty()) ShelfInfantFragment().jump(fragmentManager, true)
 		(lv_notebooks.adapter as? BaseAdapter)?.notifyDataSetChanged()
 	}
 	

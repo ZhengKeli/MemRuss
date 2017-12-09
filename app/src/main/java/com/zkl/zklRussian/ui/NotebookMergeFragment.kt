@@ -7,19 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
-import kotlinx.android.synthetic.main.fragment_notebook_infant.*
+import kotlinx.android.synthetic.main.fragment_shelf_infant.*
 
-class NotebookInfantFragment : Fragment(),
+class NotebookMergeFragment : Fragment(),
 	NotebookCreationDialog.NotebookCreatedListener,
 	NotebookImportDialog.NotebookImportedListener{
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_notebook_infant, container, false)
+		= inflater.inflate(R.layout.fragment_shelf_infant, container, false)
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		b_create.setOnClickListener {
-			NotebookCreationDialog.newInstance(this@NotebookInfantFragment).show(fragmentManager)
+			NotebookCreationDialog.newInstance(this@NotebookMergeFragment).show(fragmentManager)
 		}
 		b_import.setOnClickListener {
 			NotebookImportDialog.newInstance(this).show(fragmentManager)
