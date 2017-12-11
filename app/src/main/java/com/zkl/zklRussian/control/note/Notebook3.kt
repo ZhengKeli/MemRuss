@@ -320,15 +320,20 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 			.exec { parseNoteList() }
 	}
 	
-	override fun rawAddNote(note: Note): Long {
+	override fun rawAddNote(note: Note, ridMemoryState: Boolean): Long {
 		val content = note.content
-		val noteMemoryState = note.memoryState
-		
 		throwIfDuplicated(content.uniqueTags)
 		
 		val contentEncoder = noteContentCoders[content.typeTag] ?:
 			throw NoteTypeNotSupportedException(content.typeTag)
 		val noteContentString = contentEncoder.encode(content)
+		
+		val noteMemoryState =
+			if(!ridMemoryState) note.memoryState
+			else NoteMemoryState.infantState()
+		val noteMemoryUpdateTime =
+			if(!ridMemoryState) note.memoryUpdateTime
+			else System.currentTimeMillis()
 		
 		var newNoteId: Long = -1L
 		database.transaction {
@@ -345,7 +350,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					memoryProgress to noteMemoryState.progress,
 					reviewTime to noteMemoryState.reviewTime,
 					memoryLoad to noteMemoryState.load,
-					memoryUpdateTime to note.memoryUpdateTime
+					memoryUpdateTime to noteMemoryUpdateTime
 				)
 				if (newNoteId == -1L) throw InternalNotebookException("failed to insert new note")
 			}

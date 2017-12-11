@@ -4,13 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
 import kotlinx.android.synthetic.main.cv_note_content_edit_question.view.*
-import org.jetbrains.anko.inputMethodManager
 
 interface NoteContentEditHolder {
 	val view: View
@@ -38,8 +36,7 @@ class QuestionContentEditHolder(context: Context, container: ViewGroup? = null) 
 	
 	override fun requestFocus() = view.run {
 		et_question.requestFocus()
-		et_question.context.inputMethodManager
-			.showSoftInput(et_question, InputMethodManager.SHOW_IMPLICIT)
+		et_question.showSoftInput()
 		Unit
 	}
 	

@@ -29,71 +29,50 @@
 			android:id="@+id/ll_content"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:animateLayoutChanges="true"
 			android:orientation="vertical">
 			
 			<LinearLayout
-				android:id="@+id/ll_notebook1"
+				android:id="@+id/ll_mainBody"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:animateLayoutChanges="true"
 				android:orientation="vertical"
 				android:padding="8dp">
 				
 				<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:text="@string/choose_merge_notebooks1"
+					android:text="@string/choose_merge_mainBody"
 					android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 				
 				<Spinner
-					android:id="@+id/sp_notebook1"
+					android:id="@+id/sp_mainBody"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"/>
-				
-				<CheckBox
-					android:id="@+id/cb_keep_plan1"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="@string/keep_memory_progress"
-					android:visibility="gone"
-					tools:visibility="visible"/>
-				
-				<CheckBox
-					android:id="@+id/cb_delete_after_merge1"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="@string/delete_after_merge"
-					android:visibility="gone"
-					tools:visibility="visible"/>
 			
 			</LinearLayout>
 			
 			<LinearLayout
-				android:id="@+id/ll_notebook2"
+				android:id="@+id/ll_attachment"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:animateLayoutChanges="true"
 				android:orientation="vertical"
-				android:padding="8dp"
-				android:visibility="gone"
-				tools:visibility="visible">
+				android:padding="8dp">
 				
 				<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:text="@string/choose_merge_notebooks2"
+					android:text="@string/choose_merge_attachment"
 					android:textAppearance="@style/TextAppearance.AppCompat.Medium"
 					/>
 				
 				<Spinner
-					android:id="@+id/sp_notebook2"
+					android:id="@+id/sp_attachment"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					/>
 				
 				<CheckBox
-					android:id="@+id/cb_keep_plan2"
+					android:id="@+id/cb_keep_progress"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:text="@string/keep_memory_progress"
@@ -101,7 +80,7 @@
 					tools:visibility="visible"/>
 				
 				<CheckBox
-					android:id="@+id/cb_delete_after_merge2"
+					android:id="@+id/cb_delete_old"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:text="@string/delete_after_merge"
@@ -114,11 +93,10 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center"
-				android:text="@string/merge"
-				android:visibility="gone"
-				tools:visibility="visible"/>
-		
+				android:padding="24dp"
+				android:text="@string/merge"/>
 		</LinearLayout>
+		
 	</ScrollView>
 
 </LinearLayout>

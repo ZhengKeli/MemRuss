@@ -68,8 +68,13 @@ class MemoryPlanFragment : NotebookHoldingFragment(),
 			override fun onStopTrackingTouch(seekBar: SeekBar) {}
 		})
 		
-		b_dropMemoryPlan.setOnClickListener {
-			MemoryPlanDropDialog.newInstance(notebookKey,this).show(fragmentManager)
+		if(memoryState.status==NotebookMemoryStatus.infant){
+			b_dropMemoryPlan.visibility = View.GONE
+		}
+		else {
+			b_dropMemoryPlan.setOnClickListener {
+				MemoryPlanDropDialog.newInstance(notebookKey, this).show(fragmentManager)
+			}
 		}
 		
 		b_cancel.setOnClickListener {

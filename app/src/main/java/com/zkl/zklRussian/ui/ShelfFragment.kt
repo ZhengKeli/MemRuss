@@ -18,7 +18,8 @@ import org.jetbrains.anko.support.v4.toast
 class ShelfFragment : Fragment(),
 	NotebookMenuDialog.NotebookListChangedListener,
 	NotebookCreationDialog.NotebookCreatedListener,
-	NotebookImportDialog.NotebookImportedListener {
+	NotebookImportDialog.NotebookImportedListener,
+NotebookMergeFragment.NotebookMergedListener{
 	
 	companion object {
 		private val arg_autoJump: String = "autoJump"
@@ -56,7 +57,7 @@ class ShelfFragment : Fragment(),
 			NotebookImportDialog.newInstance(this).show(fragmentManager)
 		}
 		b_merge.setOnClickListener{
-			if (briefs.size > 1) NotebookMergeFragment.newInstance().jump(fragmentManager)
+			if (briefs.size > 1) NotebookMergeFragment.newInstance(this).jump(fragmentManager)
 			else toast(getString(R.string.only_one_notebook))
 		}
 		
@@ -88,6 +89,10 @@ class ShelfFragment : Fragment(),
 	}
 	
 	override fun onNotebookImported(notebookKey: NotebookKey) {
+		NotebookFragment.newInstance(notebookKey).jump(fragmentManager)
+	}
+	
+	override fun onNotebookMerged(notebookKey: NotebookKey) {
 		NotebookFragment.newInstance(notebookKey).jump(fragmentManager)
 	}
 	

@@ -70,13 +70,18 @@
 	<string name="import_failed">Import failed!</string>
 	<string name="no_sdcard_write_permission">I don\'t have the permission to write the SD card!</string>
 	<string name="no_sdcard_read_permission">I don\'t have the permission to read the SD card!</string>
-	<string name="no_notebook_yet">No any notebook yet</string>
+	<string name="no_notebook_yet">No any notebook yet.</string>
 	<string name="or_import">Or:</string>
-	<string name="choose_merge_notebooks1">Choose a notebook to merge:</string>
-	<string name="choose_merge_notebooks2">Choose another notebook to merge:</string>
+	<string name="choose_merge_mainBody">Choose a notebook to be the "main body" during the merge:</string>
+	<string name="choose_merge_attachment">Choose another notebook to merge into the "main body":</string>
 	<string name="keep_memory_progress">keep memory progress</string>
 	<string name="delete_after_merge">delete after merge</string>
 	<string name="merge">Merge</string>
 	<string name="only_one_notebook">There is only one notebook!</string>
+	<string name="merged_book_name">Name of the merged Notebook:</string>
+	<string name="merged_notebook">merged notebook</string>
+	<string name="merging_notebooks">Merging notebooks..</string>
+	<string name="remain_old">Remain old</string>
+	<string name="merge_succeed">Merge succeed!</string>
 
 </resources>

@@ -1,6 +1,9 @@
 package com.zkl.zklRussian.ui
 
 import android.util.SparseArray
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import org.jetbrains.anko.inputMethodManager
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantLock
@@ -113,4 +116,13 @@ class AutoIndexMap<T>{
 		return re
 	}
 	
+}
+
+
+fun EditText.showSoftInput(forced:Boolean = false) {
+	context.inputMethodManager
+		.showSoftInput(this,
+			if (forced) InputMethodManager.SHOW_FORCED
+			else InputMethodManager.SHOW_IMPLICIT
+		)
 }

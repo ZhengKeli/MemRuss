@@ -12,19 +12,33 @@ import android.widget.ScrollView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.control.note.NotebookBrief
+import com.zkl.zklRussian.control.note.NotebookKey
 import kotlinx.android.synthetic.main.fragment_notebook_merge.*
 import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.support.v4.toast
 
-class NotebookMergeFragment : Fragment(){
+class NotebookMergeFragment : Fragment(),
+	NotebookMergingDialog.MergeCompletedListener {
+	
+	interface NotebookMergedListener {
+		fun onNotebookMerged(notebookKey: NotebookKey)
+	}
 	
 	companion object {
-		val arg_brief1 = "brief1"
-		val arg_brief2 = "brief2"
-		fun newInstance(brief1: NotebookBrief? = null, brief2: NotebookBrief? = null): NotebookMergeFragment
+		val arg_mainBody = "mainBody"
+		val arg_attachment = "attachment"
+		fun <T> newInstance(mainBody: NotebookBrief?, attachment: NotebookBrief?, mergedListener: T?): NotebookMergeFragment
+			where T : NotebookMergedListener, T : Fragment
 			= NotebookMergeFragment::class.java.newInstance().apply {
-			arguments += bundleOf(arg_brief1 to brief1, arg_brief2 to brief2)
+			arguments += bundleOf(arg_mainBody to mainBody, arg_attachment to attachment)
+			setTargetFragment(mergedListener, 0)
 		}
+		fun <T> newInstance(mainBody: NotebookBrief, mergedListener: T?): NotebookMergeFragment
+			where T : NotebookMergedListener, T : Fragment
+			= newInstance(mainBody, null, mergedListener)
+		fun <T> newInstance(mergedListener: T?): NotebookMergeFragment
+			where T : NotebookMergedListener, T : Fragment
+			= newInstance(null, null, mergedListener)
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
@@ -33,82 +47,91 @@ class NotebookMergeFragment : Fragment(){
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		
-		briefs1 = myApp.notebookShelf.loadNotebookBriefs()
+		mainBodies = myApp.notebookShelf.loadNotebookBriefs()
 		
-		sp_notebook1.adapter = object : NotebookListAdapter() {
-			override fun getCount() = briefs1.size
-			override fun getItem(position: Int) = briefs1[position]
+		sp_mainBody.adapter = object : NotebookListAdapter() {
+			override fun getCount() = mainBodies.size
+			override fun getItem(position: Int) = mainBodies[position]
 			override val context: Context get() = activity
 		}
-		sp_notebook2.adapter = object : NotebookListAdapter() {
-			override fun getCount() = briefs2.size
-			override fun getItem(position: Int) = briefs2[position]
+		sp_attachment.adapter = object : NotebookListAdapter() {
+			override fun getCount() = attachments.size
+			override fun getItem(position: Int) = attachments[position]
 			override val context: Context get() = activity
 		}
 		
-		sp_notebook1.onItemSelectedListener = object :AdapterView.OnItemSelectedListener{
+		sp_mainBody.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
 			override fun onNothingSelected(parent: AdapterView<*>?) {
-				brief1 = null
-				cb_keep_plan1.visibility = View.GONE
-				cb_delete_after_merge1.visibility = View.GONE
-				ll_notebook2.visibility = View.GONE
+				mainBody = null
+				b_merge.isEnabled = false
 			}
 			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-				val brief1 = (sp_notebook1.adapter as NotebookListAdapter).getItem(position)
-				this@NotebookMergeFragment.brief1 = brief1
+				val brief = (sp_mainBody.adapter as NotebookListAdapter).getItem(position)
+				this@NotebookMergeFragment.mainBody = brief
 				
-				cb_keep_plan1.visibility = if (brief1.hasPlan) View.VISIBLE else View.GONE
-				cb_delete_after_merge1.visibility = View.VISIBLE
-				
-				briefs2 = briefs1.filter { it != brief1 }
-				(sp_notebook2.adapter as BaseAdapter).notifyDataSetChanged()
-				ll_notebook2.visibility = View.VISIBLE
+				attachments = mainBodies.filter { it != brief }
+				(sp_attachment.adapter as BaseAdapter).notifyDataSetChanged()
 				sv_content.fullScroll(ScrollView.FOCUS_DOWN)
 			}
 		}
-		sp_notebook2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+		sp_attachment.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 			override fun onNothingSelected(parent: AdapterView<*>?) {
-				brief2 = null
-				cb_keep_plan2.visibility = View.GONE
-				cb_delete_after_merge2.visibility = View.GONE
-				b_merge.visibility = View.GONE
+				attachment = null
+				cb_keep_progress.visibility = View.GONE
+				cb_delete_old.visibility = View.GONE
+				b_merge.isEnabled = false
 			}
 			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-				val brief2 = (sp_notebook2.adapter as NotebookListAdapter).getItem(position)
-				this@NotebookMergeFragment.brief2 = brief2
+				val brief = (sp_attachment.adapter as NotebookListAdapter).getItem(position)
+				this@NotebookMergeFragment.attachment = brief
 				
-				cb_keep_plan2.visibility = if (brief2.hasPlan) View.VISIBLE else View.GONE
-				cb_delete_after_merge2.visibility = View.VISIBLE
+				if (mainBody?.hasPlan == true && brief.hasPlan){
+					cb_keep_progress.visibility = View.VISIBLE
+					cb_keep_progress.isChecked = true
+				}else{
+					cb_keep_progress.visibility =View.GONE
+					cb_keep_progress.isChecked = false
+				}
+				cb_delete_old.visibility = View.VISIBLE
+				cb_delete_old.isChecked = false
 				
-				b_merge.visibility = View.VISIBLE
+				b_merge.isEnabled = true
 				sv_content.fullScroll(ScrollView.FOCUS_DOWN)
 			}
 		}
+		
+		//restore the pre-defined selections
+		mainBody = arguments.getSerializable(arg_mainBody) as? NotebookBrief
+		attachment = arguments.getSerializable(arg_attachment) as? NotebookBrief
+		mainBodies.indexOf(mainBody).let { if (it != -1) sp_mainBody.setSelection(it) }
+		attachments.indexOf(attachment).let { if (it != -1) sp_attachment.setSelection(it) }
 		
 		b_merge.setOnClickListener {
-			//todo do merge
-			toast("假装在合并单词本")
-			fragmentManager.popBackStack()
+			b_merge.isEnabled = false
+			val request = NotebookMergingDialog.MergeRequest(
+				mainBody!!, attachment!!, cb_keep_progress.isChecked, cb_delete_old.isChecked)
+			NotebookMergingDialog.newInstance(request, this).show(fragmentManager)
 		}
-		
-		brief1 = arguments.getSerializable(arg_brief1) as? NotebookBrief
-		brief2 = arguments.getSerializable(arg_brief2) as? NotebookBrief
-		briefs1.indexOf(brief1).let { if (it != -1) sp_notebook1.setSelection(it) }
-		briefs2.indexOf(brief2).let { if (it != -1) sp_notebook2.setSelection(it) }
 		
 	}
 	
-	var briefs1: List<NotebookBrief> = emptyList()
-	var briefs2: List<NotebookBrief> = emptyList()
-	var brief1: NotebookBrief? = null
+	var mainBodies: List<NotebookBrief> = emptyList()
+	var attachments: List<NotebookBrief> = emptyList()
+	var mainBody: NotebookBrief? = null
 		set(value) {
 			field = value
-			arguments.putSerializable(arg_brief1, value)
+			arguments.putSerializable(arg_mainBody, value)
 		}
-	var brief2: NotebookBrief? = null
+	var attachment: NotebookBrief? = null
 		set(value) {
 			field = value
-			arguments.putSerializable(arg_brief2, value)
+			arguments.putSerializable(arg_attachment, value)
 		}
+	
+	override fun onMergeCompleted(notebookKey: NotebookKey) {
+		toast(R.string.merge_succeed)
+		fragmentManager.popBackStack()
+		(targetFragment as NotebookMergedListener).onNotebookMerged(notebookKey)
+	}
 	
 }

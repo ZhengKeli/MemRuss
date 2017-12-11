@@ -176,7 +176,7 @@ interface MutableNotebook : Notebook {
 	 * 完全保留地添加一个词条
 	 */
 	@Throws(ConflictException::class)
-	fun rawAddNote(note: Note):Long
+	fun rawAddNote(note: Note, ridMemoryState: Boolean = false): Long
 	
 	
 	

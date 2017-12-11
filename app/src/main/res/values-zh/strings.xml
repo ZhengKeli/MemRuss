@@ -66,11 +66,16 @@
 	<string name="drop_memory_plan_ConfirmMessage">删除复习计划会重置所有词条的复习进度，你确定要删除吗？</string>
 	<string name="drop_memory_plan_Drop">删除</string>
 	<string name="notebook_deletion_ConfirmTitle">删除确认</string>
-	<string name="choose_merge_notebooks1">选择一本要合并的单词本：</string>
-	<string name="choose_merge_notebooks2">选择另一本要合并的单词本：</string>
+	<string name="choose_merge_mainBody">选择一本单词本作为合并的“主体”：</string>
+	<string name="choose_merge_attachment">选择要被并入的另一本单词本：</string>
 	<string name="keep_memory_progress">保留学习进度</string>
 	<string name="delete_after_merge">合并后删除</string>
 	<string name="merge">合并</string>
 	<string name="only_one_notebook">只有一本单词本诶</string>
+	<string name="merged_book_name">合并后的单词本的名称：</string>
+	<string name="merged_notebook">合并的单词本</string>
+	<string name="merging_notebooks">正在合并单词本……</string>
+	<string name="remain_old">保留原有的</string>
+	<string name="merge_succeed">合并成功！</string>
 
 </resources>
