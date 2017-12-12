@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
-import com.zkl.zklRussian.core.note.MemoryPlan
-import com.zkl.zklRussian.core.note.NotebookMemoryStatus
+import com.zkl.zklRussian.core.note.base.MemoryPlan
+import com.zkl.zklRussian.core.note.base.NotebookMemoryStatus
 import kotlinx.android.synthetic.main.fragment_memory_plan.*
 import kotlin.math.roundToInt
 
@@ -68,7 +68,7 @@ class MemoryPlanFragment : NotebookHoldingFragment(),
 			override fun onStopTrackingTouch(seekBar: SeekBar) {}
 		})
 		
-		if(memoryState.status==NotebookMemoryStatus.infant){
+		if(memoryState.status== NotebookMemoryStatus.infant){
 			b_dropMemoryPlan.visibility = View.GONE
 		}
 		else {

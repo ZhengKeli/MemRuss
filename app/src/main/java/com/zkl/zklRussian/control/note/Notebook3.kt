@@ -3,7 +3,11 @@ package com.zkl.zklRussian.control.note
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.zkl.zklRussian.control.tools.createIndex
-import com.zkl.zklRussian.core.note.*
+import com.zkl.zklRussian.core.note.InstantNote
+import com.zkl.zklRussian.core.note.MutableNotebook
+import com.zkl.zklRussian.core.note.Note
+import com.zkl.zklRussian.core.note.NoteContent
+import com.zkl.zklRussian.core.note.base.*
 import org.jetbrains.anko.db.*
 import org.jetbrains.anko.db.ConflictClause.ABORT
 import kotlin.math.min
@@ -248,6 +252,69 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		return newNoteId
 	}
 	
+	override fun addNote(content: NoteContent, conflictSolver: ConflictSolver<NoteContent, Note>): Long {
+		val conflictId = kotlin.run{
+			content.uniqueTags.forEach { uniqueTag ->
+				if (checkUniqueTag(uniqueTag) != -1L)
+					return@run checkUniqueTag(uniqueTag)
+			}
+			return@run -1L
+		}
+		if (conflictId != -1L) {
+			val solution = conflictSolver.onConflict(content, getNote(conflictId))
+			if (solution.override)
+				modifyNoteContent(conflictId, content)
+			if (solution.ridProgress)
+				modifyNoteMemory(conflictId, NoteMemoryState.infantState())
+			return conflictId
+		} else {
+			val contentEncoder = noteContentCoders[content.typeTag] ?:
+				throw NoteTypeNotSupportedException(content.typeTag)
+			
+			val nowTime = System.currentTimeMillis()
+			val noteContentString = contentEncoder.encode(content)
+			val noteMemoryState = NoteMemoryState.infantState()
+			
+			var newNoteId: Long = -1L
+			database.transaction {
+				NotesTable.run {
+					newNoteId = insert(tableName,
+						//noteId不用管
+						createTime to nowTime,
+						
+						contentType to content.typeTag,
+						contentString to noteContentString,
+						contentUpdateTime to nowTime,
+						
+						memoryStatus to noteMemoryState.status.name,
+						memoryProgress to noteMemoryState.progress,
+						reviewTime to noteMemoryState.reviewTime,
+						memoryLoad to noteMemoryState.load,
+						memoryUpdateTime to nowTime
+					)
+					if (newNoteId == -1L) throw InternalNotebookException("failed to insert new note")
+				}
+				UniqueTagTable.run {
+					content.uniqueTags.forEach { tag ->
+						insert(tableName,
+							UniqueTagTable.noteId to newNoteId,
+							UniqueTagTable.uniqueTag to tag
+						)
+					}
+				}
+				SearchTagTable.run {
+					content.searchTags.forEach { tag ->
+						insert(tableName,
+							noteId to newNoteId,
+							searchTag to tag
+						)
+					}
+				}
+			}
+			return newNoteId
+		}
+	}
+	
 	override fun deleteNote(noteId: Long) {
 		return database.transaction {
 			delete(NotesTable.tableName, NotesTable.noteId + "=" + noteId, null)
@@ -381,15 +448,16 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
-	private fun Cursor.parseNoteList(): List<Note> = parseList(rowParser { noteId: Long, createTime: Long,
-	                                                                       contentType: String, contentString: String, contentUpdateTime: Long,
-	                                                                       memoryState: String, memoryProgress: Double, memoryLoad: Double, reviewTime: Long, memoryUpdateTime: Long ->
+	private fun Cursor.parseNoteList(): List<Note> = parseList(rowParser {
+		noteId: Long, createTime: Long,
+		contentType: String, contentString: String, contentUpdateTime: Long,
+		memoryState: String, memoryProgress: Double, memoryLoad: Double, reviewTime: Long, memoryUpdateTime: Long ->
 		
 		val noteContentCoder = noteContentCoders[contentType] ?: throw NoteTypeNotSupportedException(contentType)
 		val noteContent = noteContentCoder.decode(contentString)
 		val noteMemory = NoteMemoryState(NoteMemoryStatus.valueOf(memoryState), memoryProgress, memoryLoad, reviewTime)
 		
-		Note(noteId, createTime,
+		InstantNote(noteId, createTime,
 			content = noteContent,
 			contentUpdateTime = contentUpdateTime,
 			memoryState = noteMemory,
@@ -556,5 +624,3 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	}
 	
 }
-
-

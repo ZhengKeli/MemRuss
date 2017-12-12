@@ -10,7 +10,7 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.control.note.NotebookBrief
 import com.zkl.zklRussian.control.note.NotebookKey
-import com.zkl.zklRussian.core.note.ConflictException
+import com.zkl.zklRussian.core.note.base.ConflictException
 import kotlinx.android.synthetic.main.dialog_notebook_merging.view.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI

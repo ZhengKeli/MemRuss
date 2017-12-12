@@ -4,7 +4,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.zkl.zklRussian.control.tools.HookSystem
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Notebook
-import com.zkl.zklRussian.core.note.NotebookMemoryStatus
+import com.zkl.zklRussian.core.note.base.NotebookMemoryStatus
 import java.io.File
 import java.io.Serializable
 import java.util.*

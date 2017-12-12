@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
-import com.zkl.zklRussian.core.note.ConflictException
 import com.zkl.zklRussian.core.note.NoteContent
-import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
+import com.zkl.zklRussian.core.note.base.ConflictException
+import com.zkl.zklRussian.core.note.base.NoteMemoryState
 import kotlinx.android.synthetic.main.fragment_note_edit.*
 
 class NoteEditFragment : NoteHoldingFragment(),

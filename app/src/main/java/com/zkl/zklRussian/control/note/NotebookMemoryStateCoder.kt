@@ -1,8 +1,8 @@
 package com.zkl.zklRussian.control.note
 
-import com.zkl.zklRussian.core.note.MemoryPlan
-import com.zkl.zklRussian.core.note.NotebookMemoryState
-import com.zkl.zklRussian.core.note.NotebookMemoryStatus
+import com.zkl.zklRussian.core.note.base.MemoryPlan
+import com.zkl.zklRussian.core.note.base.NotebookMemoryState
+import com.zkl.zklRussian.core.note.base.NotebookMemoryStatus
 import org.json.JSONObject
 
 

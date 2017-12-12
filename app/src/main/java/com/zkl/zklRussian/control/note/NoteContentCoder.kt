@@ -1,8 +1,8 @@
 package com.zkl.zklRussian.control.note
 
-import com.zkl.zklRussian.core.note.InternalNotebookException
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
+import com.zkl.zklRussian.core.note.base.InternalNotebookException
 import org.json.JSONObject
 
 interface NoteContentCoder {

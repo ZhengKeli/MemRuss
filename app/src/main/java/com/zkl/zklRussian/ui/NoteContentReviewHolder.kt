@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
-import com.zkl.zklRussian.core.note.NoteMemoryState
 import com.zkl.zklRussian.core.note.QuestionContent
-import com.zkl.zklRussian.core.note.getNextReviewTime
+import com.zkl.zklRussian.core.note.base.NoteMemoryState
+import com.zkl.zklRussian.core.note.base.getNextReviewTime
 import kotlinx.android.synthetic.main.cv_note_content_review_question.view.*
 
 interface NoteContentReviewHolder {

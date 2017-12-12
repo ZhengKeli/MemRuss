@@ -10,8 +10,8 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.Note
 import com.zkl.zklRussian.core.note.NoteContent
-import com.zkl.zklRussian.core.note.NoteMemoryState
-import com.zkl.zklRussian.core.note.NoteMemoryStatus
+import com.zkl.zklRussian.core.note.base.NoteMemoryState
+import com.zkl.zklRussian.core.note.base.NoteMemoryStatus
 import kotlinx.android.synthetic.main.dialog_note_conflict.view.*
 import org.jetbrains.anko.bundleOf
 import java.io.Serializable
