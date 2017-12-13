@@ -2,7 +2,6 @@ package com.zkl.zklRussian.core.note.base
 
 import com.zkl.zklRussian.core.note.NoteContent
 import java.io.Closeable
-import java.io.Serializable
 
 interface BaseNotebook<Note : BaseNote<*>> : Closeable {
 	
@@ -35,17 +34,6 @@ interface BaseNotebook<Note : BaseNote<*>> : Closeable {
 	fun getNote(noteId: Long): Note
 	
 	/**
-	 * 获得最新的一些词条
-	 * @param count 获取的最大词条数
-	 * @param offset 可以跳过最开始的几个词条，返回后面的几个
-	 * @return 最新的一些词条，按照修改日期倒序排序
-	 */
-	fun selectLatestNotes(count: Int = 100, offset: Int = 0): List<Note>
-	
-	
-	//raw
-	
-	/**
 	 * 不要求任何顺序地获取词条
 	 */
 	fun rawGetNotes(count: Int = 100, offset: Int = 0): List<Note>
@@ -76,6 +64,14 @@ interface BaseNotebook<Note : BaseNote<*>> : Closeable {
 		}
 	}
 	
+	/**
+	 * 获得最新的一些词条
+	 * @param count 获取的最大词条数
+	 * @param offset 可以跳过最开始的几个词条，返回后面的几个
+	 * @return 最新的一些词条，按照修改日期倒序排序
+	 */
+	fun selectLatestNotes(count: Int = 100, offset: Int = 0): List<Note>
+	
 }
 
 interface MutableBaseNotebook<Content : BaseContent, Note : BaseNote<Content>> : BaseNotebook<Note> {
@@ -90,26 +86,22 @@ interface MutableBaseNotebook<Content : BaseContent, Note : BaseNote<Content>> :
 	 * 添加一个词条
 	 * @return 返回刚加入的词条的 noteId
 	 */
-	fun addNote(content: Content, memoryState: NoteMemoryState? = null): Long
+	fun addNote(content: Content): Long
 	
 	/**
-	 * 根据 noteId 删除一个词条
+	 * 完全保留地添加一个词条
 	 */
-	fun deleteNote(noteId: Long)
+	fun rawAddNote(note: Note): Long
 	
 	/**
 	 * 修改 note 的内容
 	 */
 	fun modifyNoteContent(noteId: Long, content: Content)
 	
-	
-	//raw
-	
 	/**
-	 * 完全保留地添加一个词条
+	 * 根据 noteId 删除一个词条
 	 */
-	@Throws(ConflictException::class)
-	fun rawAddNote(note: Note, ridMemoryState: Boolean = false): Long
+	fun deleteNote(noteId: Long)
 	
 }
 
@@ -142,7 +134,7 @@ interface BaseNote<out NoteContent : BaseContent> {
 	
 }
 
-interface BaseContent : Serializable {
+interface BaseContent {
 	/**
 	 * 不同种类的[NoteContent]的类型标签
 	 */

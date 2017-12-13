@@ -48,14 +48,14 @@
 	</FrameLayout>
 	
 	<CheckBox
-		android:id="@+id/cb_remainProgress"
+		android:id="@+id/cb_resetProgress"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="end"
 		android:layout_margin="8dp"
 		android:layout_weight="0"
-		android:checked="true"
-		android:text="@string/remain_memory_progress"
+		android:checked="false"
+		android:text="@string/reset_memory_progress"
 		android:visibility="gone"
 		tools:visibility="visible"/>
 	

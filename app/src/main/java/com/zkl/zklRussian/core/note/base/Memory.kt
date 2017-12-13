@@ -1,5 +1,7 @@
 package com.zkl.zklRussian.core.note.base
 
+import kotlin.math.min
+
 
 interface MemoryNotebook<Note : MemoryNote<*>> : BaseNotebook<Note> {
 	
@@ -14,11 +16,10 @@ interface MemoryNotebook<Note : MemoryNote<*>> : BaseNotebook<Note> {
 	val memoryPlan: MemoryPlan?
 	
 	/**
-	 * 总负荷
-	 * 用平均每天要复习的次数表示，
-	 * 用来帮助判断应该如何加入新词
+	 * 检索还未被激活的词条的id
+	 * 在前面的词条将优先被激活
 	 */
-	val sumMemoryLoad: Double
+	fun selectNeedActivateNoteIds(count: Int = 1, offset: Int = 0): List<Long>
 	
 	/**
 	 * 统计有多少词条需要复习
@@ -32,10 +33,19 @@ interface MemoryNotebook<Note : MemoryNote<*>> : BaseNotebook<Note> {
 	 */
 	fun selectNeedReviewNotes(nowTime: Long, asc: Boolean = false, count: Int = 1, offset: Int = 0): List<Note>
 	
+	/**
+	 * 总负荷
+	 * 用平均每天要复习的次数表示，
+	 * 用来帮助判断应该如何加入新词
+	 */
+	fun sumMemoryLoad(): Double
+	
 }
 
 interface MutableMemoryNotebook<Content : BaseContent, Note : MemoryNote<Content>> : MemoryNotebook<Note>,
 	MutableBaseNotebook<Content, Note> {
+	
+	override var memoryState: NotebookMemoryState
 	
 	/**
 	 * 修改 note 的复习进度
@@ -53,14 +63,41 @@ interface MutableMemoryNotebook<Content : BaseContent, Note : MemoryNote<Content
 	 * 如果还没有计划就什么也不做
 	 * 如果有计划了就要激活一定数量的词条并更新[memoryState]
 	 */
-	fun activateNotesByPlan(nowTime: Long = System.currentTimeMillis()): Int
+	fun activateNotesByPlan(nowTime: Long = System.currentTimeMillis()): Int {
+		val state = memoryState
+		if (state.status != NotebookMemoryStatus.learning) return 0
+		val plan = memoryPlan ?: return 0
+		
+		val sumLoad = sumMemoryLoad()
+		val targetLoad = plan.dailyReviews
+		val limitByLoad = (targetLoad - sumLoad) / MemoryAlgorithm.maxSingleLoad
+		
+		val lastActivateTime = state.lastActivateTime
+		val activateInterval = (24 * 3600 * 1000) / plan.dailyNewWords
+		val limitByTime = (nowTime - lastActivateTime) / activateInterval
+		
+		val limit = min(limitByLoad, limitByTime).toInt()
+		if (limit <= 0) return 0
+		val activated = activateNotes(limit)
+		if (activated <= 0) return 0
+		val newLastActivateTime = nowTime - (nowTime - lastActivateTime) % activateInterval.toLong()
+		memoryState = state.copy(lastActivateTime = newLastActivateTime)
+		return activated
+	}
 	
 	/**
 	 * 直接激活词条
 	 * 此操作可以无视[memoryState]
 	 * 无论是否有复习计划都会进行
 	 */
-	fun activateNotes(count: Int = 1, nowTime: Long = System.currentTimeMillis()): Int
+	fun activateNotes(count: Int = 1, nowTime: Long = System.currentTimeMillis()): Int {
+		val noteIds = selectNeedActivateNoteIds(count)
+		noteIds.forEach { noteId ->
+			modifyNoteMemory(noteId, NoteMemoryState.beginningState(nowTime))
+		}
+		return noteIds.size
+	}
+	
 }
 
 interface MemoryNote<out Content : BaseContent> : BaseNote<Content> {

@@ -41,7 +41,7 @@
 	<string name="found_nothing">无结果</string>
 	<string name="type_to_search">请输入要搜索的内容</string>
 	<string name="there_are_conflicted_notes">有冲突的词条！</string>
-	<string name="remain_memory_progress">保留复习记录</string>
+	<string name="reset_memory_progress">重置复习进度</string>
 	<string name="override">覆盖</string>
 	<string name="export_Notebook">导出单词本</string>
 	<string name="delete_Notebook">删除单词本</string>

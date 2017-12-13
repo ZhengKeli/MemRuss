@@ -10,7 +10,10 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.control.note.NotebookBrief
 import com.zkl.zklRussian.control.note.NotebookKey
-import com.zkl.zklRussian.core.note.base.ConflictException
+import com.zkl.zklRussian.core.note.ConflictSolution
+import com.zkl.zklRussian.core.note.InstantNote
+import com.zkl.zklRussian.core.note.base.NoteMemoryState
+import com.zkl.zklRussian.core.note.rawAddNote
 import kotlinx.android.synthetic.main.dialog_notebook_merging.view.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -50,10 +53,10 @@ class NotebookMergingDialog : DialogFragment(),
 				view.pb_merge_progress.progress = progress
 			}
 		}
+		isCancelable = false
 		return AlertDialog.Builder(activity)
 			.setTitle(getString(R.string.merging_notebooks))
 			.setView(view)
-			.setCancelable(false)
 			.create()
 	}
 	
@@ -63,19 +66,22 @@ class NotebookMergingDialog : DialogFragment(),
 			val (key, mainBody) = myApp.notebookShelf.openMutableNotebook(mergeRequest.mainBody.file)
 			val (_, attachment) = myApp.notebookShelf.openNotebook(mergeRequest.attachment.file)
 			val notesToAdd = attachment.rawGetAllNotes()
-			val ridMemoryState = !mergeRequest.keepPlan
+			val resetMemoryState = !mergeRequest.keepPlan
 			
 			onProgress(0, notesToAdd.size)
 			notesToAdd.forEachIndexed { index, note ->
-				try {
-					mainBody.rawAddNote(note, ridMemoryState)
-				} catch (e: ConflictException) {
-					launch(UI) {
-						val modifyRequest = NoteConflictDialog.ModifyRequest(-1, note.content, false)
+				val filteredNote =
+					if (!resetMemoryState) note
+					else InstantNote(note,
+						memoryState = NoteMemoryState.infantState(),
+						memoryUpdateTime = System.currentTimeMillis())
+				mainBody.rawAddNote(filteredNote) { newContent, conflictNoteId ->
+					val modifyRequest = NoteConflictDialog.ModifyRequest(newContent, -1, conflictNoteId)
+					launch(UI){
 						NoteConflictDialog.newInstance(key, modifyRequest, false,
 							this@NotebookMergingDialog).show(fragmentManager)
 					}
-					conflictSolveChan.take()
+					conflictSolutionChan.take()
 				}
 				onProgress(index + 1, notesToAdd.size)
 			}
@@ -91,9 +97,9 @@ class NotebookMergingDialog : DialogFragment(),
 		}
 	}
 	
-	private val conflictSolveChan = ArrayBlockingQueue<Boolean>(1)
-	override fun onConflictSolved(canceled: Boolean, override: Boolean) {
-		conflictSolveChan.put(true)
+	private val conflictSolutionChan = ArrayBlockingQueue<ConflictSolution>(1)
+	override fun onConflictSolved(solution: ConflictSolution?) {
+		conflictSolutionChan.put(solution ?: ConflictSolution(false, false))
 	}
 	
 }

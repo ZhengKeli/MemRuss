@@ -1,7 +1,5 @@
 package com.zkl.zklRussian.core.note.base
 
-import com.zkl.zklRussian.core.note.NoteContent
-
 interface UniqueNotebook<Note : UniqueNote<*>> : BaseNotebook<Note> {
 	
 	/**
@@ -25,18 +23,14 @@ interface UniqueNotebook<Note : UniqueNote<*>> : BaseNotebook<Note> {
 interface MutableUniqueNotebook<Content : UniqueContent, Note : UniqueNote<Content>>
 	: MutableBaseNotebook<Content, Note>, UniqueNotebook<Note> {
 	
-	/**
-	 * 添加一个词条
-	 * @return 返回刚加入的词条的 noteId
-	 */
-	fun addNote(content: NoteContent, conflictSolver: ConflictSolver<Content, Note>): Long
+	@Throws(NoteConflictException::class)
+	override fun addNote(content: Content): Long
 	
-	/**
-	 * 添加一堆词条
-	 * @return 返回刚加入的词条的 noteId
-	 */
-	fun addNotes(contents: Collection<NoteContent>, conflictSolver: ConflictSolver<Content, Note>)
-		= contents.forEach { addNote(it, conflictSolver) }
+	@Throws(NoteConflictException::class)
+	override fun rawAddNote(note: Note): Long
+	
+	@Throws(NoteConflictException::class)
+	override fun modifyNoteContent(noteId: Long, content: Content)
 	
 }
 
@@ -59,18 +53,11 @@ interface UniqueContent : BaseContent {
 }
 
 
-interface ConflictSolver<Content : UniqueContent, in Note : UniqueNote<Content>> {
-	fun onConflict(newContent: Content, oldNote: Note): ConflictSolution
-}
-
-data class ConflictSolution(val override: Boolean, val ridProgress: Boolean)
-
-
 /**
  * 对[MutableUniqueNotebook]做操作的时候，
  * 出现了词条重复的冲突时，抛出此错误
  */
-class ConflictException(
+class NoteConflictException(
 	val uniqueTag: String,
 	val conflictedNoteId: Long,
 	message: String = "The adding UniqueDraft with uniqueTag $uniqueTag duplicated with " +

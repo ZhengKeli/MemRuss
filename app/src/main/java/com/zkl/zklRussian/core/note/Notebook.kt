@@ -1,6 +1,7 @@
 package com.zkl.zklRussian.core.note
 
 import com.zkl.zklRussian.core.note.base.*
+import java.io.Serializable
 
 interface Notebook :
 	BaseNotebook<Note>,
@@ -20,6 +21,7 @@ interface Note :
 	UniqueNote<NoteContent>
 
 interface NoteContent :
+	Serializable,
 	BaseContent,
 	SearchableContent,
 	UniqueContent
@@ -31,4 +33,14 @@ data class InstantNote(
 	override val contentUpdateTime: Long,
 	override val memoryState: NoteMemoryState,
 	override val memoryUpdateTime: Long
-) : Note
+) : Note {
+	constructor(
+		note: Note,
+		id: Long = note.id,
+		createTime: Long = note.createTime,
+		content: NoteContent = note.content,
+		contentUpdateTime: Long = note.contentUpdateTime,
+		memoryState: NoteMemoryState = note.memoryState,
+		memoryUpdateTime: Long = note.memoryUpdateTime
+	) : this(id, createTime, content, contentUpdateTime, memoryState, memoryUpdateTime)
+}

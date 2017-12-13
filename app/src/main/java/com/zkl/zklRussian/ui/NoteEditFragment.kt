@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
-import com.zkl.zklRussian.core.note.NoteContent
-import com.zkl.zklRussian.core.note.QuestionContent
-import com.zkl.zklRussian.core.note.base.ConflictException
+import com.zkl.zklRussian.core.note.*
 import com.zkl.zklRussian.core.note.base.NoteMemoryState
 import kotlinx.android.synthetic.main.fragment_note_edit.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import java.util.concurrent.ArrayBlockingQueue
 
 class NoteEditFragment : NoteHoldingFragment(),
 	NoteDeleteDialog.NoteDeletedListener,
@@ -44,18 +46,27 @@ class NoteEditFragment : NoteHoldingFragment(),
 		
 		noteContentEditHolder = null
 		updateNoteContent()
-		cb_remainProgress.visibility = View.VISIBLE
+		cb_resetProgress.visibility = View.VISIBLE
 		
 		b_ok.setOnClickListener {
-			val newNoteContent = noteContentEditHolder!!.applyChange()
-			try {
-				mutableNotebook.modifyNoteContent(noteId, newNoteContent)
-				if (!cb_remainProgress.isChecked)
-					mutableNotebook.modifyNoteMemory(noteId, NoteMemoryState.infantState())
-				fragmentManager.popBackStack()
-			} catch (e: ConflictException) {
-				val modifyRequest = NoteConflictDialog.ModifyRequest(noteId, newNoteContent, cb_remainProgress.isChecked)
-				NoteConflictDialog.newInstance(notebookKey, modifyRequest, true, this).show(fragmentManager)
+			val content = noteContentEditHolder!!.applyChange()
+			launch(CommonPool) {
+				var committed = true
+				mutableNotebook.modifyNoteContent(noteId, content) { newContent, conflictNoteId ->
+					val modifyRequest = NoteConflictDialog.ModifyRequest(newContent, noteId, conflictNoteId)
+					launch(UI){
+						NoteConflictDialog.newInstance(notebookKey, modifyRequest,
+							true, this@NoteEditFragment).show(fragmentManager)
+					}
+					val solution = conflictSolutionChan.take()
+					if (solution == null) committed = false
+					solution ?: ConflictSolution(false, false)
+				}
+				if (committed) {
+					if (cb_resetProgress.isChecked)
+						mutableNotebook.modifyNoteMemory(noteId, NoteMemoryState.infantState())
+					fragmentManager.popBackStack()
+				}
 			}
 		}
 		b_cancel.setOnClickListener {
@@ -69,16 +80,23 @@ class NoteEditFragment : NoteHoldingFragment(),
 		
 		noteContentEditHolder = null
 		updateNoteContent(QuestionContent("", ""))
-		cb_remainProgress.visibility = View.GONE
+		cb_resetProgress.visibility = View.GONE
 		
 		b_ok.setOnClickListener {
-			val newNoteContent = noteContentEditHolder!!.applyChange()
-			try {
-				mutableNotebook.addNote(newNoteContent)
-				fragmentManager.popBackStack()
-			} catch (e: ConflictException) {
-				val modifyRequest = NoteConflictDialog.ModifyRequest(-1, newNoteContent, false)
-				NoteConflictDialog.newInstance(notebookKey, modifyRequest, true, this).show(fragmentManager)
+			val content = noteContentEditHolder!!.applyChange()
+			launch(CommonPool){
+				var committed = true
+				mutableNotebook.addNote(content) { newContent, conflictNoteId ->
+					val modifyRequest = NoteConflictDialog.ModifyRequest(newContent, -1, conflictNoteId)
+					launch(UI){
+						NoteConflictDialog.newInstance(notebookKey, modifyRequest,
+							true, this@NoteEditFragment).show(fragmentManager)
+					}
+					val solution = conflictSolutionChan.take()
+					if (solution == null) committed = false
+					solution ?: ConflictSolution(false, false)
+				}
+				if(committed) fragmentManager.popBackStack()
 			}
 		}
 		b_cancel.setOnClickListener {
@@ -95,13 +113,13 @@ class NoteEditFragment : NoteHoldingFragment(),
 		fragmentManager.popBackStack()
 	}
 	
-	override fun onConflictSolved(canceled: Boolean, override: Boolean) {
-		if (!canceled) fragmentManager.popBackStack()
+	private val conflictSolutionChan = ArrayBlockingQueue<ConflictSolution?>(1)
+	override fun onConflictSolved(solution: ConflictSolution?) {
+		conflictSolutionChan.put(solution)
 	}
 	
 	//noteContent
 	private var noteContentEditHolder: NoteContentEditHolder? = null
-	
 	private fun updateNoteContent(noteContent: NoteContent = note.content) {
 		val oldHolder = noteContentEditHolder
 		if (oldHolder?.isCompatible(noteContent) == true) {
