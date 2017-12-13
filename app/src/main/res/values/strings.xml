@@ -84,5 +84,8 @@
 	<string name="merging_notebooks">Merging notebooks..</string>
 	<string name="remain_old">Remain old</string>
 	<string name="merge_succeed">Merge succeed!</string>
+	<string name="adding_note">Adding Note:</string>
+	<string name="modifying_note">Modifying Note:</string>
+	<string name="conflict_note">Conflict Note</string>
 
 </resources>

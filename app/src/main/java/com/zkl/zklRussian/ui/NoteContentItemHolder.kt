@@ -9,6 +9,7 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.Note
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
+import com.zkl.zklRussian.core.note.base.NoteTypeNotSupportedException
 import kotlinx.android.synthetic.main.cv_note_content_item_question.view.*
 
 interface NoteContentItemHolder {
@@ -30,18 +31,27 @@ abstract class NoteListAdapter : BaseAdapter() {
 			oldHolder.noteContent = noteContent
 			return oldHolder.view
 		} else {
-			val holder = typedNoteContentItemHolders[noteContent.typeTag]?.invoke(context, parent)
-				?: throw RuntimeException("The noteContent type \"${noteContent.typeTag}\" is not supported.")
-			holder.noteContent = noteContent
-			holder.view.tag = holder
-			return holder.view
+			val holder = noteContent.newItemHolderOrThrow(context, parent)
+			return holder.view.also { it.tag=holder }
 		}
 	}
 }
 
-val typedNoteContentItemHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentItemHolder>(
+
+//typed holders map
+
+private val typedNoteContentItemHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentItemHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentItemHolder
 )
+
+fun NoteContent.newItemHolder(context: Context, container: ViewGroup? = null)
+	= typedNoteContentItemHolders[typeTag]?.invoke(context, container)?.also { it.noteContent=this }
+
+fun NoteContent.newItemHolderOrThrow(context: Context, container: ViewGroup? = null)
+	= newItemHolder(context, container) ?: throw NoteTypeNotSupportedException(typeTag)
+
+
+//typed holders class
 
 class QuestionContentItemHolder(context: Context, container: ViewGroup? = null) : NoteContentItemHolder {
 	

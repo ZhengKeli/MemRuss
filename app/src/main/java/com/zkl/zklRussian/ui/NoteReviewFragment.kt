@@ -67,9 +67,7 @@ class NoteReviewFragment : NoteHoldingFragment() {
 		if (oldHolder?.isCompatible(noteContent) == true) {
 			oldHolder.noteContent = noteContent
 		} else {
-			val holder = typedNoteContentReviewHolders[noteContent.typeTag]?.invoke(context, fl_noteContent)
-				?: throw RuntimeException("The noteContent type \"${noteContent.typeTag}\" is not supported.")
-			holder.noteContent = noteContent
+			val holder = noteContent.newReviewHolderOrThrow(context, fl_noteContent)
 			holder.onResultListener = this::onResult
 			fl_noteContent.removeAllViews()
 			fl_noteContent.addView(holder.view)

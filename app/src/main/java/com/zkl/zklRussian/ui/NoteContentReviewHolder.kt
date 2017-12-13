@@ -8,6 +8,7 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
 import com.zkl.zklRussian.core.note.base.NoteMemoryState
+import com.zkl.zklRussian.core.note.base.NoteTypeNotSupportedException
 import com.zkl.zklRussian.core.note.base.getNextReviewTime
 import kotlinx.android.synthetic.main.cv_note_content_review_question.view.*
 
@@ -33,9 +34,21 @@ interface ReviewResult {
 	}
 }
 
-val typedNoteContentReviewHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentReviewHolder>(
+
+//typed holders map
+
+private val typedNoteContentReviewHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentReviewHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentReviewHolder
 )
+
+fun NoteContent.newReviewHolder(context: Context, container: ViewGroup? = null)
+	= typedNoteContentReviewHolders[typeTag]?.invoke(context, container)?.also { it.noteContent=this }
+
+fun NoteContent.newReviewHolderOrThrow(context: Context, container: ViewGroup? = null)
+	= newReviewHolder(context, container) ?: throw NoteTypeNotSupportedException(typeTag)
+
+
+//typed holders class
 
 class QuestionContentReviewHolder(context: Context, container: ViewGroup? = null) : NoteContentReviewHolder {
 	

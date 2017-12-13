@@ -127,9 +127,7 @@ class NoteEditFragment : NoteHoldingFragment(),
 		if (oldHolder?.isCompatible(noteContent) == true) {
 			oldHolder.noteContent = noteContent
 		} else {
-			val holder = typedNoteContentEditHolders[noteContent.typeTag]?.invoke(activity, fl_noteContent)
-				?: throw RuntimeException("The noteContent type \"${noteContent.typeTag}\" is not supported.")
-			holder.noteContent = noteContent
+			val holder = noteContent.newEditHolderOrThrow(context,fl_noteContent)
 			fl_noteContent.removeAllViews()
 			fl_noteContent.addView(holder.view)
 			noteContentEditHolder = holder

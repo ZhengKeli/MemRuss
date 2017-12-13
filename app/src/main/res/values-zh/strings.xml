@@ -78,5 +78,8 @@
 	<string name="remain_old">保留原有的</string>
 	<string name="merge_succeed">合并成功！</string>
 	<string name="cover_memory_progress">覆盖学习进度</string>
+	<string name="adding_note">正在添加的词条：</string>
+	<string name="modifying_note">正在修改的词条：</string>
+	<string name="conflict_note">冲突的词条：</string>
 
 </resources>

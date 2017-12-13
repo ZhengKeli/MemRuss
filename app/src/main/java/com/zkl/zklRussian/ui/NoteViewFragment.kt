@@ -59,9 +59,7 @@ class NoteViewFragment : NoteHoldingFragment() {
 		if (oldHolder?.isCompatible(noteContent) == true) {
 			oldHolder.noteContent = noteContent
 		} else {
-			val holder = typedNoteContentViewHolders[noteContent.typeTag]?.invoke(activity, fl_noteContent)
-				?: throw RuntimeException("The noteContent type \"${noteContent.typeTag}\" is not supported.")
-			holder.noteContent = noteContent
+			val holder = noteContent.newViewHolderOrThrow(context, fl_noteContent)
 			fl_noteContent.removeAllViews()
 			fl_noteContent.addView(holder.view)
 			noteContentViewHolder = holder

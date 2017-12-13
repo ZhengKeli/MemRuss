@@ -1,7 +1,6 @@
 package com.zkl.zklRussian.ui
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -9,7 +8,6 @@ import android.view.View
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.ConflictSolution
-import com.zkl.zklRussian.core.note.Note
 import com.zkl.zklRussian.core.note.NoteContent
 import kotlinx.android.synthetic.main.dialog_note_conflict.view.*
 import org.jetbrains.anko.bundleOf
@@ -51,11 +49,9 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 		val dialogBuilder = AlertDialog.Builder(context).setView(view)
 		
 		dialogBuilder.setTitle(R.string.there_are_conflicted_notes)
-		view.lv_conflict.adapter = object : NoteListAdapter() {
-			override fun getCount(): Int = 1
-			override fun getItem(position: Int): Note = conflictNote
-			override val context: Context get() = activity
-		}
+		
+		view.fl_newContent.addView(situation.newContent.newItemHolderOrThrow(context,view.fl_newContent).view)
+		view.fl_conflictContent.addView(conflictNote.content.newItemHolderOrThrow(context,view.fl_newContent).view)
 		
 		if (conflictNote.isActivated) {
 			view.cb_coverProgress.visibility = View.VISIBLE

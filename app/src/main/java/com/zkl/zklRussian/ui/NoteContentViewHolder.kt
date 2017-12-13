@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
+import com.zkl.zklRussian.core.note.base.NoteTypeNotSupportedException
 import kotlinx.android.synthetic.main.cv_note_content_view_question.view.*
 
 interface NoteContentViewHolder {
@@ -15,9 +16,21 @@ interface NoteContentViewHolder {
 	fun isCompatible(noteContent: NoteContent): Boolean
 }
 
-val typedNoteContentViewHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentViewHolder>(
+
+//typed holders map
+
+private val typedNoteContentViewHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentViewHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentViewHolder
 )
+
+fun NoteContent.newViewHolder(context: Context, container: ViewGroup? = null)
+	= typedNoteContentViewHolders[typeTag]?.invoke(context, container)?.also { it.noteContent=this }
+
+fun NoteContent.newViewHolderOrThrow(context: Context, container: ViewGroup? = null)
+	= newViewHolder(context, container) ?: throw NoteTypeNotSupportedException(typeTag)
+
+
+//typed holders class
 
 class QuestionContentViewHolder(context: Context, container: ViewGroup? = null) : NoteContentViewHolder {
 	

@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.core.note.NoteContent
 import com.zkl.zklRussian.core.note.QuestionContent
+import com.zkl.zklRussian.core.note.base.NoteTypeNotSupportedException
 import kotlinx.android.synthetic.main.cv_note_content_edit_question.view.*
 
 interface NoteContentEditHolder {
@@ -19,9 +20,21 @@ interface NoteContentEditHolder {
 	fun applyChange(): NoteContent
 }
 
-val typedNoteContentEditHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentEditHolder>(
+
+//typed holders map
+
+private val typedNoteContentEditHolders = hashMapOf<String, (Context, ViewGroup?) -> NoteContentEditHolder>(
 	QuestionContent::class.simpleName!! to ::QuestionContentEditHolder
 )
+
+fun NoteContent.newEditHolder(context: Context, container: ViewGroup? = null)
+	= typedNoteContentEditHolders[typeTag]?.invoke(context, container)?.also { it.noteContent=this }
+
+fun NoteContent.newEditHolderOrThrow(context: Context, container: ViewGroup? = null)
+	= newEditHolder(context, container) ?: throw NoteTypeNotSupportedException(typeTag)
+
+
+//typed holders class
 
 class QuestionContentEditHolder(context: Context, container: ViewGroup? = null) : NoteContentEditHolder {
 	
