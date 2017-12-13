@@ -58,6 +58,7 @@
 	<string name="type_to_search">type to search</string>
 	<string name="there_are_conflicted_notes">There are conflicted Note(s)</string>
 	<string name="reset_memory_progress">Reset Memory Progress</string>
+	<string name="cover_memory_progress">Cover Memory Progress</string>
 	<string name="override">Override</string>
 	<string name="error">Error!</string>
 	<string name="new_notebook">new notebook</string>

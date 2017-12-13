@@ -31,9 +31,9 @@
 	<string name="Note_view_info">
 		学习进度：%1$d\n学习负荷：%2$d\n复习时间：%3$f
 	</string>
-	<string name="MemoryPlan">复习计划</string>
-	<string name="make_MemoryPlan">制定复习计划</string>
-	<string name="MemoryPlan_paused">复习计划（已暂停）</string>
+	<string name="MemoryPlan">学习计划</string>
+	<string name="make_MemoryPlan">制定学习计划</string>
+	<string name="MemoryPlan_paused">学习计划（已暂停）</string>
 	<string name="daily_reviews_SettingTitle">每天的复习次数：%1$d</string>
 	<string name="go_to_review">去复习</string>
 	<string name="need_review">有%1$d个单词需要复习哦！</string>
@@ -41,7 +41,7 @@
 	<string name="found_nothing">无结果</string>
 	<string name="type_to_search">请输入要搜索的内容</string>
 	<string name="there_are_conflicted_notes">有冲突的词条！</string>
-	<string name="reset_memory_progress">重置复习进度</string>
+	<string name="reset_memory_progress">重置学习进度</string>
 	<string name="override">覆盖</string>
 	<string name="export_Notebook">导出单词本</string>
 	<string name="delete_Notebook">删除单词本</string>
@@ -61,9 +61,9 @@
 	<string name="no_notebook_yet">还没有单词本……</string>
 	<string name="daily_newWords_SettingTitle">每天的新单词数：%1$d</string>
 	<string name="or_import">或者：</string>
-	<string name="drop_memory_plan">删除复习计划</string>
+	<string name="drop_memory_plan">删除学习计划</string>
 	<string name="drop_memory_plan_ConfirmTitle">删除确认</string>
-	<string name="drop_memory_plan_ConfirmMessage">删除复习计划会重置所有词条的复习进度，你确定要删除吗？</string>
+	<string name="drop_memory_plan_ConfirmMessage">删除学习计划会重置所有词条的学习进度，你确定要删除吗？</string>
 	<string name="drop_memory_plan_Drop">删除</string>
 	<string name="notebook_deletion_ConfirmTitle">删除确认</string>
 	<string name="choose_merge_mainBody">选择一本单词本作为合并的“主体”：</string>
@@ -77,5 +77,6 @@
 	<string name="merging_notebooks">正在合并单词本……</string>
 	<string name="remain_old">保留原有的</string>
 	<string name="merge_succeed">合并成功！</string>
+	<string name="cover_memory_progress">覆盖学习进度</string>
 
 </resources>

@@ -33,6 +33,37 @@ class NoteEditFragment : NoteHoldingFragment(),
 		else initViewsEditMode()
 	}
 	
+	private fun initViewsCreateMode() {
+		tv_title.text = getString(R.string.Note_create)
+		b_delete.visibility = View.GONE
+		
+		noteContentEditHolder = null
+		updateNoteContent(QuestionContent("", ""))
+		cb_resetProgress.visibility = View.GONE
+		
+		b_ok.setOnClickListener {
+			val content = noteContentEditHolder!!.applyChange()
+			launch(CommonPool){
+				var committed = true
+				mutableNotebook.addNote(content) { conflictNoteId, newContent ->
+					val situation = NoteConflictDialog.ConflictSituation(
+						true, conflictNoteId, newContent, false)
+					launch(UI){
+						NoteConflictDialog.newInstance(notebookKey, situation,
+							true, this@NoteEditFragment).show(fragmentManager)
+					}
+					val solution = conflictSolutionChan.take()
+					if (solution == null) committed = false
+					solution ?: ConflictSolution(false, false)
+				}
+				if(committed) fragmentManager.popBackStack()
+			}
+		}
+		b_cancel.setOnClickListener {
+			fragmentManager.popBackStack()
+		}
+	}
+	
 	private fun initViewsEditMode() {
 		if (tryLoadNote() == null) {
 			fragmentManager.popBackStack()
@@ -52,10 +83,11 @@ class NoteEditFragment : NoteHoldingFragment(),
 			val content = noteContentEditHolder!!.applyChange()
 			launch(CommonPool) {
 				var committed = true
-				mutableNotebook.modifyNoteContent(noteId, content) { newContent, conflictNoteId ->
-					val modifyRequest = NoteConflictDialog.ModifyRequest(newContent, noteId, conflictNoteId)
+				mutableNotebook.modifyNoteContent(noteId, content) { conflictNoteId, newContent ->
+					val situation = NoteConflictDialog.ConflictSituation(false, conflictNoteId, newContent,
+						note.isActivated && !cb_resetProgress.isChecked)
 					launch(UI){
-						NoteConflictDialog.newInstance(notebookKey, modifyRequest,
+						NoteConflictDialog.newInstance(notebookKey, situation,
 							true, this@NoteEditFragment).show(fragmentManager)
 					}
 					val solution = conflictSolutionChan.take()
@@ -74,36 +106,6 @@ class NoteEditFragment : NoteHoldingFragment(),
 		}
 	}
 	
-	private fun initViewsCreateMode() {
-		tv_title.text = getString(R.string.Note_create)
-		b_delete.visibility = View.GONE
-		
-		noteContentEditHolder = null
-		updateNoteContent(QuestionContent("", ""))
-		cb_resetProgress.visibility = View.GONE
-		
-		b_ok.setOnClickListener {
-			val content = noteContentEditHolder!!.applyChange()
-			launch(CommonPool){
-				var committed = true
-				mutableNotebook.addNote(content) { newContent, conflictNoteId ->
-					val modifyRequest = NoteConflictDialog.ModifyRequest(newContent, -1, conflictNoteId)
-					launch(UI){
-						NoteConflictDialog.newInstance(notebookKey, modifyRequest,
-							true, this@NoteEditFragment).show(fragmentManager)
-					}
-					val solution = conflictSolutionChan.take()
-					if (solution == null) committed = false
-					solution ?: ConflictSolution(false, false)
-				}
-				if(committed) fragmentManager.popBackStack()
-			}
-		}
-		b_cancel.setOnClickListener {
-			fragmentManager.popBackStack()
-		}
-	}
-	
 	override fun onResume() {
 		super.onResume()
 		noteContentEditHolder?.requestFocus()
@@ -115,7 +117,7 @@ class NoteEditFragment : NoteHoldingFragment(),
 	
 	private val conflictSolutionChan = ArrayBlockingQueue<ConflictSolution?>(1)
 	override fun onConflictSolved(solution: ConflictSolution?) {
-		conflictSolutionChan.put(solution)
+		if(solution!=null) conflictSolutionChan.put(solution)
 	}
 	
 	//noteContent

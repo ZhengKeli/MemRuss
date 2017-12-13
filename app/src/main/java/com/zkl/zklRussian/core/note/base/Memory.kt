@@ -112,6 +112,10 @@ interface MemoryNote<out Content : BaseContent> : BaseNote<Content> {
 	 */
 	val memoryUpdateTime: Long
 	
+	val isActivated get() = memoryState.status != NoteMemoryStatus.infant
+	
+	val isLearning get() = memoryState.status == NoteMemoryStatus.learning
+	
 }
 
 data class MemoryPlan(

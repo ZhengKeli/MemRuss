@@ -75,10 +75,12 @@ class NotebookMergingDialog : DialogFragment(),
 					else InstantNote(note,
 						memoryState = NoteMemoryState.infantState(),
 						memoryUpdateTime = System.currentTimeMillis())
-				mainBody.rawAddNote(filteredNote) { newContent, conflictNoteId ->
-					val modifyRequest = NoteConflictDialog.ModifyRequest(newContent, -1, conflictNoteId)
+				mainBody.rawAddNote(filteredNote) { conflictNoteId, newNote ->
+					val situation = NoteConflictDialog.ConflictSituation(
+						true, conflictNoteId,
+						newNote.content, newNote.isActivated)
 					launch(UI){
-						NoteConflictDialog.newInstance(key, modifyRequest, false,
+						NoteConflictDialog.newInstance(key, situation, false,
 							this@NotebookMergingDialog).show(fragmentManager)
 					}
 					conflictSolutionChan.take()

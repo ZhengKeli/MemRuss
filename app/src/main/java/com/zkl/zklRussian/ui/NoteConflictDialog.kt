@@ -11,43 +11,40 @@ import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.ConflictSolution
 import com.zkl.zklRussian.core.note.Note
 import com.zkl.zklRussian.core.note.NoteContent
-import com.zkl.zklRussian.core.note.base.NoteMemoryStatus
 import kotlinx.android.synthetic.main.dialog_note_conflict.view.*
 import org.jetbrains.anko.bundleOf
 import java.io.Serializable
 
 class NoteConflictDialog : NotebookHoldingDialog() {
 	
-	data class ModifyRequest(val newContent: NoteContent, val targetNoteId: Long, val conflictNoteId: Long) : Serializable
+	data class ConflictSituation(
+		val isCreating: Boolean, val conflictNoteId: Long,
+		val newContent: NoteContent, val hasNewMemoryState: Boolean) : Serializable
 	
 	interface ConflictSolvedListener {
 		fun onConflictSolved(solution: ConflictSolution?)
 	}
 	
 	companion object {
-		private val arg_modifyRequest = "modifyRequest"
+		private val arg_conflictSituation = "conflictSituation"
 		private val arg_cancelable = "cancelable"
-		fun <T> newInstance(notebookKey: NotebookKey, modifyRequest: ModifyRequest, cancelable: Boolean, solvedListener: T)
+		fun <T> newInstance(notebookKey: NotebookKey, situation: ConflictSituation, cancelable: Boolean, solvedListener: T)
 			where T : ConflictSolvedListener, T : Fragment
 			= NoteConflictDialog::class.java.newInstance(notebookKey).apply {
 			arguments += bundleOf(
-				arg_modifyRequest to modifyRequest,
+				arg_conflictSituation to situation,
 				arg_cancelable to cancelable
 			)
 			setTargetFragment(solvedListener, 0)
 		}
-		
 	}
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
 		
 		//prepare data
-		val request = arguments.getSerializable(arg_modifyRequest) as ModifyRequest
+		val situation = arguments.getSerializable(arg_conflictSituation) as ConflictSituation
 		val cancelable = arguments.getBoolean(arg_cancelable, false)
-		val conflictNotes = request.newContent.uniqueTags.mapNotNull { uniqueTag ->
-			val noteId = notebook.checkUniqueTag(uniqueTag, request.targetNoteId)
-			if (noteId != -1L) notebook.getNote(noteId) else null
-		}
+		val conflictNote = notebook.getNote(situation.conflictNoteId)
 		
 		//prepare views
 		val view = View.inflate(context, R.layout.dialog_note_conflict, null)
@@ -55,29 +52,29 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 		
 		dialogBuilder.setTitle(R.string.there_are_conflicted_notes)
 		view.lv_conflict.adapter = object : NoteListAdapter() {
-			override fun getCount(): Int = conflictNotes.size
-			override fun getItem(position: Int): Note = conflictNotes[position]
+			override fun getCount(): Int = 1
+			override fun getItem(position: Int): Note = conflictNote
 			override val context: Context get() = activity
 		}
-		if (conflictNotes.size == 1) {
-			val conflictNote = conflictNotes.first()
-			if (request.targetNoteId == -1L && conflictNote.memoryState.status != NoteMemoryStatus.infant) {
-				view.cb_resetProgress.visibility = View.VISIBLE
-				view.cb_resetProgress.isChecked = false
-			} else {
-				view.cb_resetProgress.visibility = View.GONE
-				view.cb_resetProgress.isChecked = false
-			}
-			
-			dialogBuilder.setPositiveButton(R.string.override) { _, _ ->
-				makeCallback(true, view.cb_resetProgress.isChecked)
-			}
-			if (cancelable) dialogBuilder.setNegativeButton(R.string.cancel) { _, _ ->
-				makeNullCallback()
-			}
-			else dialogBuilder.setNegativeButton(R.string.remain_old) { _, _ ->
-				makeCallback(false, false)
-			}
+		
+		if (conflictNote.isActivated) {
+			view.cb_coverProgress.visibility = View.VISIBLE
+			view.cb_coverProgress.isChecked = !situation.isCreating
+			if (situation.hasNewMemoryState)
+				view.cb_coverProgress.setText(R.string.cover_memory_progress)
+		} else {
+			view.cb_coverProgress.visibility = View.GONE
+			view.cb_coverProgress.isChecked = situation.hasNewMemoryState
+		}
+		
+		dialogBuilder.setPositiveButton(R.string.override) { _, _ ->
+			makeCallback(true, view.cb_coverProgress.isChecked)
+		}
+		if (cancelable) dialogBuilder.setNegativeButton(R.string.cancel) { _, _ ->
+			makeNullCallback()
+		}
+		else dialogBuilder.setNegativeButton(R.string.remain_old) { _, _ ->
+			makeCallback(false, false)
 		}
 		
 		isCancelable = cancelable
