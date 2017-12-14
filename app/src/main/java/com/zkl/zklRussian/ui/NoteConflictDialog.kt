@@ -16,7 +16,7 @@ import java.io.Serializable
 class NoteConflictDialog : NotebookHoldingDialog() {
 	
 	data class ConflictSituation(
-		val isCreating: Boolean, val conflictNoteId: Long,
+		val isAdding: Boolean, val conflictNoteId: Long,
 		val newContent: NoteContent, val hasNewMemoryState: Boolean) : Serializable
 	
 	interface ConflictSolvedListener {
@@ -50,12 +50,13 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 		
 		dialogBuilder.setTitle(R.string.there_are_conflicted_notes)
 		
+		view.tv_newContent.setText(if (situation.isAdding) R.string.adding_note else R.string.modifying_note)
 		view.fl_newContent.addView(situation.newContent.newItemHolderOrThrow(context,view.fl_newContent).view)
 		view.fl_conflictContent.addView(conflictNote.content.newItemHolderOrThrow(context,view.fl_newContent).view)
 		
 		if (conflictNote.isActivated) {
 			view.cb_coverProgress.visibility = View.VISIBLE
-			view.cb_coverProgress.isChecked = !situation.isCreating
+			view.cb_coverProgress.isChecked = !situation.isAdding
 			if (situation.hasNewMemoryState)
 				view.cb_coverProgress.setText(R.string.cover_memory_progress)
 		} else {

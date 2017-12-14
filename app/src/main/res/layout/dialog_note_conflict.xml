@@ -4,13 +4,11 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:orientation="vertical"
-	android:paddingEnd="8dp"
-	android:paddingLeft="8dp"
-	android:paddingRight="8dp"
-	android:paddingStart="8dp">
+	android:padding="16dp">
 	
 	
 	<TextView
+		android:id="@+id/tv_newContent"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/adding_note"
