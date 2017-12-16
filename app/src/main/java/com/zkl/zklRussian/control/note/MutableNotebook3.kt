@@ -65,8 +65,7 @@ private object SearchTagTable {
 	val searchTag = "searchTag"
 }
 
-class Notebook3
-internal constructor(val database: SQLiteDatabase) : MutableNotebook {
+class MutableNotebook3(val database: SQLiteDatabase) : MutableNotebook {
 	
 	companion object {
 		val VERSION = 3
@@ -127,7 +126,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
-	fun checkTables(): Boolean {
+	fun checkVersion(): Boolean {
 		val version = ConfsTable.run {
 			database.select(tableName, confValue)
 				.whereArgs("$confName = '$item_version' ")
@@ -179,7 +178,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		return database.selectNotes()
 			.whereArgs(NotesTable.noteId + "=" + noteId)
 			.exec { parseNoteList() }
-			.getOrNull(0) ?: throw NoteIdNotFoundException(noteId)
+			.firstOrNull() ?: throw NoteIdNotFoundException(noteId)
 	}
 	
 	override fun rawGetNotes(count: Int, offset: Int): List<Note> {

@@ -9,6 +9,7 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.ConflictSolution
 import com.zkl.zklRussian.core.note.NoteContent
+import com.zkl.zklRussian.core.note.base.isActivated
 import kotlinx.android.synthetic.main.dialog_note_conflict.view.*
 import org.jetbrains.anko.bundleOf
 import java.io.Serializable

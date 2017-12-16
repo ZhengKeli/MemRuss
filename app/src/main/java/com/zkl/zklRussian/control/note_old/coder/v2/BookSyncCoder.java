@@ -807,7 +807,7 @@ public class BookSyncCoder {
 		}
 	}
 	
-	//todo 有空把args和progress分开
+	
 	@Nullable
 	Memory.MemoryPlan getMemoryPlan() {
 		Cursor cursor = manifestTable.selectAll();

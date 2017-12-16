@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
+import com.zkl.zklRussian.core.note.base.isActivated
 import kotlinx.android.synthetic.main.fragment_note_view.*
 
 

@@ -112,11 +112,10 @@ interface MemoryNote<out Content : BaseContent> : BaseNote<Content> {
 	 */
 	val memoryUpdateTime: Long
 	
-	val isActivated get() = memoryState.status != NoteMemoryStatus.infant
-	
-	val isLearning get() = memoryState.status == NoteMemoryStatus.learning
-	
 }
+
+val MemoryNote<*>.isActivated get() = memoryState.status != NoteMemoryStatus.infant
+
 
 data class MemoryPlan(
 	
@@ -148,11 +147,7 @@ enum class NotebookMemoryStatus {
 	/**
 	 * 该单词本的学习计划正在进行中
 	 */
-	learning,
-	/**
-	 * 该单词本的学习计划被暂停了
-	 */
-	paused
+	learning
 }
 
 data class NotebookMemoryState(
@@ -163,36 +158,27 @@ data class NotebookMemoryState(
 	val status: NotebookMemoryStatus,
 	
 	/**
+	 * 上次开始计划的时间
+	 * 在计划被制定并生效时、暂停后被恢复时记录
+	 * （为了避免因为时区变化而引起的错误，统一使用GMT+0毫秒时间)
+	 */
+	val planLaunchTime: Long,
+	
+	/**
 	 * 上次激活新词的时间
 	 * 用于计算应该添加多少新词
 	 * （为了避免因为时区变化而引起的错误，统一使用GMT+0毫秒时间)
 	 * 用 -1 表示不需要激活新词
 	 */
-	val lastActivateTime: Long,
-	
-	/**
-	 * 上次开始计划的时间
-	 * 在计划被制定并生效时、暂停后被恢复时记录
-	 * （为了避免因为时区变化而引起的错误，统一使用GMT+0毫秒时间)
-	 */
-	val lastResumeTime: Long,
-	
-	/**
-	 * 上次暂停的时间
-	 * 用于在恢复时计算暂停了多久，
-	 * 并据此进行一些变动
-	 * （为了避免因为时区变化而引起的错误，统一使用GMT+0毫秒时间)
-	 * 用 -1 表示从没暂停过
-	 */
-	val lastPauseTime: Long
+	val lastActivateTime: Long
 
 ) {
 	companion object {
 		val infantState =
-			NotebookMemoryState(NotebookMemoryStatus.infant, -1L, -1L, -1L)
+			NotebookMemoryState(NotebookMemoryStatus.infant, -1L, -1L)
 		
 		fun beginningState(nowTime: Long = System.currentTimeMillis())
-			= NotebookMemoryState(NotebookMemoryStatus.learning, nowTime, nowTime, -1L)
+			= NotebookMemoryState(NotebookMemoryStatus.learning, nowTime, nowTime)
 	}
 }
 
@@ -204,11 +190,7 @@ enum class NoteMemoryStatus {
 	/**
 	 * 词条已经在复习计划中，且尚未学习完成
 	 */
-	learning,
-	/**
-	 * 词条已经在复习计划中，且已学习完成
-	 */
-	finished
+	learning
 }
 
 data class NoteMemoryState(

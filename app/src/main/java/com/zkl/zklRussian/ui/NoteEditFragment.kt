@@ -8,6 +8,7 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.*
 import com.zkl.zklRussian.core.note.base.NoteMemoryState
+import com.zkl.zklRussian.core.note.base.isActivated
 import kotlinx.android.synthetic.main.fragment_note_edit.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI

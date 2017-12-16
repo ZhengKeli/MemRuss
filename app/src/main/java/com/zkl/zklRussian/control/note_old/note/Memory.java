@@ -626,8 +626,6 @@ public class Memory {
 		public PlanArgs setWorkLoadLimit(float newWorkLoadLimit) {
 			return new PlanArgs(newWorkLoadLimit, refillInterval, arg_times, arg_k, arg_a);
 		}
-
-		//todo 把特殊情况的返回值好好整理一下
 		public long computeNextTime(long nowTime, int progress) {
 			if (progress == -1 || progress == -2) {
 				return 0;

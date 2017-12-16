@@ -71,21 +71,21 @@ class Notebook3Compactor : NotebookCompactor {
 	
 	override fun createNotebook(file: File, notebookName: String): MutableNotebook? {
 		val database = SQLiteDatabase.openOrCreateDatabase(file, null)
-		val notebook = Notebook3(database)
+		val notebook = MutableNotebook3(database)
 		notebook.createTables(notebookName)
 		return notebook
 	}
 	
 	override fun loadNotebook(file: File): Notebook? {
 		val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
-		val notebook = Notebook3(database)
-		return if (notebook.checkTables()) notebook else null
+		val notebook = MutableNotebook3(database)
+		return if (notebook.checkVersion()) notebook else null
 	}
 	
 	override fun loadMutableNotebook(file: File): MutableNotebook? {
 		val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READWRITE)
-		val notebook = Notebook3(database)
-		return if (notebook.checkTables()) notebook else {
+		val notebook = MutableNotebook3(database)
+		return if (notebook.checkVersion()) notebook else {
 			notebook.close()
 			null
 		}

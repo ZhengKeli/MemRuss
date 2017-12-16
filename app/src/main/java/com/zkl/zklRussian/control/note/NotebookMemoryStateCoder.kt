@@ -11,9 +11,8 @@ object NotebookMemoryStateCoder {
 		 = memoryState.let {
 		 JSONObject(mapOf(
 			 it::status.run { name to get().name },
-			 it::lastActivateTime.run { name to get() },
-			 it::lastResumeTime.run { name to get() },
-			 it::lastPauseTime.run { name to get() }
+			 it::planLaunchTime.run { name to get() },
+			 it::lastActivateTime.run { name to get() }
 		 )).toString()
 	 }
 	
@@ -23,8 +22,7 @@ object NotebookMemoryStateCoder {
 			status = NotebookMemoryStatus.valueOf(
 				getString(NotebookMemoryState::status.name)),
 			lastActivateTime = getLong(NotebookMemoryState::lastActivateTime.name),
-			lastResumeTime = getLong(NotebookMemoryState::lastResumeTime.name),
-			lastPauseTime = getLong(NotebookMemoryState::lastPauseTime.name)
+			planLaunchTime = getLong(NotebookMemoryState::planLaunchTime.name)
 		)
 	}
 }

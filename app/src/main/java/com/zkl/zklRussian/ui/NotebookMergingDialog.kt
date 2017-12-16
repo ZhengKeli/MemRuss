@@ -13,6 +13,7 @@ import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.ConflictSolution
 import com.zkl.zklRussian.core.note.InstantNote
 import com.zkl.zklRussian.core.note.base.NoteMemoryState
+import com.zkl.zklRussian.core.note.base.isActivated
 import com.zkl.zklRussian.core.note.rawAddNote
 import kotlinx.android.synthetic.main.dialog_notebook_merging.view.*
 import kotlinx.coroutines.experimental.CommonPool
