@@ -13,7 +13,7 @@ import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.ConflictSolution
 import com.zkl.zklRussian.core.note.InstantNote
 import com.zkl.zklRussian.core.note.base.NoteMemoryState
-import com.zkl.zklRussian.core.note.base.isActivated
+import com.zkl.zklRussian.core.note.base.isLearning
 import com.zkl.zklRussian.core.note.rawAddNote
 import kotlinx.android.synthetic.main.dialog_notebook_merging.view.*
 import kotlinx.coroutines.experimental.CommonPool
@@ -79,7 +79,7 @@ class NotebookMergingDialog : DialogFragment(),
 				mainBody.rawAddNote(filteredNote) { conflictNoteId, newNote ->
 					val situation = NoteConflictDialog.ConflictSituation(
 						true, conflictNoteId,
-						newNote.content, newNote.isActivated)
+						newNote.content, newNote.isLearning)
 					launch(UI){
 						NoteConflictDialog.newInstance(key, situation, false,
 							this@NotebookMergingDialog).show(fragmentManager)

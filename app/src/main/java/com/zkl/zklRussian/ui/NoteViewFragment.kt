@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.MutableNotebook
-import com.zkl.zklRussian.core.note.base.isActivated
+import com.zkl.zklRussian.core.note.base.isLearning
 import kotlinx.android.synthetic.main.fragment_note_view.*
 
 
@@ -33,7 +33,7 @@ class NoteViewFragment : NoteHoldingFragment() {
 		
 		tv_title.text = getString(R.string.Note_view_id, noteId)
 		
-		if (note.isActivated) {
+		if (note.isLearning) {
 			val relativeReviewTime = (note.memoryState.reviewTime - System.currentTimeMillis()).toDouble() / (3600 * 1000)
 			tv_info.text = getString(R.string.Note_view_info,
 				note.memoryState.progress.toInt(), note.memoryState.load.toInt(), relativeReviewTime)

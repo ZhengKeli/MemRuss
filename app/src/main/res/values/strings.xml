@@ -42,7 +42,6 @@
 	
 	<string name="MemoryPlan">Memory Plan</string>
 	<string name="make_MemoryPlan">Make Memory Plan</string>
-	<string name="MemoryPlan_paused">Memory Plan (Paused)</string>
 	<string name="daily_reviews_SettingTitle">Daily reviews: %1$d</string>
 	<string name="daily_newWords_SettingTitle">Daily new words: %1$d</string>
 	<string name="drop_memory_plan">Drop the memory plan</string>

@@ -9,7 +9,7 @@ import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.ConflictSolution
 import com.zkl.zklRussian.core.note.NoteContent
-import com.zkl.zklRussian.core.note.base.isActivated
+import com.zkl.zklRussian.core.note.base.isLearning
 import kotlinx.android.synthetic.main.dialog_note_conflict.view.*
 import org.jetbrains.anko.bundleOf
 import java.io.Serializable
@@ -55,7 +55,7 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 		view.fl_newContent.addView(situation.newContent.newItemHolderOrThrow(context,view.fl_newContent).view)
 		view.fl_conflictContent.addView(conflictNote.content.newItemHolderOrThrow(context,view.fl_newContent).view)
 		
-		if (conflictNote.isActivated) {
+		if (conflictNote.isLearning) {
 			view.cb_coverProgress.visibility = View.VISIBLE
 			view.cb_coverProgress.isChecked = !situation.isAdding
 			if (situation.hasNewMemoryState)

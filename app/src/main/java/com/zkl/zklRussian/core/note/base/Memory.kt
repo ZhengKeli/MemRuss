@@ -65,7 +65,7 @@ interface MutableMemoryNotebook<Content : BaseContent, Note : MemoryNote<Content
 	 */
 	fun activateNotesByPlan(nowTime: Long = System.currentTimeMillis()): Int {
 		val state = memoryState
-		if (state.status != NotebookMemoryStatus.learning) return 0
+		if (state.status != NotebookMemoryStatus.LEARNING) return 0
 		val plan = memoryPlan ?: return 0
 		
 		val sumLoad = sumMemoryLoad()
@@ -114,7 +114,9 @@ interface MemoryNote<out Content : BaseContent> : BaseNote<Content> {
 	
 }
 
-val MemoryNote<*>.isActivated get() = memoryState.status != NoteMemoryStatus.infant
+val MemoryNotebook<*>.isLearning get() = memoryState.status == NotebookMemoryStatus.LEARNING
+
+val MemoryNote<*>.isLearning get() = memoryState.status == NoteMemoryStatus.LEARNING
 
 
 data class MemoryPlan(
@@ -143,11 +145,11 @@ enum class NotebookMemoryStatus {
 	/**
 	 * 该单词本尚未制定学习计划
 	 */
-	infant,
+	INFANT,
 	/**
 	 * 该单词本的学习计划正在进行中
 	 */
-	learning
+	LEARNING
 }
 
 data class NotebookMemoryState(
@@ -174,11 +176,11 @@ data class NotebookMemoryState(
 
 ) {
 	companion object {
-		val infantState =
-			NotebookMemoryState(NotebookMemoryStatus.infant, -1L, -1L)
+		val infantState
+			= NotebookMemoryState(NotebookMemoryStatus.INFANT, -1L, -1L)
 		
 		fun beginningState(nowTime: Long = System.currentTimeMillis())
-			= NotebookMemoryState(NotebookMemoryStatus.learning, nowTime, nowTime)
+			= NotebookMemoryState(NotebookMemoryStatus.LEARNING, nowTime, nowTime)
 	}
 }
 
@@ -186,11 +188,11 @@ enum class NoteMemoryStatus {
 	/**
 	 * 该词条还未被加到复习计划中
 	 */
-	infant,
+	INFANT,
 	/**
 	 * 词条已经在复习计划中，且尚未学习完成
 	 */
-	learning
+	LEARNING
 }
 
 data class NoteMemoryState(
@@ -223,10 +225,10 @@ data class NoteMemoryState(
 ) {
 	companion object {
 		fun infantState()
-			= NoteMemoryState(NoteMemoryStatus.infant, 0.0, 0.0, -1L)
+			= NoteMemoryState(NoteMemoryStatus.INFANT, 0.0, 0.0, -1L)
 		
 		fun beginningState(nowTime: Long = System.currentTimeMillis())
-			= NoteMemoryState(NoteMemoryStatus.learning, 0.0, MemoryAlgorithm.maxSingleLoad, nowTime)
+			= NoteMemoryState(NoteMemoryStatus.LEARNING, 0.0, MemoryAlgorithm.maxSingleLoad, nowTime)
 	}
 }
 

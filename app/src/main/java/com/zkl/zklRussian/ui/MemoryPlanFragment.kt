@@ -39,9 +39,8 @@ class MemoryPlanFragment : NotebookHoldingFragment(),
 		val memoryPlan = notebook.memoryPlan ?: MemoryPlan.default
 		
 		tv_title.text = when (memoryState.status) {
-			NotebookMemoryStatus.infant -> getString(R.string.make_MemoryPlan)
-			NotebookMemoryStatus.learning -> getString(R.string.MemoryPlan)
-			NotebookMemoryStatus.paused -> getString(R.string.MemoryPlan_paused)
+			NotebookMemoryStatus.INFANT -> getString(R.string.make_MemoryPlan)
+			NotebookMemoryStatus.LEARNING -> getString(R.string.MemoryPlan)
 		}
 		
 		tv_dailyReviews.text = getString(R.string.daily_reviews_SettingTitle, memoryPlan.dailyReviews.roundToInt())
@@ -68,7 +67,7 @@ class MemoryPlanFragment : NotebookHoldingFragment(),
 			override fun onStopTrackingTouch(seekBar: SeekBar) {}
 		})
 		
-		if(memoryState.status== NotebookMemoryStatus.infant){
+		if(memoryState.status== NotebookMemoryStatus.INFANT){
 			b_dropMemoryPlan.visibility = View.GONE
 		}
 		else {

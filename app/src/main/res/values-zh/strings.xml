@@ -33,7 +33,6 @@
 	</string>
 	<string name="MemoryPlan">学习计划</string>
 	<string name="make_MemoryPlan">制定学习计划</string>
-	<string name="MemoryPlan_paused">学习计划（已暂停）</string>
 	<string name="daily_reviews_SettingTitle">每天的复习次数：%1$d</string>
 	<string name="go_to_review">去复习</string>
 	<string name="need_review">有%1$d个单词需要复习哦！</string>

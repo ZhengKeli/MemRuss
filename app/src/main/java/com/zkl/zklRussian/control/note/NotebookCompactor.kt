@@ -3,14 +3,13 @@ package com.zkl.zklRussian.control.note
 import android.database.sqlite.SQLiteDatabase
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Notebook
-import com.zkl.zklRussian.core.note.base.NotebookMemoryStatus
+import com.zkl.zklRussian.core.note.base.isLearning
 import java.io.File
 
 interface NotebookCompactor {
 	fun createNotebook(file: File, notebookName: String): MutableNotebook? = null
 	fun loadBrief(file: File): NotebookBrief? = loadNotebook(file)?.use { notebook ->
-		NotebookBrief(file, notebook.name,
-			notebook.memoryState.status != NotebookMemoryStatus.infant)
+		NotebookBrief(file, notebook.name, notebook.isLearning)
 	}
 	fun loadNotebook(file: File): Notebook? = null
 	fun loadMutableNotebook(file: File): MutableNotebook? = null

@@ -142,13 +142,13 @@ class Notebook2(val database: SQLiteDatabase) : Notebook {
 				val interval = MemoryAlgorithm.computeReviewInterval(newProgress)
 				val load = MemoryAlgorithm.computeLoad(interval)
 				val nowTime = System.currentTimeMillis()
-				NoteMemoryState(NoteMemoryStatus.learning, newProgress, load, nowTime + interval)
+				NoteMemoryState(NoteMemoryStatus.LEARNING, newProgress, load, nowTime + interval)
 			}
 			else -> {
 				val newProgress = progress.toDouble()
 				val interval = MemoryAlgorithm.computeReviewInterval(newProgress)
 				val load = MemoryAlgorithm.computeLoad(interval)
-				NoteMemoryState(NoteMemoryStatus.learning, newProgress, load, nextTime)
+				NoteMemoryState(NoteMemoryStatus.LEARNING, newProgress, load, nextTime)
 			}
 		}
 		
@@ -173,8 +173,8 @@ class Notebook2(val database: SQLiteDatabase) : Notebook {
 			val stringData = StringData.decode(progressString)
 			
 			val status = when (stringData.getInteger(0)) {
-				0 -> NotebookMemoryStatus.learning
-				else -> NotebookMemoryStatus.infant
+				0 -> NotebookMemoryStatus.LEARNING
+				else -> NotebookMemoryStatus.INFANT
 			}
 			return NotebookMemoryState(
 				status = status,

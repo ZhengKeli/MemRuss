@@ -435,7 +435,7 @@ class MutableNotebook3(val database: SQLiteDatabase) : MutableNotebook {
 					confUpdateTime to nowTime)
 				
 				//是否要将state设为开启
-				if (memoryState.status == NotebookMemoryStatus.infant)
+				if (memoryState.status == NotebookMemoryStatus.INFANT)
 					memoryState = NotebookMemoryState.beginningState(nowTime)
 				
 			}
@@ -466,7 +466,7 @@ class MutableNotebook3(val database: SQLiteDatabase) : MutableNotebook {
 				confCreateTime to nowTime,
 				confUpdateTime to nowTime)
 			
-			if (value.status == NotebookMemoryStatus.infant) {
+			if (value.status == NotebookMemoryStatus.INFANT) {
 				//reset all MemoryState of all Notes
 				NotesTable.run {
 					val infantState = NoteMemoryState.infantState()
@@ -500,7 +500,7 @@ class MutableNotebook3(val database: SQLiteDatabase) : MutableNotebook {
 	
 	override fun selectNeedActivateNoteIds(count: Int, offset: Int): List<Long> {
 		return database.select(NotesTable.tableName, NotesTable.noteId)
-			.whereArgs("${NotesTable.memoryStatus}='${NoteMemoryStatus.infant}'")
+			.whereArgs("${NotesTable.memoryStatus}='${NoteMemoryStatus.INFANT}'")
 			.limit(count)
 			.exec {
 				parseList(rowParser{noteId:Long-> noteId })
