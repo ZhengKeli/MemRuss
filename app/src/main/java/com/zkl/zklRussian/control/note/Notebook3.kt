@@ -65,14 +65,14 @@ private object SearchTagTable {
 	val searchTag = "searchTag"
 }
 
-class MutableNotebook3
+class Notebook3
 internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 	
-	//life cycle
-	override fun close() {
-		database.close()
+	companion object {
+		val VERSION = 3
 	}
 	
+	//life cycle
 	fun createTables(bookName: String) {
 		database.transaction {
 			val nowTime = System.currentTimeMillis()
@@ -84,7 +84,7 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 					confUpdateTime to INTEGER)
 				insert(tableName,
 					confName to item_version,
-					confValue to 3,
+					confValue to VERSION,
 					confCreateTime to nowTime,
 					confUpdateTime to nowTime)
 				insert(tableName,
@@ -127,10 +127,27 @@ internal constructor(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
+	fun checkTables(): Boolean {
+		val version = ConfsTable.run {
+			database.select(tableName, confValue)
+				.whereArgs("$confName = '$item_version' ")
+				.exec {
+					moveToFirst()
+					getInt(0)
+				}
+		}
+		return version == VERSION
+	}
+	
+	override fun close() {
+		database.close()
+	}
+	
 	
 	
 	//info
-	override val version: Int = 3
+	override val version: Int = VERSION
+	
 	override var name: String
 		get() = ConfsTable.run {
 			database.select(tableName, confValue)

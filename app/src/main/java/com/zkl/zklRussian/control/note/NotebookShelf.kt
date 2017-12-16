@@ -1,10 +1,8 @@
 package com.zkl.zklRussian.control.note
 
-import android.database.sqlite.SQLiteDatabase
 import com.zkl.zklRussian.control.tools.HookSystem
 import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Notebook
-import com.zkl.zklRussian.core.note.base.NotebookMemoryStatus
 import java.io.File
 import java.io.Serializable
 import java.util.*
@@ -22,25 +20,15 @@ class NotebookShelf(workingDir: File){
 			?: emptyList()
 	}
 	private fun loadNotebookBrief(file: File): NotebookBrief? {
-		return try {
-			val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
-			MutableNotebook3(database).use { notebook ->
-				NotebookBrief(file, notebook.name,
-					notebook.memoryState.status != NotebookMemoryStatus.infant)
-			}
-		}catch (e:Exception){
-			null
-		}
+		return MainCompactor.loadBrief(file)
 	}
 	
 	
 	//book opening & creating
 	private val openedNotebooks = HookSystem<NotebookKey, Notebook>()
-	@Synchronized fun createNotebook(bookName: String): Pair<NotebookKey, MutableNotebook> {
-		val file: File = generateNotebookFile(bookName)
-		val database = SQLiteDatabase.openDatabase(file.path, null,
-			SQLiteDatabase.CREATE_IF_NECESSARY or SQLiteDatabase.OPEN_READWRITE)
-		val notebook = MutableNotebook3(database).apply { createTables(bookName) }
+	@Synchronized fun createNotebook(notebookName: String): Pair<NotebookKey, MutableNotebook> {
+		val file: File = generateNotebookFile(notebookName)
+		val notebook = MainCompactor.createNotebookOrThrow(file, notebookName)
 		val key = NotebookKey(file.canonicalPath, true)
 		openedNotebooks[key] = notebook
 		return Pair(key, notebook)
@@ -49,21 +37,17 @@ class NotebookShelf(workingDir: File){
 		val key = NotebookKey(file.canonicalPath, false)
 		val opened = openedNotebooks[key]
 		if (opened is Notebook) return Pair(key,opened)
-		
-		val database = SQLiteDatabase.openDatabase(key.canonicalPath, null, SQLiteDatabase.OPEN_READONLY)
-		val notebook = MutableNotebook3(database)
+		val notebook = MainCompactor.loadNotebookOrThrow(file)
 		openedNotebooks[key] = notebook
 		return Pair(key,notebook)
 	}
 	@Synchronized fun openMutableNotebook(file: File): Pair<NotebookKey, MutableNotebook> {
 		val key = NotebookKey(file.canonicalPath, true)
 		val opened = openedNotebooks[key]
-		if (opened is MutableNotebook) return Pair(key,opened)
-		
-		val database = SQLiteDatabase.openDatabase(key.canonicalPath, null, SQLiteDatabase.OPEN_READWRITE)
-		val mutableNotebook = MutableNotebook3(database)
+		if (opened is MutableNotebook) return Pair(key, opened)
+		val mutableNotebook = MainCompactor.loadMutableNotebookOrThrow(file)
 		openedNotebooks[key] = mutableNotebook
-		return Pair(key,mutableNotebook)
+		return Pair(key, mutableNotebook)
 	}
 	@Synchronized fun restoreNotebook(key: NotebookKey): Notebook {
 		return openedNotebooks[key] ?:
@@ -71,9 +55,9 @@ class NotebookShelf(workingDir: File){
 			else openNotebook(File(key.canonicalPath)).second
 	}
 	@Synchronized fun deleteNotebook(file: File): Boolean {
-		return SQLiteDatabase.deleteDatabase(file)
+		//todo remove the key
+		return MainCompactor.deleteNotebook(file)
 	}
-	
 	@Synchronized fun importNotebook(file: File): Pair<NotebookKey, Notebook>{
 		val brief = loadNotebookBrief(file)?: throw FileNotCompatibleException(file)
 		val target = generateNotebookFile(brief.bookName)
@@ -95,7 +79,6 @@ class NotebookShelf(workingDir: File){
 		} while (randomFile.exists())
 		return randomFile
 	}
-	
 	
 }
 
