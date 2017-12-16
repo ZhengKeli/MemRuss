@@ -45,7 +45,7 @@ NotebookMergeFragment.NotebookMergedListener{
 		briefs = myApp.notebookShelf.loadNotebookBriefs()
 		if (briefs.isEmpty()) ShelfInfantFragment.newInstance().jump(fragmentManager)
 		else if (autoJump) {
-			val (key, _) = myApp.notebookShelf.openMutableNotebook(briefs.first().file)
+			val (key, _) = myApp.notebookShelf.openNotebook(briefs.first().file)
 			NotebookFragment.newInstance(key).jump(fragmentManager)
 			autoJump = false
 		}
@@ -68,7 +68,7 @@ NotebookMergeFragment.NotebookMergedListener{
 		}
 		lv_notebooks.setOnItemClickListener { parent, _, position, _ ->
 			val brief = parent.adapter.getItem(position) as NotebookBrief
-			val (key, _) = myApp.notebookShelf.openMutableNotebook(brief.file)
+			val (key, _) = myApp.notebookShelf.openNotebook(brief.file)
 			NotebookFragment.newInstance(key).jump(fragmentManager)
 		}
 		lv_notebooks.setOnItemLongClickListener { parent, _, position, _ ->

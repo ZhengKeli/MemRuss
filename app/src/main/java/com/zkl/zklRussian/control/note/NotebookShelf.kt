@@ -33,26 +33,33 @@ class NotebookShelf(workingDir: File){
 		openedNotebooks[key] = notebook
 		return Pair(key, notebook)
 	}
-	@Synchronized fun openNotebook(file:File): Pair<NotebookKey, Notebook> {
+	@Synchronized fun openReadOnlyNotebook(file:File): Pair<NotebookKey, Notebook> {
 		val key = NotebookKey(file.canonicalPath, false)
 		val opened = openedNotebooks[key]
 		if (opened is Notebook) return Pair(key,opened)
-		val notebook = MainCompactor.loadNotebookOrThrow(file)
+		val notebook = MainCompactor.loadReadOnlyNotebookOrThrow(file)
 		openedNotebooks[key] = notebook
 		return Pair(key,notebook)
 	}
-	@Synchronized fun openMutableNotebook(file: File): Pair<NotebookKey, MutableNotebook> {
-		val key = NotebookKey(file.canonicalPath, true)
+	@Synchronized fun openMutableNotebook(file:File): Pair<NotebookKey, MutableNotebook>{
+		val key = NotebookKey(file.canonicalPath, false)
 		val opened = openedNotebooks[key]
-		if (opened is MutableNotebook) return Pair(key, opened)
-		val mutableNotebook = MainCompactor.loadMutableNotebookOrThrow(file)
-		openedNotebooks[key] = mutableNotebook
-		return Pair(key, mutableNotebook)
+		if (opened is MutableNotebook) return Pair(key,opened)
+		val notebook = MainCompactor.loadMutableNotebookOrThrow(file)
+		openedNotebooks[key] = notebook
+		return Pair(key,notebook)
+	}
+	@Synchronized fun openNotebook(file:File): Pair<NotebookKey, Notebook> {
+		return try {
+			openMutableNotebook(file)
+		}catch (e:Exception){
+			null
+		}?:openReadOnlyNotebook(file)
 	}
 	@Synchronized fun restoreNotebook(key: NotebookKey): Notebook {
 		return openedNotebooks[key] ?:
 			if (key.mutable) openMutableNotebook(File(key.canonicalPath)).second
-			else openNotebook(File(key.canonicalPath)).second
+			else openReadOnlyNotebook(File(key.canonicalPath)).second
 	}
 	@Synchronized fun deleteNotebook(file: File): Boolean {
 		//todo remove the key

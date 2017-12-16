@@ -65,7 +65,7 @@ class NotebookMergingDialog : DialogFragment(),
 		launch(CommonPool) {
 			val mergeRequest = arguments[arg_mergeRequest] as MergeRequest
 			val (key, mainBody) = myApp.notebookShelf.openMutableNotebook(mergeRequest.mainBody.file)
-			val (_, attachment) = myApp.notebookShelf.openNotebook(mergeRequest.attachment.file)
+			val (_, attachment) = myApp.notebookShelf.openReadOnlyNotebook(mergeRequest.attachment.file)
 			val notesToAdd = attachment.rawGetAllNotes()
 			val resetMemoryState = !mergeRequest.keepPlan
 			

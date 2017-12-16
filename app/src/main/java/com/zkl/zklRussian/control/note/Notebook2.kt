@@ -51,14 +51,18 @@ class Notebook2(val database: SQLiteDatabase) : Notebook {
 	
 	//life cycle
 	fun checkVersion(): Boolean {
-		val version = BookVersionTable.run {
-			database.select(tableName, versionCode)
-				.exec {
-					moveToFirst()
-					getInt(0)
-				}
+		return try {
+			val version = BookVersionTable.run {
+				database.select(tableName, versionCode)
+					.exec {
+						moveToFirst()
+						getInt(0)
+					}
+			}
+			version == VERSION
+		} catch (e: Exception) {
+			false
 		}
-		return version == VERSION
 	}
 	
 	override fun close() {
@@ -128,9 +132,9 @@ class Notebook2(val database: SQLiteDatabase) : Notebook {
 		}
 	}
 	
-	private fun Cursor.parseNoteList(): List<Note> = parseList(rowParser { noteId: Long, modifyTime: Long, noteData: String, rawData: Any?, duplicateTags: String, searchTags: String, progress: Int, nextTime: Long ->
+	private fun Cursor.parseNoteList(): List<Note> = parseList(rowParser { noteId: Long, modifyTime: Long, noteData: String, _: Any?, _: String, _: String, progress: Int, nextTime: Long ->
 		
-		val stringData = StringData.decode(noteData)
+		val stringData = StringData.decode(noteData).getStringData(2)
 		val noteContent = QuestionContent(
 			question = stringData.getString(0),
 			answer = stringData.getString(1))
@@ -169,7 +173,10 @@ class Notebook2(val database: SQLiteDatabase) : Notebook {
 	override val memoryState: NotebookMemoryState
 		get()  {
 			val progressString = database.select(ManifestsTable.tableName, ManifestsTable.memoryPlanProgress)
-				.exec { getString(0) }
+				.exec {
+					moveToFirst()
+					getString(0)
+				}
 			val stringData = StringData.decode(progressString)
 			
 			val status = when (stringData.getInteger(0)) {
@@ -185,7 +192,10 @@ class Notebook2(val database: SQLiteDatabase) : Notebook {
 	override val memoryPlan: MemoryPlan?
 		get() {
 			val planString = database.select(ManifestsTable.tableName, ManifestsTable.memoryPlanArgs)
-				.exec { getString(0) }
+				.exec {
+					moveToFirst()
+					getString(0)
+				}
 			val stringData = StringData.decode(planString)
 			val workLoadLimit = stringData.getFloat(0)
 			val refillInterval = stringData.getLong(1)

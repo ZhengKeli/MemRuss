@@ -127,15 +127,19 @@ class MutableNotebook3(val database: SQLiteDatabase) : MutableNotebook {
 	}
 	
 	fun checkVersion(): Boolean {
-		val version = ConfsTable.run {
-			database.select(tableName, confValue)
-				.whereArgs("$confName = '$item_version' ")
-				.exec {
-					moveToFirst()
-					getInt(0)
-				}
+		return try {
+			val version = ConfsTable.run {
+				database.select(tableName, confValue)
+					.whereArgs("$confName = '$item_version' ")
+					.exec {
+						moveToFirst()
+						getInt(0)
+					}
+			}
+			version == VERSION
+		}catch (e:Exception){
+			false
 		}
-		return version == VERSION
 	}
 	
 	override fun close() {
