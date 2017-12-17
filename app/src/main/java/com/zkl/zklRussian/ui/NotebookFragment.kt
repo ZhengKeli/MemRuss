@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
-import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.Note
 import kotlinx.android.synthetic.main.fragment_notebook.*
 
@@ -25,26 +24,29 @@ class NotebookFragment : NotebookHoldingFragment(),
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		
+		val key = notebookKey
+		
 		//top bar
 		b_back.setOnClickListener {
 			fragmentManager.popBackStack()
 		}
 		tv_title.text = notebook.name
 		sv_search.setOnSearchClickListener {
-			NotebookSearchFragment.newInstance(notebookKey).jump(fragmentManager)
+			NotebookSearchFragment.newInstance(key).jump(fragmentManager)
 			sv_search.isIconified = true
 		}
 		
 		//info bar
 		tv_bookInfo.text = getString(R.string.count_Notes_in_all, notebook.noteCount)
-		if (notebook is MutableNotebook) {
+		if (key.mutable) {
 			b_addNote.visibility = View.VISIBLE
 			b_addNote.setOnClickListener {
-				NoteEditFragment.newInstance(notebookKey, -1).jump(fragmentManager)
+				NoteEditFragment.newInstance(key, -1).jump(fragmentManager)
 			}
 			b_memoryPlan.visibility = View.VISIBLE
 			b_memoryPlan.setOnClickListener {
-				MemoryPlanFragment.newInstance(notebookKey).jump(fragmentManager)
+				MemoryPlanFragment.newInstance(key).jump(fragmentManager)
 			}
 		} else {
 			b_addNote.visibility = View.GONE
@@ -52,12 +54,10 @@ class NotebookFragment : NotebookHoldingFragment(),
 		}
 		
 		//review bar
-		if (notebook is MutableNotebook) {
-			b_review.setOnClickListener {
-				NoteReviewFragment.newInstance(notebookKey).jump(fragmentManager)
-			}
-			updateNeedReview()
+		b_review.setOnClickListener {
+			NoteReviewFragment.newInstance(key).jump(fragmentManager)
 		}
+		updateNeedReview()
 		
 		//list
 		notesBuffer.clear()
@@ -68,11 +68,11 @@ class NotebookFragment : NotebookHoldingFragment(),
 		}
 		lv_notes.setOnItemClickListener { _, _, position, _ ->
 			val note = notesBuffer[position]
-			NoteViewFragment.newInstance(notebookKey, note.id).jump(fragmentManager)
+			NoteViewFragment.newInstance(key, note.id).jump(fragmentManager)
 		}
 		lv_notes.setOnItemLongClickListener { _, _, position, _ ->
 			val note = notesBuffer[position]
-			NoteMenuDialog.newInstance(notebookKey, note.id, this@NotebookFragment).show(fragmentManager)
+			NoteMenuDialog.newInstance(key, note.id, this@NotebookFragment).show(fragmentManager)
 			true
 		}
 	}
@@ -88,13 +88,14 @@ class NotebookFragment : NotebookHoldingFragment(),
 	}
 	
 	private fun updateNeedReview() {
-		if (notebook is MutableNotebook) {
-			mutableNotebook.activateNotesByPlan()
-			val needReviewCount = notebook.countNeedReviewNotes(System.currentTimeMillis())
-			if (needReviewCount > 0) {
-				cl_review.visibility = View.VISIBLE
-				tv_review.text = getString(R.string.need_review, needReviewCount)
-			}
+		val key = notebookKey
+		if (key.mutable) mutableNotebook.activateNotesByPlan()
+		
+		val needReviewCount = notebook.countNeedReviewNotes(System.currentTimeMillis())
+		if (needReviewCount > 0) {
+			cl_review.visibility = View.VISIBLE
+			tv_review.text = getString(R.string.need_review, needReviewCount)
+			b_review.isEnabled = key.mutable
 		}
 	}
 	

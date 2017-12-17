@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.note.NotebookKey
-import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.base.isLearning
 import kotlinx.android.synthetic.main.fragment_note_view.*
 
@@ -42,7 +41,7 @@ class NoteViewFragment : NoteHoldingFragment() {
 			tv_info.visibility = View.GONE
 		}
 		
-		b_edit.isEnabled = notebook is MutableNotebook
+		b_edit.isEnabled = notebookKey.mutable
 		b_edit.setOnClickListener {
 			NoteEditFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
 		}

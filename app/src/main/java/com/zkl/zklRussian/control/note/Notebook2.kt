@@ -213,12 +213,13 @@ class Notebook2(val database: SQLiteDatabase) : Notebook {
 	}
 	
 	override fun countNeedReviewNotes(nowTime: Long): Int {
-		return database.select(BookTable.tableName,"count(*)")
-			.whereArgs("${BookTable.nextTime} < $nowTime")
+		return BookTable.run { database.select(tableName,"count(*)")
+			.whereArgs("$progress>-1 AND $nextTime < $nowTime ")
 			.exec {
 				moveToFirst()
 				getInt(0)
 			}
+		}
 	}
 	
 	override fun selectNeedReviewNotes(nowTime: Long, asc: Boolean, count: Int, offset: Int): List<Note> {

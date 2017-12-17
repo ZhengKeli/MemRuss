@@ -23,7 +23,7 @@ class NoteMenuDialog : NoteHoldingDialog(),NoteDeleteDialog.NoteDeletedListener 
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		
-		val itemPairs = arrayOf(
+		val itemPairs = if (notebookKey.mutable) arrayOf(
 			getString(R.string.view) to {
 				NoteViewFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
 			},
@@ -31,7 +31,12 @@ class NoteMenuDialog : NoteHoldingDialog(),NoteDeleteDialog.NoteDeletedListener 
 				NoteEditFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
 			},
 			getString(R.string.delete) to {
-				NoteDeleteDialog.newInstance(notebookKey, noteId,this).show(fragmentManager)
+				NoteDeleteDialog.newInstance(notebookKey, noteId, this).show(fragmentManager)
+			}
+		)
+		else arrayOf(
+			getString(R.string.view) to {
+				NoteViewFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
 			}
 		)
 		val itemNames = itemPairs.map { it.first }.toTypedArray<String>()
