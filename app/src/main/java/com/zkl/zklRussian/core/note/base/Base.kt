@@ -45,16 +45,16 @@ interface BaseNotebook<Note : BaseNote<*>> : Closeable {
 		override val size: Int = noteCount
 		override fun iterator(): Iterator<Note> = object : AbstractIterator<Note>() {
 			var index = 0
-			val bufferSize = 1024
-			var buffer = emptyList<Note>()
+			val sectionSize = 1024
+			var section = emptyList<Note>()
 			override fun computeNext() {
 				if (index < size) {
-					val indexInBuffer = index % bufferSize
+					val indexInBuffer = index % sectionSize
 					if (indexInBuffer == 0) {
-						val count = Math.min(bufferSize, size - index)
-						buffer = rawGetNotes(count, index)
+						val count = Math.min(sectionSize, size - index)
+						section = rawGetNotes(count, index)
 					}
-					setNext(buffer[indexInBuffer])
+					setNext(section[indexInBuffer])
 					index++
 				} else done()
 			}
