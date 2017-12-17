@@ -19,7 +19,7 @@ class SectionBuffer<T>(val sectionSize: Int = 128):AbstractList<T>() {
 		return bufferSize
 	}
 	@Synchronized fun getAndExpand(index: Int): T {
-		if (index >= bufferSize) expandBuffer()
+		while (index >= bufferSize) expandBuffer()
 		return get(index)
 	}
 	
