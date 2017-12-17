@@ -32,8 +32,7 @@ abstract class NotebookHoldingFragment : Fragment() {
 		}
 	
 	private var cachedNotebook: Notebook? = null
-	protected val notebook: Notebook
-		get() = cachedNotebook ?: loadNotebook()
+	protected val notebook: Notebook get() = cachedNotebook ?: loadNotebook()
 	protected val mutableNotebook: MutableNotebook get() = notebook as MutableNotebook
 	fun loadNotebook() = myApp.notebookShelf.restoreNotebook(notebookKey).also { cachedNotebook = it }
 	fun tryLoadNotebook(): Notebook? {

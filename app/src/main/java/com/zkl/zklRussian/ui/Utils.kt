@@ -10,44 +10,38 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
 import kotlin.concurrent.withLock
 
-abstract class SectionBufferList<T>
-constructor(val sectionSize: Int = 20, val sectionCount: Int = 10)
-	: AbstractList<T>() {
+abstract class SectionBuffer<T>
+constructor(val sectionSize: Int = 128, var paddingSize: Int = sectionSize / 4) {
 	
+	abstract fun onExpand(offset: Int, limit: Int): List<T>
+	
+	private var reachTail:Boolean = false
 	private val sections = LinkedList<List<T>>()
-	private var bufferFrom: Int = 0
-	private val bufferSize: Int
-		get() {
-			return if (sections.isEmpty()) 0
-			else sectionSize * (sections.size - 1) + sections.last.size
-		}
-	private val bufferToExclusive: Int get() = bufferFrom + bufferSize
-	@Synchronized override fun get(index: Int): T {
-		while (index < bufferFrom) extendAtHead()
-		while (index >= bufferToExclusive) appendAtTail()
-		return sections[(index - bufferFrom) / sectionSize][(index - bufferFrom) % sectionSize]
+	private val bufferSize:Int get() {
+		return if (!reachTail) sectionSize * sections.size
+		else sectionSize * (sections.size - 1) + sections.last.size
 	}
 	
-	@Synchronized private fun extendAtHead() {
-		bufferFrom -= sectionSize
-		sections.addFirst(getSection(bufferFrom))
-		if (sections.size > sectionCount) sections.removeLast()
+	val size:Int get() {
+		if(sections.isEmpty()) expand()
+		return bufferSize
 	}
-	
-	@Synchronized private fun appendAtTail() {
-		sections.addLast(getSection(bufferToExclusive))
-		if (sections.size > sectionCount) {
-			sections.removeFirst()
-			bufferFrom += sectionSize
-		}
+	@Synchronized operator fun get(index: Int): T {
+		if (bufferSize - index < paddingSize) expand()
+		return sections[index / sectionSize][index % sectionSize]
 	}
-	
-	@Synchronized
-	fun clearBuffer() {
+	@Synchronized private fun expand(): Boolean {
+		if (reachTail) return false
+		val append = onExpand(bufferSize, sectionSize)
+		if (append.size < sectionSize) reachTail = true
+		sections.addLast(append)
+		return true
+	}
+	@Synchronized fun clear() {
 		sections.clear()
+		reachTail = false
 	}
 	
-	abstract fun getSection(startFrom: Int): List<T>
 	
 }
 

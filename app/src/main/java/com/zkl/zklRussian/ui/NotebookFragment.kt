@@ -60,7 +60,7 @@ class NotebookFragment : NotebookHoldingFragment(),
 		}
 		
 		//list
-		notesBuffer.clearBuffer()
+		notesBuffer.clear()
 		lv_notes.adapter = object : NoteListAdapter() {
 			override fun getCount() = notesBuffer.size
 			override fun getItem(position: Int) = notesBuffer[position]
@@ -81,10 +81,10 @@ class NotebookFragment : NotebookHoldingFragment(),
 		updateList()
 	}
 	
-	private fun updateList(){
-		notesBuffer.clearBuffer()
-		(lv_notes.adapter as? BaseAdapter)?.notifyDataSetChanged()
+	private fun updateList() {
+		notesBuffer.clear()
 		updateNeedReview()
+		(lv_notes.adapter as? BaseAdapter)?.notifyDataSetChanged()
 	}
 	
 	private fun updateNeedReview() {
@@ -98,11 +98,11 @@ class NotebookFragment : NotebookHoldingFragment(),
 		}
 	}
 	
-	private val notesBuffer = object : SectionBufferList<Note>() {
-		override fun getSection(startFrom: Int): List<Note>
-			= notebook.selectLatestNotes(sectionSize, startFrom)
-		
-		override val size: Int get() = notebook.noteCount
+	private val notesBuffer = object : SectionBuffer<Note>() {
+		override fun onExpand(offset: Int, limit: Int): List<Note> {
+			lv_notes.post { (lv_notes.adapter as? BaseAdapter)?.notifyDataSetChanged() }
+			return notebook.selectLatestNotes(limit, offset)
+		}
 	}
 	
 	
