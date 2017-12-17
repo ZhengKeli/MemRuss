@@ -10,38 +10,44 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
 import kotlin.concurrent.withLock
 
-abstract class SectionBuffer<T>
-constructor(val sectionSize: Int = 128, var paddingSize: Int = sectionSize / 4) {
+class SectionBuffer<T>(val sectionSize: Int = 128, var paddingSize: Int = sectionSize / 4):AbstractList<T>() {
 	
-	abstract fun onExpand(offset: Int, limit: Int): List<T>
-	
-	private var reachTail:Boolean = false
-	private val sections = LinkedList<List<T>>()
-	private val bufferSize:Int get() {
-		return if (!reachTail) sectionSize * sections.size
-		else sectionSize * (sections.size - 1) + sections.last.size
-	}
-	
-	val size:Int get() {
-		if(sections.isEmpty()) expand()
+	override val size get() = bufferSize
+	override fun get(index: Int) = buffer[index / sectionSize][index % sectionSize]
+	@Synchronized fun getSizeAndExpand(): Int {
+		if (buffer.isEmpty()) expandBuffer()
 		return bufferSize
 	}
-	@Synchronized operator fun get(index: Int): T {
-		if (bufferSize - index < paddingSize) expand()
-		return sections[index / sectionSize][index % sectionSize]
-	}
-	@Synchronized private fun expand(): Boolean {
-		if (reachTail) return false
-		val append = onExpand(bufferSize, sectionSize)
-		if (append.size < sectionSize) reachTail = true
-		sections.addLast(append)
-		return true
-	}
-	@Synchronized fun clear() {
-		sections.clear()
-		reachTail = false
+	@Synchronized fun getAndExpand(index: Int): T {
+		if (bufferSize - index < paddingSize) expandBuffer()
+		return get(index)
 	}
 	
+	private var sourceSize: Int = 0
+	private var source: ((offset: Int, limit: Int) -> List<T>)? = null
+	fun setSource(sourceSize: Int, source: (offset: Int, limit: Int) -> List<T>) {
+		clearBuffer()
+		this.sourceSize = sourceSize
+		this.source = source
+	}
+	
+	private val buffer = LinkedList<List<T>>()
+	private var bufferSize:Int = 0
+	@Synchronized fun expandBuffer(): Boolean {
+		val requireSize = Math.min(sectionSize, sourceSize - bufferSize)
+		if (requireSize <= 0) return false
+		
+		val section = source?.invoke(bufferSize, requireSize) ?: return false
+		if (section.size < requireSize) throw RuntimeException("Section size not enough!")
+		
+		buffer.addLast(section)
+		bufferSize += requireSize
+		return true
+	}
+	@Synchronized fun clearBuffer() {
+		buffer.clear()
+		bufferSize = 0
+	}
 	
 }
 
