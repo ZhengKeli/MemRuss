@@ -42,7 +42,7 @@ class NotebookShelf(workingDir: File){
 		return Pair(key,notebook)
 	}
 	@Synchronized fun openMutableNotebook(file:File): Pair<NotebookKey, MutableNotebook>{
-		val key = NotebookKey(file.canonicalPath, false)
+		val key = NotebookKey(file.canonicalPath, true)
 		val opened = openedNotebooks[key]
 		if (opened is MutableNotebook) return Pair(key,opened)
 		val notebook = MainCompactor.loadMutableNotebookOrThrow(file)
@@ -89,5 +89,5 @@ class NotebookShelf(workingDir: File){
 	
 }
 
-data class NotebookBrief(val file: File, val bookName: String, val hasPlan: Boolean) : Serializable
+data class NotebookBrief(val file: File, val bookName: String, val hasPlan: Boolean, val mutable: Boolean) : Serializable
 data class NotebookKey internal constructor(val canonicalPath: String, val mutable: Boolean) : Serializable

@@ -47,7 +47,8 @@ class NotebookMergeFragment : Fragment(),
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		
-		mainBodies = myApp.notebookShelf.loadNotebookBriefs()
+		allNotebooks = myApp.notebookShelf.loadNotebookBriefs()
+		mainBodies = allNotebooks.filter { it.mutable }
 		
 		sp_mainBody.adapter = object : NotebookListAdapter() {
 			override fun getCount() = mainBodies.size
@@ -69,7 +70,7 @@ class NotebookMergeFragment : Fragment(),
 				val brief = (sp_mainBody.adapter as NotebookListAdapter).getItem(position)
 				this@NotebookMergeFragment.mainBody = brief
 				
-				attachments = mainBodies.filter { it != brief }
+				attachments = allNotebooks.filter { it != brief }
 				(sp_attachment.adapter as BaseAdapter).notifyDataSetChanged()
 				sv_content.fullScroll(ScrollView.FOCUS_DOWN)
 			}
@@ -115,6 +116,7 @@ class NotebookMergeFragment : Fragment(),
 		
 	}
 	
+	var allNotebooks: List<NotebookBrief> = emptyList()
 	var mainBodies: List<NotebookBrief> = emptyList()
 	var attachments: List<NotebookBrief> = emptyList()
 	var mainBody: NotebookBrief? = null

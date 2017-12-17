@@ -13,10 +13,6 @@ interface NotebookCompactor {
 	fun createNotebookOrThrow(file: File, notebookName: String): MutableNotebook
 		= createNotebook(file, notebookName) ?: throw NotCreatableException(file)
 	
-	fun loadBrief(file: File): NotebookBrief? = loadReadOnlyNotebook(file)?.use { notebook ->
-		NotebookBrief(file, notebook.name, notebook.isLearning)
-	}
-	
 	fun loadReadOnlyNotebook(file: File): Notebook? = null
 	
 	fun loadReadOnlyNotebookOrThrow(file: File): Notebook
@@ -33,6 +29,11 @@ interface NotebookCompactor {
 	fun loadNotebookOrThrow(file: File): Notebook
 		= loadNotebook(file) ?: throw FileNotCompatibleException(file)
 	
+	fun loadBrief(file: File): NotebookBrief?
+		= loadNotebook(file)?.use { notebook ->
+		NotebookBrief(file, notebook.name, notebook.isLearning, notebook is MutableNotebook)
+	}
+	
 	fun deleteNotebook(file: File): Boolean = false
 	
 }
@@ -42,6 +43,7 @@ class NotCreatableException(file: File)
 
 class FileNotCompatibleException(file: File)
 	: Exception("Can not load the file ${file.path} as a Notebook.")
+
 
 
 //versioned map
@@ -75,6 +77,8 @@ object MainCompactor : NotebookCompactor {
 		.map { it.deleteNotebook(file) }
 		.any { it }
 }
+
+
 
 //versioned class
 

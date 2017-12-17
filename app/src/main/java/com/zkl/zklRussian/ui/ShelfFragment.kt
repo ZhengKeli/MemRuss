@@ -19,7 +19,7 @@ class ShelfFragment : Fragment(),
 	NotebookMenuDialog.NotebookListChangedListener,
 	NotebookCreationDialog.NotebookCreatedListener,
 	NotebookImportDialog.NotebookImportedListener,
-NotebookMergeFragment.NotebookMergedListener{
+	NotebookMergeFragment.NotebookMergedListener {
 	
 	companion object {
 		private val arg_autoJump: String = "autoJump"

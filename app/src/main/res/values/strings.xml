@@ -86,5 +86,6 @@
 	<string name="adding_note">Adding Note:</string>
 	<string name="modifying_note">Modifying Note:</string>
 	<string name="conflict_note">Conflict Note</string>
+	<string name="read_only">(read only)</string>
 
 </resources>

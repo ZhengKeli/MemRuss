@@ -19,7 +19,12 @@ class NotebookItemView(context: Context) : LinearLayout(context) {
 	var notebookBrief: NotebookBrief? = null
 		set(value) {
 			field = value
-			tv_notebookName.text = value?.bookName ?: ""
+			var text = ""
+			if (value != null) {
+				text += value.bookName
+				if (!value.mutable) text += context.getString(R.string.read_only)
+			}
+			tv_notebookName.text = text
 		}
 	
 }

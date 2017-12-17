@@ -80,5 +80,6 @@
 	<string name="adding_note">正在添加的词条：</string>
 	<string name="modifying_note">正在修改的词条：</string>
 	<string name="conflict_note">冲突的词条：</string>
+	<string name="read_only">（只读）</string>
 
 </resources>
