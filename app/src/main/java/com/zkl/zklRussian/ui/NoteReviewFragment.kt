@@ -25,12 +25,10 @@ class NoteReviewFragment : NoteHoldingFragment() {
 		
 		noteContentReviewHolder = null
 		if (tryLoadNote() == null) jumpToNextNote()
-		else {
-			tv_title.text = getString(R.string.Note_review_progress, note.memoryState.progress.toInt())
-			b_view.setOnClickListener {
-				NoteViewFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
-			}
-			updateNoteContent()
+		else updateNoteContent()
+		
+		b_view.setOnClickListener {
+			NoteViewFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
 		}
 		
 	}
@@ -62,6 +60,8 @@ class NoteReviewFragment : NoteHoldingFragment() {
 	private var noteContentReviewHolder: NoteContentReviewHolder? = null
 	
 	private fun updateNoteContent() {
+		tv_title.text = getString(R.string.Note_review_progress, note.memoryState.progress.toInt())
+		
 		val noteContent = note.content
 		val oldHolder = noteContentReviewHolder
 		if (oldHolder?.isCompatible(noteContent) == true) {

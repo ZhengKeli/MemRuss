@@ -31,7 +31,7 @@ interface MemoryNotebook<Note : MemoryNote<*>> : BaseNotebook<Note> {
 	 * 根据需要复习的时间检索词条
 	 * （只有处于正在复习状态的词条会被检索出来）
 	 */
-	fun selectNeedReviewNotes(nowTime: Long, asc: Boolean = false, count: Int = 1, offset: Int = 0): List<Note>
+	fun selectNeedReviewNotes(nowTime: Long, asc: Boolean = true, count: Int = 1, offset: Int = 0): List<Note>
 	
 	/**
 	 * 总负荷

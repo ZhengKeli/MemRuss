@@ -100,7 +100,7 @@ abstract class PendingWorker<in Request : Any, Result> {
 	
 }
 
-class AutoIndexMap<T>{
+class AutoIndexMap<T> {
 	private var nextKey = AtomicInteger(0)
 	private val sparseArray = SparseArray<T>()
 	
