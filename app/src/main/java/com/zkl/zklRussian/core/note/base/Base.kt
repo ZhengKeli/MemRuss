@@ -36,7 +36,7 @@ interface BaseNotebook<Note : BaseNote<*>> : Closeable {
 	/**
 	 * 不要求任何顺序地获取词条
 	 */
-	fun rawGetNotes(count: Int = 100, offset: Int = 0): List<Note>
+	fun rawGetNotes(count: Int = 128, offset: Int = 0): List<Note>
 	
 	/**
 	 * 获取所有词条
@@ -45,21 +45,18 @@ interface BaseNotebook<Note : BaseNote<*>> : Closeable {
 		override val size: Int = noteCount
 		override fun iterator(): Iterator<Note> = object : AbstractIterator<Note>() {
 			var index = 0
-			var buffer = emptyList<Note>()
+			val sectionSize = 1024
+			var section = emptyList<Note>()
 			override fun computeNext() {
-				if (index < buffer.size) {
-					setNext(buffer[index])
-					index++
-				} else {
-					buffer = rawGetNotes(1024, index)
-					if (buffer.isNotEmpty()) {
-						setNext(buffer[0])
-						index = 1
-					} else {
-						done()
-						index = 0
+				if (index < size) {
+					val indexInBuffer = index % sectionSize
+					if (indexInBuffer == 0) {
+						val count = Math.min(sectionSize, size - index)
+						section = rawGetNotes(count, index)
 					}
-				}
+					setNext(section[indexInBuffer])
+					index++
+				} else done()
 			}
 		}
 	}
