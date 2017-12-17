@@ -83,7 +83,7 @@ class NotebookFragment : NotebookHoldingFragment(),
 		updateNeedReview()
 	}
 	
-	private val notesBuffer = SectionBuffer<Note>()
+	private val notesBuffer = AutoExpandBuffer<Note>()
 	private fun updateList() {
 		notesBuffer.setSource(notebook.noteCount) { offset, limit ->
 			lv_notes.post {

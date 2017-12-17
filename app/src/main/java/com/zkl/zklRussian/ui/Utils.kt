@@ -10,16 +10,16 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
 import kotlin.concurrent.withLock
 
-class SectionBuffer<T>(val sectionSize: Int = 128):AbstractList<T>() {
+class AutoExpandBuffer<T>(val sectionSize: Int = 128, val paddingSize: Int = sectionSize / 4) : AbstractList<T>() {
 	
 	override val size get() = bufferSize
 	override fun get(index: Int) = buffer[index / sectionSize][index % sectionSize]
 	@Synchronized fun getSizeAndExpand(): Int {
-		if (bufferSize == 0 && sourceSize > 0) expandBuffer()
+		if (bufferSize < paddingSize) expandBuffer()
 		return bufferSize
 	}
 	@Synchronized fun getAndExpand(index: Int): T {
-		while (index >= bufferSize) expandBuffer()
+		while (bufferSize <= index + paddingSize) expandBuffer()
 		return get(index)
 	}
 	
