@@ -9,7 +9,7 @@
 	android:layout_marginRight="8dp"
 	android:layout_marginStart="8dp"
 	android:animateLayoutChanges="true"
-	tools:context="com.zkl.zklRussian.ui.NoteViewFragment">
+	tools:context="com.zkl.memruss.ui.NoteViewFragment">
 	
 	
 	<TextView

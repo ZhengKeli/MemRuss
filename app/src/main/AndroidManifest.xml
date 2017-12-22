@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-	package="com.zkl.zklRussian"
+	package="com.zkl.memruss"
 	xmlns:android="http://schemas.android.com/apk/res/android">
-	<!--todo 改名-->
 	
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	
 	<application
-		android:name="com.zkl.zklRussian.control.MyApplication"
+		android:name="com.zkl.memruss.control.MyApplication"
 		android:allowBackup="true"
 		android:fullBackupContent="true"
 		android:label="@string/ZKLRussian"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
 		<activity
-			android:name="com.zkl.zklRussian.ui.MainActivity"
+			android:name="com.zkl.memruss.ui.MainActivity"
 			android:windowSoftInputMode="adjustResize">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
