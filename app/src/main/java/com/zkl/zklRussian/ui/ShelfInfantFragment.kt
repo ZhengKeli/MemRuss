@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.zkl.zklRussian.R
+import com.zkl.zklRussian.control.myApp
+import com.zkl.zklRussian.control.note.NotebookCompactor
 import com.zkl.zklRussian.control.note.NotebookKey
 import kotlinx.android.synthetic.main.fragment_shelf_infant.*
+import org.jetbrains.anko.toast
 
 class ShelfInfantFragment : Fragment(),
 	NotebookCreationDialog.NotebookCreatedListener,
-	NotebookImportDialog.NotebookImportedListener{
+	NotebookImportDialog.NotebookImportedListener,
+	NotebookUpgradeDialog.NotebookUpgradedListener {
 	
 	companion object {
 		fun newInstance(): ShelfInfantFragment = ShelfInfantFragment::class.java.newInstance()
@@ -31,13 +35,25 @@ class ShelfInfantFragment : Fragment(),
 	}
 	
 	override fun onNotebookCreated(notebookKey: NotebookKey) {
-		fragmentManager.popBackStack()
+		ShelfFragment.newInstance(false).jump(fragmentManager, false)
 		NotebookFragment.newInstance(notebookKey).jump(fragmentManager)
 	}
 	
 	override fun onNotebookImported(notebookKey: NotebookKey) {
-		fragmentManager.popBackStack()
+		val notebook = myApp.notebookShelf.restoreNotebook(notebookKey)
+		if (notebook.version < NotebookCompactor.LATEST_VERSION) {
+			NotebookUpgradeDialog.newInstance(notebookKey, this).show(fragmentManager)
+		} else {
+			ShelfFragment.newInstance(false).jump(fragmentManager, false)
+			NotebookFragment.newInstance(notebookKey).jump(fragmentManager)
+		}
+		activity.toast(R.string.import_succeed)
+	}
+	
+	override fun onNotebookUpgraded(notebookKey: NotebookKey, upgraded: Boolean) {
+		ShelfFragment.newInstance(false).jump(fragmentManager, false)
 		NotebookFragment.newInstance(notebookKey).jump(fragmentManager)
+		if(upgraded) activity.toast(R.string.upgrade_succeed)
 	}
 	
 }

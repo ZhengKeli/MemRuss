@@ -2,17 +2,19 @@ package com.zkl.zklRussian.ui
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.view.View
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
-import com.zkl.zklRussian.control.note.NotebookBrief
 import com.zkl.zklRussian.control.note.NotebookKey
 import com.zkl.zklRussian.core.note.ConflictSolution
 import com.zkl.zklRussian.core.note.InstantNote
+import com.zkl.zklRussian.core.note.MutableNotebook
 import com.zkl.zklRussian.core.note.base.NoteMemoryState
+import com.zkl.zklRussian.core.note.base.NotebookMemoryStatus
 import com.zkl.zklRussian.core.note.base.isLearning
 import com.zkl.zklRussian.core.note.rawAddNote
 import kotlinx.android.synthetic.main.dialog_notebook_merging.view.*
@@ -26,8 +28,8 @@ import java.util.concurrent.ArrayBlockingQueue
 class NotebookMergingDialog : DialogFragment(),
 	NoteConflictDialog.ConflictSolvedListener {
 	
-	data class MergeRequest(val mainBody: NotebookBrief, val attachment: NotebookBrief,
-	                        val keepPlan: Boolean, val deleteOld: Boolean) : Serializable
+	data class MergeRequest(val mainBodyKey: NotebookKey, val attachmentKey: NotebookKey,
+	                        val keepProgress: Boolean, val deleteOld: Boolean) : Serializable
 	
 	interface MergeCompletedListener{
 		fun onMergeCompleted(notebookKey: NotebookKey)
@@ -64,15 +66,15 @@ class NotebookMergingDialog : DialogFragment(),
 	private fun doMerging(onProgress: ((progress: Int, max: Int) -> Unit)) {
 		launch(CommonPool) {
 			val mergeRequest = arguments[arg_mergeRequest] as MergeRequest
-			val (key, mainBody) = myApp.notebookShelf.openMutableNotebook(mergeRequest.mainBody.file)
-			val (_, attachment) = myApp.notebookShelf.openReadOnlyNotebook(mergeRequest.attachment.file)
+			val mainBody = myApp.notebookShelf.restoreNotebook(mergeRequest.mainBodyKey) as MutableNotebook
+			val attachment = myApp.notebookShelf.restoreNotebook(mergeRequest.attachmentKey)
 			val notesToAdd = attachment.rawGetAllNotes()
-			val resetMemoryState = !mergeRequest.keepPlan
 			
+			//notes
 			onProgress(0, notesToAdd.size)
 			notesToAdd.forEachIndexed { index, note ->
 				val filteredNote =
-					if (!resetMemoryState) note
+					if (mergeRequest.keepProgress) note
 					else InstantNote(note,
 						memoryState = NoteMemoryState.infantState(),
 						memoryUpdateTime = System.currentTimeMillis())
@@ -80,8 +82,8 @@ class NotebookMergingDialog : DialogFragment(),
 					val situation = NoteConflictDialog.ConflictSituation(
 						true, conflictNoteId,
 						newNote.content, newNote.isLearning)
-					launch(UI){
-						NoteConflictDialog.newInstance(key, situation, false,
+					launch(UI) {
+						NoteConflictDialog.newInstance(mergeRequest.mainBodyKey, situation, false,
 							this@NotebookMergingDialog).show(fragmentManager)
 					}
 					conflictSolutionChan.take()
@@ -89,20 +91,30 @@ class NotebookMergingDialog : DialogFragment(),
 				onProgress(index + 1, notesToAdd.size)
 			}
 			
+			//plan
+			if (mergeRequest.keepProgress && attachment.memoryState.status != NotebookMemoryStatus.INFANT) {
+				mainBody.memoryPlan = attachment.memoryPlan
+				mainBody.memoryState = attachment.memoryState
+			}
+			
+			//delete
 			if (mergeRequest.deleteOld) {
 				attachment.close()
-				myApp.notebookShelf.deleteNotebook(mergeRequest.attachment.file)
+				myApp.notebookShelf.deleteNotebook(mergeRequest.attachmentKey)
 			}
 			
 			dismiss()
-			(targetFragment as? MergeCompletedListener)?.onMergeCompleted(key)
-			
 		}
 	}
 	
 	private val conflictSolutionChan = ArrayBlockingQueue<ConflictSolution>(1)
 	override fun onConflictSolved(solution: ConflictSolution?) {
 		conflictSolutionChan.put(solution ?: ConflictSolution(false, false))
+	}
+	
+	override fun onDismiss(dialog: DialogInterface?) {
+		super.onDismiss(dialog)
+		(targetFragment as? MergeCompletedListener)?.onMergeCompleted((arguments[arg_mergeRequest] as MergeRequest).mainBodyKey)
 	}
 	
 }

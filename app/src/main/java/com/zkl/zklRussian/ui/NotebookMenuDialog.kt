@@ -10,16 +10,12 @@ import com.zkl.zklRussian.control.note.NotebookBrief
 import org.jetbrains.anko.bundleOf
 
 class NotebookMenuDialog : DialogFragment(),
-	NotebookDeleteDialog.NotebookDeletedListener {
-	
-	interface NotebookListChangedListener {
-		fun onNotebookListChanged()
-	}
+	NotebookDeleteDialog.NotebookDeletedListener{
 	
 	companion object {
 		val arg_notebookBrief = "notebookBrief"
 		fun <T>newInstance(notebookBrief: NotebookBrief, changedListener: T?): NotebookMenuDialog
-			where T : NotebookListChangedListener, T : Fragment
+			where T : NotebookDeleteDialog.NotebookDeletedListener, T : Fragment
 			= NotebookMenuDialog::class.java.newInstance().apply {
 			arguments += bundleOf(arg_notebookBrief to notebookBrief)
 			setTargetFragment(changedListener, 0)
@@ -35,7 +31,7 @@ class NotebookMenuDialog : DialogFragment(),
 				NotebookExportDialog.newInstance(notebookBrief).show(fragmentManager)
 			},
 			getString(R.string.delete_Notebook) to {
-				NotebookDeleteDialog.newInstance(notebookBrief,this).show(fragmentManager)
+				NotebookDeleteDialog.newInstance(notebookBrief, this).show(fragmentManager)
 			}
 		)
 		val itemNames = itemPairs.map { it.first }.toTypedArray<String>()
@@ -49,7 +45,7 @@ class NotebookMenuDialog : DialogFragment(),
 	}
 	
 	override fun onNotebookDeleted() {
-		(targetFragment as? NotebookListChangedListener)?.onNotebookListChanged()
+		(targetFragment as? NotebookDeleteDialog.NotebookDeletedListener)?.onNotebookDeleted()
 	}
 	
 }

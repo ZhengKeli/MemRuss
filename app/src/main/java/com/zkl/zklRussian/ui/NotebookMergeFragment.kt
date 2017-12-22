@@ -109,8 +109,10 @@ class NotebookMergeFragment : Fragment(),
 		
 		b_merge.setOnClickListener {
 			b_merge.isEnabled = false
+			val (mainBodyKey,_) = myApp.notebookShelf.openMutableNotebook(mainBody!!.file)
+			val (attachmentKey,_) = myApp.notebookShelf.openReadOnlyNotebook(attachment!!.file)
 			val request = NotebookMergingDialog.MergeRequest(
-				mainBody!!, attachment!!, cb_keep_progress.isChecked, cb_delete_old.isChecked)
+				mainBodyKey, attachmentKey, cb_keep_progress.isChecked, cb_delete_old.isChecked)
 			NotebookMergingDialog.newInstance(request, this).show(fragmentManager)
 		}
 		

@@ -10,16 +10,19 @@ import android.widget.BaseAdapter
 import com.zkl.zklRussian.R
 import com.zkl.zklRussian.control.myApp
 import com.zkl.zklRussian.control.note.NotebookBrief
+import com.zkl.zklRussian.control.note.NotebookCompactor
 import com.zkl.zklRussian.control.note.NotebookKey
 import kotlinx.android.synthetic.main.fragment_shelf.*
 import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.support.v4.toast
+import org.jetbrains.anko.toast
 
 class ShelfFragment : Fragment(),
-	NotebookMenuDialog.NotebookListChangedListener,
 	NotebookCreationDialog.NotebookCreatedListener,
+	NotebookDeleteDialog.NotebookDeletedListener,
 	NotebookImportDialog.NotebookImportedListener,
-	NotebookMergeFragment.NotebookMergedListener {
+	NotebookMergeFragment.NotebookMergedListener,
+	NotebookUpgradeDialog.NotebookUpgradedListener {
 	
 	companion object {
 		private val arg_autoJump: String = "autoJump"
@@ -43,7 +46,7 @@ class ShelfFragment : Fragment(),
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		briefs = myApp.notebookShelf.loadNotebookBriefs()
-		if (briefs.isEmpty()) ShelfInfantFragment.newInstance().jump(fragmentManager)
+		if (briefs.isEmpty()) ShelfInfantFragment.newInstance().jump(fragmentManager, false)
 		else if (autoJump) {
 			val (key, _) = myApp.notebookShelf.openNotebook(briefs.first().file)
 			NotebookFragment.newInstance(key).jump(fragmentManager)
@@ -78,9 +81,9 @@ class ShelfFragment : Fragment(),
 		}
 	}
 	
-	override fun onNotebookListChanged() {
+	override fun onNotebookDeleted(){
 		briefs = myApp.notebookShelf.loadNotebookBriefs()
-		if (briefs.isEmpty()) ShelfInfantFragment().jump(fragmentManager)
+		if (briefs.isEmpty()) ShelfInfantFragment.newInstance().jump(fragmentManager, false)
 		(lv_notebooks.adapter as? BaseAdapter)?.notifyDataSetChanged()
 	}
 	
@@ -89,12 +92,24 @@ class ShelfFragment : Fragment(),
 	}
 	
 	override fun onNotebookImported(notebookKey: NotebookKey) {
-		NotebookFragment.newInstance(notebookKey).jump(fragmentManager)
+		val notebook = myApp.notebookShelf.restoreNotebook(notebookKey)
+		if (notebook.version < NotebookCompactor.LATEST_VERSION) {
+			NotebookUpgradeDialog.newInstance(notebookKey, this).show(fragmentManager)
+		} else {
+			NotebookFragment.newInstance(notebookKey).jump(fragmentManager)
+		}
+		activity.toast(R.string.import_succeed)
 	}
 	
 	override fun onNotebookMerged(notebookKey: NotebookKey) {
 		NotebookFragment.newInstance(notebookKey).jump(fragmentManager)
 	}
+	
+	override fun onNotebookUpgraded(notebookKey: NotebookKey, upgraded: Boolean) {
+		NotebookFragment.newInstance(notebookKey).jump(fragmentManager)
+		if(upgraded) activity.toast(R.string.upgrade_succeed)
+	}
+	
 	
 	//summaries
 	var briefs: List<NotebookBrief> = emptyList()

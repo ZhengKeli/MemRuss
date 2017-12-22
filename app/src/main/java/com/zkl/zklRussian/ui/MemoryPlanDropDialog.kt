@@ -25,7 +25,7 @@ class MemoryPlanDropDialog : NotebookHoldingDialog() {
 		return AlertDialog.Builder(context)
 			.setTitle(R.string.drop_memory_plan_ConfirmTitle)
 			.setMessage(R.string.drop_memory_plan_ConfirmMessage)
-			.setNegativeButton(android.R.string.cancel, null)
+			.setNegativeButton(R.string.cancel, null)
 			.setPositiveButton(R.string.ok) { _, _ ->
 				mutableNotebook.memoryPlan = null
 				(targetFragment as? MemoryPlanDroppedListener)?.onMemoryPlanDropped()

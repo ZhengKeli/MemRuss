@@ -34,7 +34,7 @@ class NotebookCreationDialog : DialogFragment() {
 				val (key, _) = myApp.notebookShelf.createNotebook(view.et_newBookName.text.toString())
 				(targetFragment as? NotebookCreatedListener)?.onNotebookCreated(key)
 			}
-			.setNegativeButton(android.R.string.cancel, null)
+			.setNegativeButton(R.string.cancel, null)
 			.create()
 	}
 	

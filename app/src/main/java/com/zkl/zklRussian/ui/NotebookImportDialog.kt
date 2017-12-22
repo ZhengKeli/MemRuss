@@ -35,8 +35,13 @@ class NotebookImportDialog : DialogFragment() {
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		val view = View.inflate(context, R.layout.dialog_notebook_import, null)
 		
-		val defaultDir = Environment.getExternalStorageDirectory().resolve("ZKLRussian")
-		view.et_path.setText(defaultDir.path)
+		view.et_path.run {
+			val defaultDir = Environment.getExternalStorageDirectory().resolve("ZKLRussian")
+			val pathText = defaultDir.path+"/"
+			setText(pathText)
+			setSelection(text.length)
+			postDelayed({ showSoftInput() },500)
+		}
 		
 		return AlertDialog.Builder(context)
 			.setTitle(R.string.import_Notebook)
@@ -46,19 +51,22 @@ class NotebookImportDialog : DialogFragment() {
 				val listener = targetFragment as? NotebookImportedListener
 				val bookShelf = myApp.notebookShelf
 				activity.requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE,true) { granted, _ ->
-					if (!granted) activity.toast(R.string.no_sdcard_read_permission)
-					else launch(CommonPool) {
-						try {
+					if (!granted) {
+						activity.toast(R.string.no_sdcard_read_permission)
+						return@requestPermission
+					}
+					launch(CommonPool) {
+						val (key, _) = try {
 							val file = File(view.et_path.text.toString())
-							val (key, _) = bookShelf.importNotebook(file)
-							launch(UI) {
-								listener?.onNotebookImported(key)
-								activity.toast(R.string.import_succeed)
-							}
+							bookShelf.importNotebook(file)
 						} catch (e: Exception) {
 							e.printStackTrace()
+							null
+						} ?: kotlin.run {
 							launch(UI) { activity.toast(R.string.import_failed) }
+							return@launch
 						}
+						launch(UI) { listener?.onNotebookImported(key) }
 					}
 				}
 			}

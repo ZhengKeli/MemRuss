@@ -8,6 +8,10 @@ import java.io.File
 
 interface NotebookCompactor {
 	
+	companion object {
+		val LATEST_VERSION get() = MutableNotebook3.VERSION
+	}
+	
 	fun createNotebook(file: File, notebookName: String): MutableNotebook? = null
 	
 	fun createNotebookOrThrow(file: File, notebookName: String): MutableNotebook

@@ -81,5 +81,8 @@
 	<string name="modifying_note">正在修改的词条：</string>
 	<string name="conflict_note">冲突的词条：</string>
 	<string name="read_only">（只读）</string>
+	<string name="notebook_upgrade_ConfirmTitle">升级确认</string>
+	<string name="notebook_upgrade_ConfirmMessage">这个单词本文件是旧版本，其功能可能受限。你想将其导入到最新版本吗？</string>
+	<string name="upgrade_succeed">升级成功！</string>
 
 </resources>

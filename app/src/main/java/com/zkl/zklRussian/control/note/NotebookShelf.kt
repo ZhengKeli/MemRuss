@@ -62,8 +62,18 @@ class NotebookShelf(workingDir: File){
 			else openReadOnlyNotebook(File(key.canonicalPath)).second
 	}
 	@Synchronized fun deleteNotebook(file: File): Boolean {
-		//todo remove the key
+		NotebookKey(file.canonicalPath, true).let {
+			if(openedNotebooks[it]!=null) return deleteNotebook(it)
+		}
+		NotebookKey(file.canonicalPath, false).let {
+			if(openedNotebooks[it]!=null) return deleteNotebook(it)
+		}
 		return MainCompactor.deleteNotebook(file)
+	}
+	@Synchronized fun deleteNotebook(key: NotebookKey): Boolean {
+		openedNotebooks[key]?.close()
+		openedNotebooks.remove(key)
+		return MainCompactor.deleteNotebook(File(key.canonicalPath))
 	}
 	@Synchronized fun importNotebook(file: File): Pair<NotebookKey, Notebook>{
 		val brief = loadNotebookBrief(file)?: throw FileNotCompatibleException(file)
@@ -90,4 +100,4 @@ class NotebookShelf(workingDir: File){
 }
 
 data class NotebookBrief(val file: File, val bookName: String, val hasPlan: Boolean, val mutable: Boolean) : Serializable
-data class NotebookKey internal constructor(val canonicalPath: String, val mutable: Boolean) : Serializable
+data class NotebookKey(val canonicalPath: String, val mutable: Boolean) : Serializable

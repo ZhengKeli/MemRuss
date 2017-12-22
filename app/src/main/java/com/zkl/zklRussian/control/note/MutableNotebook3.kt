@@ -121,7 +121,8 @@ class MutableNotebook3(val database: SQLiteDatabase) : MutableNotebook {
 			SearchTagTable.run {
 				createTable(tableName, true,
 					noteId to INTEGER,
-					searchTag to TEXT + PRIMARY_KEY)
+					searchTag to TEXT)
+				createIndex("${searchTag}Index", tableName, false, true, searchTag)
 			}
 		}
 	}

@@ -31,7 +31,7 @@ class NotebookDeleteDialog : DialogFragment() {
 		return AlertDialog.Builder(context)
 			.setTitle(R.string.notebook_deletion_ConfirmTitle)
 			.setMessage(R.string.notebook_deletion_ConfirmMessage)
-			.setNegativeButton(android.R.string.cancel, null)
+			.setNegativeButton(R.string.cancel, null)
 			.setPositiveButton(R.string.ok) { _, _ ->
 				val notebookBrief = arguments.getSerializable(arg_notebookBrief) as NotebookBrief
 				if (myApp.notebookShelf.deleteNotebook(notebookBrief.file))
