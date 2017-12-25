@@ -5,10 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
-	android:paddingEnd="8dp"
-	android:paddingLeft="8dp"
-	android:paddingRight="8dp"
-	android:paddingStart="8dp">
+	>
 	
 	
 	<android.support.constraint.ConstraintLayout
@@ -16,7 +13,12 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="0"
-		android:gravity="center_vertical|end">
+		android:background="?attr/colorPrimary"
+		android:gravity="center_vertical|end"
+		android:paddingEnd="8dp"
+		android:paddingLeft="8dp"
+		android:paddingRight="8dp"
+		android:paddingStart="8dp">
 		
 		<TextView
 			android:id="@+id/tv_title"
@@ -49,13 +51,21 @@
 		android:layout_height="wrap_content"
 		android:layout_weight="0"
 		android:padding="8dp"
+		android:paddingEnd="8dp"
+		android:paddingLeft="8dp"
+		android:paddingRight="8dp"
+		android:paddingStart="8dp"
 		tools:text="@string/Note_view_info"/>
 	
 	<FrameLayout
 		android:id="@+id/fl_noteContent"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:layout_weight="1">
+		android:layout_weight="1"
+		android:paddingEnd="8dp"
+		android:paddingLeft="8dp"
+		android:paddingRight="8dp"
+		android:paddingStart="8dp">
 	
 	</FrameLayout>
 
