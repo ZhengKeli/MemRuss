@@ -1,6 +1,7 @@
 package com.zkl.memruss.control.note
 
 import android.database.sqlite.SQLiteDatabase
+import android.os.Environment
 import com.zkl.memruss.core.note.MutableNotebook
 import com.zkl.memruss.core.note.Notebook
 import com.zkl.memruss.core.note.base.isLearning
@@ -10,6 +11,7 @@ interface NotebookCompactor {
 	
 	companion object {
 		val LATEST_VERSION get() = MutableNotebook3.VERSION
+		val defaultExportDir get() = Environment.getExternalStorageDirectory().resolve("ZKLRussian")
 	}
 	
 	fun createNotebook(file: File, notebookName: String): MutableNotebook? = null
@@ -88,6 +90,10 @@ object MainCompactor : NotebookCompactor {
 
 class MutableNotebook3Compactor : NotebookCompactor {
 	
+	companion object {
+		val fileExtension = ".mnb"
+	}
+	
 	override fun createNotebook(file: File, notebookName: String): MutableNotebook? {
 		val database = SQLiteDatabase.openOrCreateDatabase(file, null)
 		val notebook = MutableNotebook3(database)
@@ -120,6 +126,11 @@ class MutableNotebook3Compactor : NotebookCompactor {
 }
 
 class Notebook2Compactor : NotebookCompactor {
+	
+	companion object {
+		val fileExtension = ".zrb"
+	}
+	
 	override fun loadReadOnlyNotebook(file: File): Notebook? {
 		val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
 		val notebook = Notebook2(database)

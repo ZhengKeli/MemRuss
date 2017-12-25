@@ -4,12 +4,13 @@ import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.os.Environment
 import android.support.v4.app.DialogFragment
 import android.view.View
 import com.zkl.memruss.R
 import com.zkl.memruss.control.myApp
+import com.zkl.memruss.control.note.MutableNotebook3Compactor
 import com.zkl.memruss.control.note.NotebookBrief
+import com.zkl.memruss.control.note.NotebookCompactor
 import kotlinx.android.synthetic.main.dialog_notebook_export.view.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -34,9 +35,9 @@ class NotebookExportDialog : DialogFragment() {
 		val view = View.inflate(context, R.layout.dialog_notebook_export, null)
 		
 		val brief = arguments[arg_notebookBrief] as NotebookBrief
-		val format = SimpleDateFormat("YYYY-MM-dd", Locale.getDefault())
-		val targetFileName = brief.bookName + "-" + format.format(Date()) + ".zrb"
-		val targetFile = Environment.getExternalStorageDirectory().resolve("ZKLRussian").resolve(targetFileName)
+		val format = SimpleDateFormat("MMdd", Locale.getDefault())
+		val targetFileName = brief.bookName + "-" + format.format(Date()) + MutableNotebook3Compactor.fileExtension
+		val targetFile = NotebookCompactor.defaultExportDir.resolve(targetFileName)
 		view.et_path.setText(targetFile.path)
 		
 		return AlertDialog.Builder(context)

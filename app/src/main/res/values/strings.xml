@@ -93,6 +93,8 @@
 	<string name="upgrade_succeed">Upgrade succeed!</string>
 	<string name="night_mode_off">Night Mode off</string>
 	<string name="night_mode_on">Night Mode on</string>
+	<string name="question_should_not_be_blank">The question should not be blank!</string>
+	<string name="answer_should_not_be_blank">The answer should not be blank!</string>
 
 
 </resources>

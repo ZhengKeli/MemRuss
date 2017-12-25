@@ -10,6 +10,7 @@ import com.zkl.memruss.core.note.NoteContent
 import com.zkl.memruss.core.note.QuestionContent
 import com.zkl.memruss.core.note.base.NoteTypeNotSupportedException
 import kotlinx.android.synthetic.main.cv_note_content_edit_question.view.*
+import org.jetbrains.anko.toast
 
 interface NoteContentEditHolder {
 	val view: View
@@ -17,6 +18,8 @@ interface NoteContentEditHolder {
 	
 	var noteContent: NoteContent?
 	fun isCompatible(noteContent: NoteContent): Boolean
+	
+	fun checkLegalAndAlert(): Boolean
 	fun applyChange(): NoteContent
 }
 
@@ -68,6 +71,20 @@ class QuestionContentEditHolder(context: Context, container: ViewGroup? = null) 
 	
 	override fun isCompatible(noteContent: NoteContent)
 		= noteContent is QuestionContent
+	
+	override fun checkLegalAndAlert(): Boolean {
+		view.run {
+			if (et_question.text.isBlank()) {
+				context.toast(R.string.question_should_not_be_blank)
+				return false
+			}
+			if (et_answer.text.isBlank()) {
+				context.toast(R.string.answer_should_not_be_blank)
+				return false
+			}
+			return true
+		}
+	}
 	
 	override fun applyChange()
 		= view.run { QuestionContent(et_question.text.toString(), et_answer.text.toString()) }.also { questionContent = it }

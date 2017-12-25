@@ -43,13 +43,15 @@ class NoteEditFragment : NoteHoldingFragment(),
 		cb_resetProgress.visibility = View.GONE
 		
 		b_ok.setOnClickListener {
-			val content = noteContentEditHolder!!.applyChange()
-			launch(CommonPool){
+			val holder = noteContentEditHolder ?: return@setOnClickListener
+			if (!holder.checkLegalAndAlert()) return@setOnClickListener
+			val content = holder.applyChange()
+			launch(CommonPool) {
 				var committed = true
 				mutableNotebook.addNote(content) { conflictNoteId, newContent ->
 					val situation = NoteConflictDialog.ConflictSituation(
 						true, conflictNoteId, newContent, false)
-					launch(UI){
+					launch(UI) {
 						NoteConflictDialog.newInstance(notebookKey, situation,
 							true, this@NoteEditFragment).show(fragmentManager)
 					}
@@ -57,7 +59,7 @@ class NoteEditFragment : NoteHoldingFragment(),
 					if (solution == null) committed = false
 					solution ?: ConflictSolution(false, false)
 				}
-				if(committed) fragmentManager.popBackStack()
+				if (committed) fragmentManager.popBackStack()
 			}
 		}
 		b_cancel.setOnClickListener {
@@ -81,7 +83,9 @@ class NoteEditFragment : NoteHoldingFragment(),
 		cb_resetProgress.visibility = View.VISIBLE
 		
 		b_ok.setOnClickListener {
-			val content = noteContentEditHolder!!.applyChange()
+			val holder = noteContentEditHolder ?: return@setOnClickListener
+			if (!holder.checkLegalAndAlert()) return@setOnClickListener
+			val content = holder.applyChange()
 			launch(CommonPool) {
 				var committed = true
 				mutableNotebook.modifyNoteContent(noteId, content) { conflictNoteId, newContent ->
