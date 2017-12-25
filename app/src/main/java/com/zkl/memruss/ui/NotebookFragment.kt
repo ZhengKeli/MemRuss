@@ -87,7 +87,7 @@ class NotebookFragment : NotebookHoldingFragment(),
 	private fun updateList() {
 		notesBuffer.setSource(notebook.noteCount) { offset, limit ->
 			lv_notes.post {
-				(lv_notes.adapter as? BaseAdapter)?.notifyDataSetChanged()
+				(lv_notes?.adapter as? BaseAdapter)?.notifyDataSetChanged()
 			}
 			notebook.selectLatestNotes(limit, offset)
 		}

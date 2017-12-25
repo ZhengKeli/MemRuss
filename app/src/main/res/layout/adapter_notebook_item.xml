@@ -9,7 +9,7 @@
 	android:drawableLeft="@mipmap/ic_note_book"
 	android:drawableStart="@mipmap/ic_note_book"
 	android:gravity="center_vertical"
-	android:padding="16dp"
+	android:padding="8dp"
 	android:textAppearance="?android:attr/textAppearanceLarge"
 	tools:text="NotebookName"/>
 

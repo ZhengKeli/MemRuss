@@ -1,7 +1,6 @@
 package com.zkl.memruss.ui
 
 import android.app.UiModeManager
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -11,13 +10,23 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import com.zkl.memruss.R
+import org.jetbrains.anko.uiModeManager
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		(getSystemService(Context.UI_MODE_SERVICE) as UiModeManager).nightMode = UiModeManager.MODE_NIGHT_AUTO
+		if (savedInstanceState == null) {
+			val calendar = Calendar.getInstance()
+			val hour = calendar.get(Calendar.HOUR_OF_DAY)
+			uiModeManager.nightMode = when (hour) {
+				in 0..7 -> UiModeManager.MODE_NIGHT_YES
+				in 19..23 -> UiModeManager.MODE_NIGHT_YES
+				else -> UiModeManager.MODE_NIGHT_NO
+			}
+		}
 		setContentView(R.layout.activity_main)
 		
 		if (getShowingFragment() == null) {
@@ -69,8 +78,22 @@ val Fragment.mainActivity get() = activity as MainActivity
 
 
 //fragment jumping
-fun Fragment.jump(fragmentManager: FragmentManager, addToBackStack: Boolean = true) {
+fun Fragment.jump(fragmentManager: FragmentManager, addToBackStack: Boolean = true, animate:Boolean = addToBackStack) {
 	val transaction = fragmentManager.beginTransaction()
+	if (animate) transaction.setCustomAnimations(
+		R.animator.fly_in_right, R.animator.fly_out_left,
+		R.animator.fly_in_left, R.animator.fly_out_right)
+	else if(addToBackStack && !animate){
+		transaction.setCustomAnimations(0, 0,
+			R.animator.fly_in_left, R.animator.fly_out_right)
+	}
+	transaction.replace(R.id.fragment_container, this)
+	if (addToBackStack) transaction.addToBackStack(null)
+	transaction.commit()
+}
+fun Fragment.jumpFade(fragmentManager: FragmentManager,addToBackStack: Boolean=true){
+	val transaction = fragmentManager.beginTransaction()
+	transaction.setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
 	transaction.replace(R.id.fragment_container, this)
 	if (addToBackStack) transaction.addToBackStack(null)
 	transaction.commit()

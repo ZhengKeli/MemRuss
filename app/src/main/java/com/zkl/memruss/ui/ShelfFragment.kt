@@ -1,5 +1,6 @@
 package com.zkl.memruss.ui
 
+import android.app.UiModeManager
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_shelf.*
 import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiModeManager
 
 class ShelfFragment : Fragment(),
 	NotebookCreationDialog.NotebookCreatedListener,
@@ -49,8 +51,28 @@ class ShelfFragment : Fragment(),
 		if (briefs.isEmpty()) ShelfInfantFragment.newInstance().jump(fragmentManager, false)
 		else if (autoJump) {
 			val (key, _) = myApp.notebookShelf.openNotebook(briefs.first().file)
-			NotebookFragment.newInstance(key).jump(fragmentManager)
+			NotebookFragment.newInstance(key).jump(fragmentManager,animate = false)
 			autoJump = false
+		}
+		
+		activity.uiModeManager.run {
+			when (nightMode) {
+				UiModeManager.MODE_NIGHT_YES -> b_nightMode.setText(R.string.night_mode_on)
+				UiModeManager.MODE_NIGHT_NO -> b_nightMode.setText(R.string.night_mode_off)
+				else -> b_nightMode.visibility = View.GONE
+			}
+		}
+		b_nightMode.setOnClickListener{
+			activity.uiModeManager.run {
+				if (nightMode == UiModeManager.MODE_NIGHT_YES) {
+					nightMode = UiModeManager.MODE_NIGHT_NO
+					b_nightMode.setText(R.string.night_mode_off)
+				}else{
+					nightMode = UiModeManager.MODE_NIGHT_YES
+					b_nightMode.setText(R.string.night_mode_on)
+				}
+			}
+			activity.recreate()
 		}
 		
 		b_create.setOnClickListener {

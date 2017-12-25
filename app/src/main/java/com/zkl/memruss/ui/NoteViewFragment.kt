@@ -43,7 +43,7 @@ class NoteViewFragment : NoteHoldingFragment() {
 		
 		b_edit.isEnabled = notebookKey.mutable
 		b_edit.setOnClickListener {
-			NoteEditFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
+			NoteEditFragment.newInstance(notebookKey, noteId).jumpFade(fragmentManager)
 		}
 		
 		noteContentViewHolder = null

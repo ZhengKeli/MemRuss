@@ -28,7 +28,7 @@ class NoteReviewFragment : NoteHoldingFragment() {
 		else updateNoteContent()
 		
 		b_view.setOnClickListener {
-			NoteViewFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
+			NoteViewFragment.newInstance(notebookKey, noteId).jumpFade(fragmentManager)
 		}
 		
 	}

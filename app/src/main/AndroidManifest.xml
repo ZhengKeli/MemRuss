@@ -7,9 +7,10 @@
 	
 	<application
 		android:name="com.zkl.memruss.control.MyApplication"
+		android:label="@string/MemRuss"
+		android:icon="@mipmap/ic_launcher"
 		android:allowBackup="true"
 		android:fullBackupContent="true"
-		android:label="@string/ZKLRussian"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
 		<activity

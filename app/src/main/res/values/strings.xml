@@ -1,5 +1,5 @@
 <resources>
-	<string name="ZKLRussian">ZKLRussian</string>
+	<string name="MemRuss" translatable="false">MemRuss</string>
 	<string name="Notebook">Notebook</string>
 	
 	<string name="question_colon">question:</string>
@@ -91,6 +91,8 @@
 	<string name="notebook_upgrade_ConfirmMessage">This Notebook file is in an old version. The functions may be limited.
 		Do you want to import it into the latest version?</string>
 	<string name="upgrade_succeed">Upgrade succeed!</string>
+	<string name="night_mode_off">Night Mode off</string>
+	<string name="night_mode_on">Night Mode on</string>
 
 
 </resources>
