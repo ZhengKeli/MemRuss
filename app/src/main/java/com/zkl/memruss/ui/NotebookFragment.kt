@@ -89,7 +89,7 @@ class NotebookFragment : NotebookHoldingFragment(),
 			lv_notes.post {
 				(lv_notes?.adapter as? BaseAdapter)?.notifyDataSetChanged()
 			}
-			notebook.selectLatestNotes(limit, offset)
+			return@setSource notebook.selectLatestNotes(limit, offset)
 		}
 		(lv_notes.adapter as? BaseAdapter)?.notifyDataSetChanged()
 	}

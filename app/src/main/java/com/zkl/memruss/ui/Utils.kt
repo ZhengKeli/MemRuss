@@ -15,11 +15,11 @@ class AutoExpandBuffer<T>(val sectionSize: Int = 128, val paddingSize: Int = sec
 	override val size get() = bufferSize
 	override fun get(index: Int) = buffer[index / sectionSize][index % sectionSize]
 	@Synchronized fun getSizeAndExpand(): Int {
-		if (bufferSize < paddingSize) expandBuffer()
+		while (bufferSize < paddingSize && bufferSize < sourceSize) expandBuffer()
 		return bufferSize
 	}
 	@Synchronized fun getAndExpand(index: Int): T {
-		while (bufferSize <= index + paddingSize) expandBuffer()
+		while (bufferSize <= index + paddingSize && bufferSize < sourceSize) expandBuffer()
 		return get(index)
 	}
 	

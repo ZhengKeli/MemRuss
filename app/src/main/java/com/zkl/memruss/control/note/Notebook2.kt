@@ -149,7 +149,7 @@ class Notebook2(val database: SQLiteDatabase) : Notebook {
 				NoteMemoryState(NoteMemoryStatus.LEARNING, newProgress, load, nowTime + interval)
 			}
 			else -> {
-				val newProgress = progress.toDouble()
+				val newProgress = progress.toDouble()/100.0
 				val interval = MemoryAlgorithm.computeReviewInterval(newProgress)
 				val load = MemoryAlgorithm.computeLoad(interval)
 				NoteMemoryState(NoteMemoryStatus.LEARNING, newProgress, load, nextTime)
