@@ -40,7 +40,10 @@ class NotebookImportDialog : DialogFragment() {
 			val pathText = defaultDir.path+"/"
 			setText(pathText)
 			setSelection(text.length)
-			postDelayed({ showSoftInput() },500)
+			addOnAttachStateChangeListener(object :View.OnAttachStateChangeListener{
+				override fun onViewDetachedFromWindow(v: View?) {}
+				override fun onViewAttachedToWindow(v: View?) = showSoftInput()
+			})
 		}
 		
 		return AlertDialog.Builder(context)

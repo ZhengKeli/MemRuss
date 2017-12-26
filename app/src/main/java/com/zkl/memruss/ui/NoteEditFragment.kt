@@ -79,7 +79,8 @@ class NoteEditFragment : NoteHoldingFragment(),
 		
 		noteContentEditHolder = null
 		updateNoteContent()
-		cb_resetProgress.visibility = View.VISIBLE
+		if (note.isLearning) cb_resetProgress.visibility = View.VISIBLE
+		else cb_resetProgress.run { visibility = View.GONE; isChecked = false }
 		
 		b_ok.setOnClickListener {
 			val content = noteContentEditHolder?.applyChange() ?: return@setOnClickListener

@@ -60,7 +60,7 @@ class NoteReviewFragment : NoteHoldingFragment() {
 	private var noteContentReviewHolder: NoteContentReviewHolder? = null
 	
 	private fun updateNoteContent() {
-		tv_title.text = getString(R.string.Note_review_progress, note.memoryState.progress.toInt())
+		tv_title.text = getString(R.string.Note_view_id, noteId)
 		
 		val noteContent = note.content
 		val oldHolder = noteContentReviewHolder

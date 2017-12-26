@@ -8,6 +8,7 @@ import com.zkl.memruss.R
 import com.zkl.memruss.control.note.NotebookKey
 import com.zkl.memruss.core.note.base.isLearning
 import kotlinx.android.synthetic.main.fragment_note_view.*
+import kotlin.math.abs
 
 
 class NoteViewFragment : NoteHoldingFragment() {
@@ -33,9 +34,21 @@ class NoteViewFragment : NoteHoldingFragment() {
 		tv_title.text = getString(R.string.Note_view_id, noteId)
 		
 		if (note.isLearning) {
-			val relativeReviewTime = (note.memoryState.reviewTime - System.currentTimeMillis()).toDouble() / (3600 * 1000)
-			tv_info.text = getString(R.string.Note_view_info,
-				note.memoryState.progress.toInt(), note.memoryState.load.toInt(), relativeReviewTime)
+			val memoryState = note.memoryState
+			val progressText = memoryState.progress.let { progress ->
+				val percent = (100*progress/20).toInt()
+				"$percent%"
+			}
+			val loadText = memoryState.load.let { load->
+				"%.2f".format(load)
+			}
+			val reviewTimeText = (note.memoryState.reviewTime - System.currentTimeMillis()).let { ms->
+				val hour = ms / (3600 * 1000)
+				val min = abs(ms / (1000 * 60) % 60)
+				if (min == 0L) "$hour"
+				else "$hour:$min"
+			}
+			tv_info.text = getString(R.string.Note_view_info, progressText, loadText, reviewTimeText)
 				.replace("\\n", "\n")
 		} else {
 			tv_info.visibility = View.GONE

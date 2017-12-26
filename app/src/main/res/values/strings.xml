@@ -15,11 +15,10 @@
 	
 	<string name="Note_view_id">Note@%1$d</string>
 	<string name="Note_view_info">
-		memory progress:%1$d\nmemory load:%2$f\nreview time:%3$d
+		memory progress:%1$s\nmemory load:%2$s\nreview time:%3$s
 	</string>
 	<string name="Note_create">New Note</string>
 	<string name="Note_edit_id">Edit Note@%1$d</string>
-	<string name="Note_review_progress">Progress:%1$d</string>
 	<string name="Note_review_noMore">No more words need to be reviewed</string>
 	<string name="back">back</string>
 	
