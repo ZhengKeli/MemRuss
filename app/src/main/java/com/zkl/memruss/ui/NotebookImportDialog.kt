@@ -4,12 +4,12 @@ import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.os.Environment
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.view.View
 import com.zkl.memruss.R
 import com.zkl.memruss.control.myApp
+import com.zkl.memruss.control.note.NotebookCompactor
 import com.zkl.memruss.control.note.NotebookKey
 import kotlinx.android.synthetic.main.dialog_notebook_import.view.*
 import kotlinx.coroutines.experimental.CommonPool
@@ -36,7 +36,7 @@ class NotebookImportDialog : DialogFragment() {
 		val view = View.inflate(context, R.layout.dialog_notebook_import, null)
 		
 		view.et_path.run {
-			val defaultDir = Environment.getExternalStorageDirectory().resolve("ZKLRussian")
+			val defaultDir = NotebookCompactor.defaultImportDir
 			val pathText = defaultDir.path+"/"
 			setText(pathText)
 			setSelection(text.length)

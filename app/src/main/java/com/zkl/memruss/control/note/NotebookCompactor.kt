@@ -11,7 +11,8 @@ interface NotebookCompactor {
 	
 	companion object {
 		val LATEST_VERSION get() = MutableNotebook3.VERSION
-		val defaultExportDir get() = Environment.getExternalStorageDirectory().resolve("ZKLRussian")
+		val defaultImportDir get() = Environment.getExternalStorageDirectory().resolve("ZKLRussian")
+		val defaultExportDir get() = Environment.getExternalStorageDirectory().resolve("MemRuss")
 	}
 	
 	fun createNotebook(file: File, notebookName: String): MutableNotebook? = null
