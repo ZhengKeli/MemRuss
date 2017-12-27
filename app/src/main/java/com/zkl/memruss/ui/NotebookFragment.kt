@@ -31,7 +31,11 @@ class NotebookFragment : NotebookHoldingFragment(),
 		b_back.setOnClickListener {
 			fragmentManager.popBackStack()
 		}
-		tv_title.text = notebook.name
+		
+		tv_title.text = notebook.name.let { notebookName ->
+			if (notebookKey.mutable) notebookName
+			else notebookName + context.getString(R.string.read_only)
+		}
 		sv_search.setOnSearchClickListener {
 			NotebookSearchFragment.newInstance(key).jump(fragmentManager)
 			sv_search.isIconified = true

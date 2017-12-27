@@ -20,11 +20,12 @@ import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiModeManager
 
 class ShelfFragment : Fragment(),
-	NotebookCreationDialog.NotebookCreatedListener,
+	NotebookCreateDialog.NotebookCreatedListener,
 	NotebookDeleteDialog.NotebookDeletedListener,
 	NotebookImportDialog.NotebookImportedListener,
 	NotebookMergeFragment.NotebookMergedListener,
-	NotebookUpgradeDialog.NotebookUpgradedListener {
+	NotebookUpgradeDialog.NotebookUpgradedListener,
+	NotebookRenameDialog.NotebookRenamedListener {
 	
 	companion object {
 		private val arg_autoJump: String = "autoJump"
@@ -47,6 +48,7 @@ class ShelfFragment : Fragment(),
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		
 		briefs = myApp.notebookShelf.loadNotebookBriefs()
 		if (briefs.isEmpty()) ShelfInfantFragment.newInstance().jump(fragmentManager, false)
 		else if (autoJump) {
@@ -76,7 +78,7 @@ class ShelfFragment : Fragment(),
 		}
 		
 		b_create.setOnClickListener {
-			NotebookCreationDialog.newInstance(this).show(fragmentManager)
+			NotebookCreateDialog.newInstance(this).show(fragmentManager)
 		}
 		b_import.setOnClickListener {
 			NotebookImportDialog.newInstance(this).show(fragmentManager)
@@ -104,9 +106,7 @@ class ShelfFragment : Fragment(),
 	}
 	
 	override fun onNotebookDeleted(){
-		briefs = myApp.notebookShelf.loadNotebookBriefs()
-		if (briefs.isEmpty()) ShelfInfantFragment.newInstance().jump(fragmentManager, false)
-		(lv_notebooks.adapter as? BaseAdapter)?.notifyDataSetChanged()
+		updateNotebookList()
 	}
 	
 	override fun onNotebookCreated(notebookKey: NotebookKey) {
@@ -132,6 +132,15 @@ class ShelfFragment : Fragment(),
 		if(upgraded) activity.toast(R.string.upgrade_succeed)
 	}
 	
+	override fun onNotebookRenamed(notebookKey: NotebookKey) {
+		updateNotebookList()
+	}
+	
+	private fun updateNotebookList(){
+		briefs = myApp.notebookShelf.loadNotebookBriefs()
+		if (briefs.isEmpty()) ShelfInfantFragment.newInstance().jump(fragmentManager, false)
+		(lv_notebooks.adapter as? BaseAdapter)?.notifyDataSetChanged()
+	}
 	
 	//summaries
 	var briefs: List<NotebookBrief> = emptyList()

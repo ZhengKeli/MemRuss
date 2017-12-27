@@ -161,12 +161,11 @@ class MutableNotebook3(val database: SQLiteDatabase) : MutableNotebook {
 					getString(0)
 				}
 		}
-		set(value) {
-			ConfsTable.run {
-				database.update(tableName, item_bookName to value)
-					.whereArgs("$confName = '$item_bookName' ")
-					.exec()
-			}
+		set(value) = ConfsTable.run {
+			database.update(tableName, confValue to value)
+				.whereArgs("$confName = '$item_bookName' ")
+				.exec()
+			
 		}
 	
 	

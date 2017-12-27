@@ -86,5 +86,6 @@
 	<string name="night_mode_on">夜间模式</string>
 	<string name="question_should_not_be_blank">问题不能为空</string>
 	<string name="answer_should_not_be_blank">答案不能为空</string>
+	<string name="rename_Notebook">重命名单词本</string>
 
 </resources>

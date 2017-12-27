@@ -33,6 +33,7 @@
 	<string name="create_Notebook">Create Notebook</string>
 	<string name="export_Notebook">Export Notebook</string>
 	<string name="delete_Notebook">Delete Notebook</string>
+	<string name="rename_Notebook">Rename Notebook</string>
 	<string name="notebook_deletion_ConfirmTitle">Confirm deletion</string>
 	<string name="notebook_deletion_ConfirmMessage">Are you sure to delete this Notebook?</string>
 	<string name="show">show</string>
@@ -61,6 +62,7 @@
 	<string name="error">Error!</string>
 	<string name="new_notebook">new notebook</string>
 	<string name="new_notebook_name">Name of the new Notebook</string>
+	<string name="notebook_new_name">New name of the Notebook</string>
 	<string name="export_to_file">Export to file:</string>
 	<string name="export_succeed">Export succeed!</string>
 	<string name="export_failed">Export failed!</string>

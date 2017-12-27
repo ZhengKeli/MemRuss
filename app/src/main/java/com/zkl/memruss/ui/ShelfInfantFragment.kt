@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_shelf_infant.*
 import org.jetbrains.anko.toast
 
 class ShelfInfantFragment : Fragment(),
-	NotebookCreationDialog.NotebookCreatedListener,
+	NotebookCreateDialog.NotebookCreatedListener,
 	NotebookImportDialog.NotebookImportedListener,
 	NotebookUpgradeDialog.NotebookUpgradedListener {
 	
@@ -27,7 +27,7 @@ class ShelfInfantFragment : Fragment(),
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		b_create.setOnClickListener {
-			NotebookCreationDialog.newInstance(this@ShelfInfantFragment).show(fragmentManager)
+			NotebookCreateDialog.newInstance(this@ShelfInfantFragment).show(fragmentManager)
 		}
 		b_import.setOnClickListener {
 			NotebookImportDialog.newInstance(this).show(fragmentManager)
