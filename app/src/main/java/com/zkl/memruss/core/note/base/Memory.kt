@@ -17,9 +17,8 @@ interface MemoryNotebook<Note : MemoryNote<*>> : BaseNotebook<Note> {
 	
 	/**
 	 * 检索还未被激活的词条的id
-	 * 在前面的词条将优先被激活
 	 */
-	fun selectNeedActivateNoteIds(count: Int = 1, offset: Int = 0): List<Long>
+	fun selectNeedActivateNoteIds(asc: Boolean = false, count: Int = 1, offset: Int = 0): List<Long>
 	
 	/**
 	 * 统计有多少词条需要复习
@@ -91,7 +90,7 @@ interface MutableMemoryNotebook<Content : BaseContent, Note : MemoryNote<Content
 	 * 无论是否有复习计划都会进行
 	 */
 	fun activateNotes(count: Int = 1, nowTime: Long = System.currentTimeMillis()): Int {
-		val noteIds = selectNeedActivateNoteIds(count)
+		val noteIds = selectNeedActivateNoteIds(false, count)
 		noteIds.forEach { noteId ->
 			modifyNoteMemory(noteId, NoteMemoryState.beginningState(nowTime))
 		}

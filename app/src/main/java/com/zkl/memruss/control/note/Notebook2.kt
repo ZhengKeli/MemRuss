@@ -2,6 +2,7 @@ package com.zkl.memruss.control.note
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.zkl.memruss.control.tools.orderBy
 import com.zkl.memruss.control.tools.stringData.StringData
 import com.zkl.memruss.core.note.Note
 import com.zkl.memruss.core.note.NoteContent
@@ -205,9 +206,10 @@ class Notebook2(val database: SQLiteDatabase) : Notebook {
 			)
 		}
 	
-	override fun selectNeedActivateNoteIds(count: Int, offset: Int): List<Long> {
+	override fun selectNeedActivateNoteIds(asc: Boolean, count: Int, offset: Int): List<Long> {
 		return database.selectNotes()
 			.whereArgs("${BookTable.progress} = -1")
+			.orderBy(BookTable.modifyTime, asc)
 			.limit(offset, count)
 			.exec { parseNoteList().map { it.id } }
 	}

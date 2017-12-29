@@ -3,6 +3,7 @@ package com.zkl.memruss.control.note
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.zkl.memruss.control.tools.createIndex
+import com.zkl.memruss.control.tools.orderBy
 import com.zkl.memruss.core.note.InstantNote
 import com.zkl.memruss.core.note.MutableNotebook
 import com.zkl.memruss.core.note.Note
@@ -502,10 +503,11 @@ class MutableNotebook3(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
-	override fun selectNeedActivateNoteIds(count: Int, offset: Int): List<Long> {
+	override fun selectNeedActivateNoteIds(asc: Boolean, count: Int, offset: Int): List<Long> {
 		return database.select(NotesTable.tableName, NotesTable.noteId)
 			.whereArgs("${NotesTable.memoryStatus}='${NoteMemoryStatus.INFANT}'")
-			.limit(count)
+			.orderBy(NotesTable.contentUpdateTime, asc)
+			.limit(offset, count)
 			.exec {
 				parseList(rowParser{noteId:Long-> noteId })
 			}
@@ -526,7 +528,7 @@ class MutableNotebook3(val database: SQLiteDatabase) : MutableNotebook {
 		return NotesTable.run {
 			database.selectNotes()
 				.whereArgs(" $reviewTime!=-1 AND $reviewTime<$nowTime ")
-				.orderBy(reviewTime, if (asc) SqlOrderDirection.ASC else SqlOrderDirection.DESC)
+				.orderBy(reviewTime, asc)
 				.limit(offset, count)
 				.exec { parseNoteList() }
 		}
