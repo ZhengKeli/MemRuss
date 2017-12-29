@@ -9,7 +9,7 @@
 	<application
 		android:name="com.zkl.memruss.control.MyApplication"
 		android:label="@string/MemRuss"
-		android:icon="@mipmap/ic_launcher"
+		android:icon="@drawable/ic_launcher"
 		android:allowBackup="true"
 		android:fullBackupContent="true"
 		android:supportsRtl="true"
