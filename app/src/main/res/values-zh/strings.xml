@@ -87,5 +87,8 @@
 	<string name="question_should_not_be_blank">问题不能为空</string>
 	<string name="answer_should_not_be_blank">答案不能为空</string>
 	<string name="rename_Notebook">重命名单词本</string>
+	<string name="notebook_new_name">单词本的新名称：</string>
+	<string name="Note_review_remainCount">还剩%1$d个要复习</string>
+	<string name="update_logs">升级日志</string>
 
 </resources>

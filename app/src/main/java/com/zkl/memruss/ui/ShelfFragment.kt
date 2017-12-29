@@ -57,6 +57,10 @@ class ShelfFragment : Fragment(),
 			autoJump = false
 		}
 		
+		b_info.setOnClickListener {
+			UpdateLogsDialog.newInstance().show(fragmentManager)
+		}
+		
 		activity.uiModeManager.run {
 			when (nightMode) {
 				UiModeManager.MODE_NIGHT_YES -> b_nightMode.setText(R.string.night_mode_on)

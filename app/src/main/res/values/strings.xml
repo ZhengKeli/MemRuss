@@ -19,6 +19,7 @@
 	</string>
 	<string name="Note_create">New Note</string>
 	<string name="Note_edit_id">Edit Note@%1$d</string>
+	<string name="Note_review_remainCount">Remain %1$d Notes to review</string>
 	<string name="Note_review_noMore">No more words need to be reviewed</string>
 	<string name="back">back</string>
 	
@@ -96,6 +97,7 @@
 	<string name="night_mode_on">Night Mode on</string>
 	<string name="question_should_not_be_blank">The question should not be blank!</string>
 	<string name="answer_should_not_be_blank">The answer should not be blank!</string>
+	<string name="update_logs">Update logs</string>
 
 
 </resources>

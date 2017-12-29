@@ -27,7 +27,7 @@
 			android:text="@string/NotebookShelf"
 			android:textAppearance="@style/TextAppearance.AppCompat.Large"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toStartOf="@+id/b_nightMode"
+			app:layout_constraintEnd_toStartOf="@+id/b_info"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"/>
 		
@@ -39,6 +39,17 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"/>
+		
+		<ImageButton
+			android:id="@+id/b_info"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/b_nightMode"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="1.0"
+			app:srcCompat="@drawable/ic_info"
+			android:contentDescription="@string/update_logs"/>
 	</android.support.constraint.ConstraintLayout>
 	
 	<android.support.constraint.ConstraintLayout

@@ -44,23 +44,10 @@ class NoteReviewFragment : NoteHoldingFragment() {
 		jumpToNextNote()
 	}
 	
-	private fun jumpToNextNote() {
-		val nextNote = notebook.selectNeedReviewNotes(System.currentTimeMillis()).firstOrNull()
-		if (nextNote != null) {
-			this.noteId = nextNote.id
-			updateNoteContent()
-		} else {
-			fragmentManager.popBackStack()
-			NoteReviewFinishedFragment.newInstance(notebookKey).jump(fragmentManager)
-		}
-	}
-	
-	
-	//noteContent
 	private var noteContentReviewHolder: NoteContentReviewHolder? = null
-	
 	private fun updateNoteContent() {
-		tv_title.text = getString(R.string.Note_view_id, noteId)
+		val remainCount = notebook.countNeedReviewNotes(System.currentTimeMillis())
+		tv_title.text = getString(R.string.Note_review_remainCount, remainCount)
 		
 		val noteContent = note.content
 		val oldHolder = noteContentReviewHolder
@@ -72,6 +59,17 @@ class NoteReviewFragment : NoteHoldingFragment() {
 			fl_noteContent.removeAllViews()
 			fl_noteContent.addView(holder.view)
 			noteContentReviewHolder = holder
+		}
+	}
+	
+	private fun jumpToNextNote() {
+		val nextNote = notebook.selectNeedReviewNotes(System.currentTimeMillis()).firstOrNull()
+		if (nextNote != null) {
+			this.noteId = nextNote.id
+			updateNoteContent()
+		} else {
+			fragmentManager.popBackStack()
+			NoteReviewFinishedFragment.newInstance(notebookKey).jump(fragmentManager)
 		}
 	}
 	
