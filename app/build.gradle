@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.zkl.zklRussian"
+        applicationId "com.zkl.memruss"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 23
