@@ -98,6 +98,9 @@
 	<string name="question_should_not_be_blank">The question should not be blank!</string>
 	<string name="answer_should_not_be_blank">The answer should not be blank!</string>
 	<string name="update_logs">Update logs</string>
+	<string name="memory_plan_statistics">
+		There\'re %1$d words in total\nThere\'re %2$d words in plan\nThere\'re %3$d words not in plan
+	</string>
 
 
 </resources>

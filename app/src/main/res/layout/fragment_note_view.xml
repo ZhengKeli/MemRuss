@@ -45,18 +45,6 @@
 	
 	</android.support.constraint.ConstraintLayout>
 	
-	<TextView
-		android:id="@+id/tv_info"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_weight="0"
-		android:padding="8dp"
-		android:paddingEnd="8dp"
-		android:paddingLeft="8dp"
-		android:paddingRight="8dp"
-		android:paddingStart="8dp"
-		tools:text="@string/Note_view_info"/>
-	
 	<FrameLayout
 		android:id="@+id/fl_noteContent"
 		android:layout_width="match_parent"
@@ -68,5 +56,17 @@
 		android:paddingStart="8dp">
 	
 	</FrameLayout>
+	
+	<TextView
+		android:id="@+id/tv_info"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="0"
+		android:padding="8dp"
+		android:paddingEnd="8dp"
+		android:paddingLeft="8dp"
+		android:paddingRight="8dp"
+		android:paddingStart="8dp"
+		tools:text="@string/Note_view_info"/>
 
 </LinearLayout>

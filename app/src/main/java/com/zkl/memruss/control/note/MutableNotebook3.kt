@@ -503,14 +503,27 @@ class MutableNotebook3(val database: SQLiteDatabase) : MutableNotebook {
 		}
 	}
 	
+	override fun countNeedActivateNotes(): Int {
+		return NotesTable.run {
+			database.select(tableName, "count(*)")
+				.whereArgs("$memoryStatus='${NoteMemoryStatus.INFANT}'")
+				.exec {
+					moveToFirst()
+					getInt(0)
+				}
+		}
+	}
+	
 	override fun selectNeedActivateNoteIds(asc: Boolean, count: Int, offset: Int): List<Long> {
-		return database.select(NotesTable.tableName, NotesTable.noteId)
-			.whereArgs("${NotesTable.memoryStatus}='${NoteMemoryStatus.INFANT}'")
-			.orderBy(NotesTable.contentUpdateTime, asc)
+		return NotesTable.run {
+			database.select(tableName, noteId)
+			.whereArgs("$memoryStatus='${NoteMemoryStatus.INFANT}'")
+			.orderBy(contentUpdateTime, asc)
 			.limit(offset, count)
 			.exec {
 				parseList(rowParser{noteId:Long-> noteId })
 			}
+		}
 	}
 	
 	override fun countNeedReviewNotes(nowTime: Long): Int {

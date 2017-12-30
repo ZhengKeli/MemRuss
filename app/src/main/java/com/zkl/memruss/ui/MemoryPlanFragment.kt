@@ -8,7 +8,8 @@ import android.widget.SeekBar
 import com.zkl.memruss.R
 import com.zkl.memruss.control.note.NotebookKey
 import com.zkl.memruss.core.note.base.MemoryPlan
-import com.zkl.memruss.core.note.base.NotebookMemoryStatus
+import com.zkl.memruss.core.note.base.NotebookMemoryStatus.INFANT
+import com.zkl.memruss.core.note.base.NotebookMemoryStatus.LEARNING
 import kotlinx.android.synthetic.main.fragment_memory_plan.*
 import kotlin.math.roundToInt
 
@@ -39,8 +40,18 @@ class MemoryPlanFragment : NotebookHoldingFragment(),
 		val memoryPlan = notebook.memoryPlan ?: MemoryPlan.default
 		
 		tv_title.text = when (memoryState.status) {
-			NotebookMemoryStatus.INFANT -> getString(R.string.make_MemoryPlan)
-			NotebookMemoryStatus.LEARNING -> getString(R.string.MemoryPlan)
+			INFANT -> getString(R.string.make_MemoryPlan)
+			LEARNING -> getString(R.string.MemoryPlan)
+		}
+		
+		if(memoryState.status == INFANT){
+			tv_info.visibility = View.GONE
+		} else {
+			val countTotal = notebook.noteCount
+			val countNotInPlan = notebook.countNeedActivateNotes()
+			val countInPlan = countTotal - countNotInPlan
+			tv_info.text = getString(R.string.memory_plan_statistics, countTotal, countInPlan, countNotInPlan)
+				.replace("\\n", "\n")
 		}
 		
 		tv_dailyReviews.text = getString(R.string.daily_reviews_SettingTitle, memoryPlan.dailyReviews.roundToInt())
@@ -67,7 +78,7 @@ class MemoryPlanFragment : NotebookHoldingFragment(),
 			override fun onStopTrackingTouch(seekBar: SeekBar) {}
 		})
 		
-		if(memoryState.status== NotebookMemoryStatus.INFANT){
+		if(memoryState.status== INFANT){
 			b_dropMemoryPlan.visibility = View.GONE
 		}
 		else {

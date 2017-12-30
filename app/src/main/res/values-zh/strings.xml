@@ -90,5 +90,6 @@
 	<string name="notebook_new_name">单词本的新名称：</string>
 	<string name="Note_review_remainCount">还剩%1$d个要复习</string>
 	<string name="update_logs">升级日志</string>
+	<string name="memory_plan_statistics">共有%1$d个词条\n有%2$d个已加入学习计划\n有%3$d个仍未开始学习计划</string>
 
 </resources>

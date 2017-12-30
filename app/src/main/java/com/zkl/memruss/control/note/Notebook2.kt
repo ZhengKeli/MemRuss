@@ -206,6 +206,17 @@ class Notebook2(val database: SQLiteDatabase) : Notebook {
 			)
 		}
 	
+	override fun countNeedActivateNotes(): Int {
+		return BookTable.run {
+			database.select(tableName, "count(*)")
+				.whereArgs("$progress = -1")
+				.exec {
+					moveToFirst()
+					getInt(0)
+				}
+		}
+	}
+	
 	override fun selectNeedActivateNoteIds(asc: Boolean, count: Int, offset: Int): List<Long> {
 		return database.selectNotes()
 			.whereArgs("${BookTable.progress} = -1")
@@ -215,12 +226,13 @@ class Notebook2(val database: SQLiteDatabase) : Notebook {
 	}
 	
 	override fun countNeedReviewNotes(nowTime: Long): Int {
-		return BookTable.run { database.select(tableName,"count(*)")
-			.whereArgs("$progress>-1 AND $nextTime < $nowTime ")
-			.exec {
-				moveToFirst()
-				getInt(0)
-			}
+		return BookTable.run {
+			database.select(tableName, "count(*)")
+				.whereArgs("$progress > -1 AND $nextTime < $nowTime ")
+				.exec {
+					moveToFirst()
+					getInt(0)
+				}
 		}
 	}
 	

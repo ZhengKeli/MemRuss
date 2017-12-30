@@ -16,6 +16,11 @@ interface MemoryNotebook<Note : MemoryNote<*>> : BaseNotebook<Note> {
 	val memoryPlan: MemoryPlan?
 	
 	/**
+	 * 统计有多少词条已被激活
+	 */
+	fun countNeedActivateNotes(): Int
+	
+	/**
 	 * 检索还未被激活的词条的id
 	 */
 	fun selectNeedActivateNoteIds(asc: Boolean = false, count: Int = 1, offset: Int = 0): List<Long>
