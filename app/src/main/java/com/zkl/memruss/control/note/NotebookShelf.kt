@@ -50,11 +50,8 @@ class NotebookShelf(workingDir: File){
 		return Pair(key,notebook)
 	}
 	@Synchronized fun openNotebook(file:File): Pair<NotebookKey, Notebook> {
-		return try {
-			openMutableNotebook(file)
-		}catch (e:Exception){
-			null
-		}?:openReadOnlyNotebook(file)
+		try { return openMutableNotebook(file) }catch (e:Exception){}
+		return openReadOnlyNotebook(file)
 	}
 	@Synchronized fun restoreNotebook(key: NotebookKey): Notebook {
 		return openedNotebooks[key] ?:
@@ -75,9 +72,10 @@ class NotebookShelf(workingDir: File){
 		openedNotebooks.remove(key)
 		return MainCompactor.deleteNotebook(File(key.canonicalPath))
 	}
-	@Synchronized fun importNotebook(file: File): Pair<NotebookKey, Notebook>{
-		val brief = loadNotebookBrief(file)?: throw FileNotCompatibleException(file)
-		val target = generateNotebookFile(brief.bookName)
+	@Synchronized fun importNotebook(file: File): Pair<NotebookKey, Notebook> {
+		val notebook = MainCompactor.loadReadOnlyNotebookOrThrow(file)
+		val notebookName = notebook.use { notebook.name }
+		val target = generateNotebookFile(notebookName)
 		file.copyTo(target)
 		return openNotebook(target)
 	}
@@ -91,7 +89,7 @@ class NotebookShelf(workingDir: File){
 		val random = Random()
 		var randomFile: File
 		do {
-			val randomFileName = bookName + "_" + Math.abs(random.nextLong()) + ".zrb"
+			val randomFileName = bookName + "_" + Math.abs(random.nextLong())
 			randomFile = File(booksDir, randomFileName)
 		} while (randomFile.exists())
 		return randomFile

@@ -15,33 +15,62 @@ interface NotebookCompactor {
 		val defaultExportDir get() = Environment.getExternalStorageDirectory().resolve("MemRuss")
 	}
 	
-	fun createNotebook(file: File, notebookName: String): MutableNotebook? = null
+	//create
+	fun createNotebook(file: File, notebookName: String): MutableNotebook?
+	
+	fun createNotebookOrNull(file: File, notebookName: String): MutableNotebook? {
+		return try {
+			createNotebook(file, notebookName)
+		} catch (e: Exception) {
+			null
+		}
+	}
 	
 	fun createNotebookOrThrow(file: File, notebookName: String): MutableNotebook
 		= createNotebook(file, notebookName) ?: throw NotCreatableException(file)
 	
-	fun loadReadOnlyNotebook(file: File): Notebook? = null
+	//load: read only
+	fun loadReadOnlyNotebook(file: File): Notebook?
+	
+	fun loadReadOnlyNotebookOrNull(file: File): Notebook? {
+		return try {
+			loadReadOnlyNotebook(file)
+		} catch (e: Exception) {
+			null
+		}
+	}
 	
 	fun loadReadOnlyNotebookOrThrow(file: File): Notebook
 		= loadReadOnlyNotebook(file) ?: throw FileNotCompatibleException(file)
 	
-	fun loadMutableNotebook(file: File): MutableNotebook? = null
+	//load: mutable
+	fun loadMutableNotebook(file: File): MutableNotebook?
+	
+	fun loadMutableNotebookOrNull(file: File): MutableNotebook? {
+		return try {
+			loadMutableNotebook(file)
+		} catch (e: Exception) {
+			null
+		}
+	}
 	
 	fun loadMutableNotebookOrThrow(file: File): MutableNotebook
 		= loadMutableNotebook(file) ?: throw FileNotCompatibleException(file)
 	
-	fun loadNotebook(file: File): Notebook?
-		= loadMutableNotebook(file) ?: loadReadOnlyNotebook(file)
+	//load: as possible
+	fun loadNotebookOrNull(file: File): Notebook?
+		= loadMutableNotebookOrNull(file) ?: loadReadOnlyNotebookOrNull(file)
 	
 	fun loadNotebookOrThrow(file: File): Notebook
-		= loadNotebook(file) ?: throw FileNotCompatibleException(file)
+		= loadMutableNotebookOrNull(file) ?: loadReadOnlyNotebookOrThrow(file)
 	
-	fun loadBrief(file: File): NotebookBrief?
-		= loadNotebook(file)?.use { notebook ->
-		NotebookBrief(file, notebook.name, notebook.isLearning, notebook is MutableNotebook)
+	fun loadBrief(file: File): NotebookBrief? {
+		return loadNotebookOrNull(file)?.use { notebook ->
+			NotebookBrief(file, notebook.name, notebook.isLearning, notebook is MutableNotebook)
+		}
 	}
 	
-	fun deleteNotebook(file: File): Boolean = false
+	fun deleteNotebook(file: File): Boolean
 	
 }
 
@@ -50,7 +79,6 @@ class NotCreatableException(file: File)
 
 class FileNotCompatibleException(file: File)
 	: Exception("Can not load the file ${file.path} as a Notebook.")
-
 
 
 //versioned map
@@ -66,17 +94,17 @@ object MainCompactor : NotebookCompactor {
 	
 	override fun createNotebook(file: File, notebookName: String): MutableNotebook?
 		= notebookCompactors.asSequence()
-		.mapNotNull { it.createNotebook(file, notebookName) }
+		.mapNotNull { it.createNotebookOrNull(file, notebookName) }
 		.firstOrNull()
 	
 	override fun loadReadOnlyNotebook(file: File): Notebook?
 		= notebookCompactors.asSequence()
-		.mapNotNull { it.loadReadOnlyNotebook(file) }
+		.mapNotNull { it.loadReadOnlyNotebookOrNull(file) }
 		.firstOrNull()
 	
 	override fun loadMutableNotebook(file: File): MutableNotebook?
 		= notebookCompactors.asSequence()
-		.mapNotNull { it.loadMutableNotebook(file) }
+		.mapNotNull { it.loadMutableNotebookOrNull(file) }
 		.firstOrNull()
 	
 	override fun deleteNotebook(file: File): Boolean
@@ -86,13 +114,12 @@ object MainCompactor : NotebookCompactor {
 }
 
 
-
 //versioned class
 
 class MutableNotebook3Compactor : NotebookCompactor {
 	
 	companion object {
-		val fileExtension = ".mnb"
+		val fileExtension = "mnb"
 	}
 	
 	override fun createNotebook(file: File, notebookName: String): MutableNotebook? {
@@ -105,20 +132,25 @@ class MutableNotebook3Compactor : NotebookCompactor {
 	override fun loadReadOnlyNotebook(file: File): Notebook? {
 		val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
 		val notebook = MutableNotebook3(database)
-		return if (notebook.checkVersion()) notebook else null
+		if (!notebook.checkVersion()) {
+			notebook.close()
+			return null
+		}
+		return notebook
 	}
 	
 	override fun loadMutableNotebook(file: File): MutableNotebook? {
 		val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READWRITE)
 		val notebook = MutableNotebook3(database)
-		return if (notebook.checkVersion()) notebook else {
+		if (!notebook.checkVersion()) {
 			notebook.close()
-			null
+			return null
 		}
+		return notebook
 	}
 	
 	override fun deleteNotebook(file: File): Boolean {
-		return loadReadOnlyNotebook(file)?.let {
+		return loadReadOnlyNotebookOrNull(file)?.let {
 			it.close()
 			SQLiteDatabase.deleteDatabase(file)
 		} ?: false
@@ -129,17 +161,25 @@ class MutableNotebook3Compactor : NotebookCompactor {
 class Notebook2Compactor : NotebookCompactor {
 	
 	companion object {
-		val fileExtension = ".zrb"
+		val fileExtension = "zrb"
 	}
+	
+	override fun createNotebook(file: File, notebookName: String): MutableNotebook? = null
+	
+	override fun loadMutableNotebook(file: File): MutableNotebook? = null
 	
 	override fun loadReadOnlyNotebook(file: File): Notebook? {
 		val database = SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY)
 		val notebook = Notebook2(database)
-		return if (notebook.checkVersion()) notebook else null
+		if (!notebook.checkVersion()) {
+			notebook.close()
+			return null
+		}
+		return notebook
 	}
 	
 	override fun deleteNotebook(file: File): Boolean {
-		return loadReadOnlyNotebook(file)?.let {
+		return loadReadOnlyNotebookOrNull(file)?.let {
 			it.close()
 			SQLiteDatabase.deleteDatabase(file)
 		} ?: false
