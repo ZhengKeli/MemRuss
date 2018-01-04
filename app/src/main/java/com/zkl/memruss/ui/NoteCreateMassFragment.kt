@@ -1,5 +1,6 @@
 package com.zkl.memruss.ui
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.support.v4.toast
+import org.jetbrains.anko.toast
 import java.io.File
 import java.nio.charset.Charset
 import java.util.concurrent.ArrayBlockingQueue
@@ -64,11 +66,21 @@ class NoteCreateMassFragment : NotebookHoldingFragment(),
 	}
 	
 	override fun onNotesFileSelected(file: File, charset: Charset) {
-		if (!file.exists()) toast(R.string.file_not_exists)
-		else launch(CommonPool){
-			val string = file.readText(charset).trimStart('\uFEFF') //utf8编码可能带BOM头，要去掉
-			launch(UI){ et_contents.setText(string) }
+		mainActivity.requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE,true) { granted, _ ->
+			if (!granted) {
+				mainActivity.toast(R.string.no_sdcard_read_permission)
+				return@requestPermission
+			}
+			if (!file.exists()) {
+				toast(R.string.file_not_exists)
+				return@requestPermission
+			}
+			launch(CommonPool){
+				val string = file.readText(charset).trimStart('\uFEFF') //utf8编码可能带BOM头，要去掉
+				launch(UI){ et_contents.setText(string) }
+			}
 		}
+		
 	}
 	
 	private val conflictSolutionChan = ArrayBlockingQueue<ConflictSolution?>(1)
