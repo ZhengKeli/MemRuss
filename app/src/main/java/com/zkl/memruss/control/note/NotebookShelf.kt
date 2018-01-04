@@ -14,20 +14,15 @@ class NotebookShelf(workingDir: File){
 	
 	//brief
 	fun loadNotebookBriefs(): List<NotebookBrief> {
-		return booksDir.takeIf { it.exists() }
-			?.listFiles { _, name -> name.endsWith(".zrb") }
-			?.mapNotNull { loadNotebookBrief(it) }
-			?: emptyList()
-	}
-	private fun loadNotebookBrief(file: File): NotebookBrief? {
-		return MainCompactor.loadBrief(file)
+		return booksDir.listFiles { _, name -> !name.endsWith("-journal") }
+			.mapNotNull { MainCompactor.loadBriefOrNull(it) }
 	}
 	
 	
 	//book opening & creating
 	private val openedNotebooks = HookSystem<NotebookKey, Notebook>()
 	@Synchronized fun createNotebook(notebookName: String): Pair<NotebookKey, MutableNotebook> {
-		val file: File = generateNotebookFile(notebookName)
+		val file: File = generateNotebookFile()
 		val notebook = MainCompactor.createNotebookOrThrow(file, notebookName)
 		val key = NotebookKey(file.canonicalPath, true)
 		openedNotebooks[key] = notebook
@@ -73,9 +68,8 @@ class NotebookShelf(workingDir: File){
 		return MainCompactor.deleteNotebook(File(key.canonicalPath))
 	}
 	@Synchronized fun importNotebook(file: File): Pair<NotebookKey, Notebook> {
-		val notebook = MainCompactor.loadReadOnlyNotebookOrThrow(file)
-		val notebookName = notebook.use { notebook.name }
-		val target = generateNotebookFile(notebookName)
+		MainCompactor.loadReadOnlyNotebookOrThrow(file)
+		val target = generateNotebookFile()
 		file.copyTo(target)
 		return openNotebook(target)
 	}
@@ -84,12 +78,12 @@ class NotebookShelf(workingDir: File){
 		file.copyTo(target,true)
 	}
 	
-	private fun generateNotebookFile(bookName: String): File {
+	private fun generateNotebookFile(): File {
 		//find a new file name
 		val random = Random()
 		var randomFile: File
 		do {
-			val randomFileName = bookName + "_" + Math.abs(random.nextLong())
+			val randomFileName = Math.abs(random.nextLong()).toString()
 			randomFile = File(booksDir, randomFileName)
 		} while (randomFile.exists())
 		return randomFile

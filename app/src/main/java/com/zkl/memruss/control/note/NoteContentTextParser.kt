@@ -13,8 +13,7 @@ object NoteContentTextParser {
 	val fileExtension = "txt"
 	
 	fun parse(file: File, charset: Charset): List<NoteContent> {
-		silence { return Scanner(file, charset.name()).parseNoteContents() }
-		return emptyList()
+		return silence { Scanner(file, charset.name()).parseNoteContents() } ?: emptyList()
 	}
 	
 	fun parse(string: String): List<NoteContent> {
