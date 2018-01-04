@@ -15,7 +15,7 @@
 		android:padding="16dp"
 		
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:textSize="40sp"
+		android:textSize="36sp"
 		
 		tools:text="слово"/>
 	
@@ -29,7 +29,7 @@
 		android:padding="16dp"
 		
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:textSize="20sp"
+		android:textSize="24sp"
 		
 		tools:text="tv_answer"/>
 

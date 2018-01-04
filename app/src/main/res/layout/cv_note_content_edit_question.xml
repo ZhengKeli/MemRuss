@@ -21,7 +21,7 @@
 		
 		android:singleLine="false"
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:textSize="40sp"
+		android:textSize="36sp"
 		tools:text="слово">
 		
 		<requestFocus/>
@@ -36,9 +36,10 @@
 		android:padding="16dp"
 		android:gravity="top|start"
 		
-		android:inputType="text"
+		android:inputType="textMultiLine"
+		android:maxLines="4"
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:textSize="20sp"
+		android:textSize="24sp"
 		
 		android:hint="@string/answer"
 		tools:text="tv_answer"/>
