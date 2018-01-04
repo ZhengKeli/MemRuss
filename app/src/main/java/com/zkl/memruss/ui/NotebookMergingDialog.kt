@@ -86,7 +86,7 @@ class NotebookMergingDialog : DialogFragment(),
 						NoteConflictDialog.newInstance(mergeRequest.mainBodyKey, situation, false,
 							this@NotebookMergingDialog).show(fragmentManager)
 					}
-					conflictSolutionChan.take()
+					conflictSolutionChan.take()?: ConflictSolution(false, false)
 				}
 				onProgress(index + 1, notesToAdd.size)
 			}
@@ -107,9 +107,9 @@ class NotebookMergingDialog : DialogFragment(),
 		}
 	}
 	
-	private val conflictSolutionChan = ArrayBlockingQueue<ConflictSolution>(1)
+	private val conflictSolutionChan = ArrayBlockingQueue<ConflictSolution?>(1)
 	override fun onConflictSolved(solution: ConflictSolution?) {
-		conflictSolutionChan.put(solution ?: ConflictSolution(false, false))
+		conflictSolutionChan.put(solution)
 	}
 	
 	override fun onDismiss(dialog: DialogInterface?) {

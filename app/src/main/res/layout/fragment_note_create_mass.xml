@@ -1,12 +1,9 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="vertical"
-	>
-	
+	android:orientation="vertical">
 	
 	<android.support.constraint.ConstraintLayout
 		android:layout_width="match_parent"
@@ -26,54 +23,35 @@
 			android:padding="8dp"
 			android:textAppearance="@style/TextAppearance.AppCompat.Large"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toStartOf="@+id/b_delete"
+			app:layout_constraintEnd_toStartOf="@+id/b_fromFile"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			tools:text="@string/Note_edit_id"/>
+			android:text="@string/mass_creation"/>
 		
 		<Button
-			android:id="@+id/b_delete"
+			android:id="@+id/b_fromFile"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="0"
-			android:text="@string/delete"
+			android:text="@string/from_file"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toTopOf="parent"/>
 	</android.support.constraint.ConstraintLayout>
 	
 	
-	<FrameLayout
-		android:id="@+id/fl_noteContent"
+	<EditText
+		android:id="@+id/et_contents"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_weight="1"
-		android:paddingEnd="8dp"
-		android:paddingLeft="8dp"
-		android:paddingRight="8dp"
-		android:paddingStart="8dp">
-	
-	</FrameLayout>
-	
-	<CheckBox
-		android:id="@+id/cb_resetProgress"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="end"
-		android:layout_margin="8dp"
-		android:layout_marginEnd="8dp"
-		android:layout_marginLeft="8dp"
-		android:layout_marginRight="8dp"
-		android:layout_marginStart="8dp"
-		android:layout_weight="0"
-		android:checked="false"
-		android:paddingEnd="8dp"
-		android:paddingLeft="8dp"
-		android:paddingRight="8dp"
-		android:paddingStart="8dp"
-		android:text="@string/reset_memory_progress"
-		android:visibility="gone"
-		tools:visibility="visible"/>
+		android:gravity="start|top"
+		android:hint="@string/format_hint"
+		android:inputType="textMultiLine"
+		android:padding="16dp">
+		
+		<requestFocus/>
+	</EditText>
 	
 	<android.support.constraint.ConstraintLayout
 		android:layout_width="match_parent"

@@ -46,7 +46,7 @@ class NotebookFragment : NotebookHoldingFragment(),
 		if (key.mutable) {
 			b_addNote.visibility = View.VISIBLE
 			b_addNote.setOnClickListener {
-				NoteEditFragment.newInstance(key, -1).jump(fragmentManager)
+				NoteCreateFragment.newInstance(key).jump(fragmentManager)
 			}
 			b_memoryPlan.visibility = View.VISIBLE
 			b_memoryPlan.setOnClickListener {

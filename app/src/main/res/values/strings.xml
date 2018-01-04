@@ -101,6 +101,11 @@
 	<string name="memory_plan_statistics">
 		There\'re %1$d words in total\nThere\'re %2$d words in plan\nThere\'re %3$d words not in plan
 	</string>
+	<string name="mass">Mass</string>
+	<string name="mass_creation">Mass creation</string>
+	<string name="format_hint">слово1\nword1\n\nслово2\nword2\n\nслово3\nword3\n</string>
+	<string name="from_file">from file</string>
+	<string name="can_not_recognize_any_note">Can not recognize any note!</string>
 
 
 </resources>

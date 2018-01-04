@@ -91,5 +91,9 @@
 	<string name="Note_review_remainCount">还剩%1$d个要复习</string>
 	<string name="update_logs">升级日志</string>
 	<string name="memory_plan_statistics">共有%1$d个词条\n有%2$d个已加入学习计划\n有%3$d个仍未开始学习计划</string>
+	<string name="mass">批量</string>
+	<string name="format_hint">слово1\n单词1\n\nслово2\n单词2\n\nслово3\n单词3\n</string>
+	<string name="mass_creation">批量添加</string>
+	<string name="from_file">从文件</string>
 
 </resources>
