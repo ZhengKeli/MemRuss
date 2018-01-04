@@ -95,5 +95,10 @@
 	<string name="format_hint">слово1\n单词1\n\nслово2\n单词2\n\nслово3\n单词3\n</string>
 	<string name="mass_creation">批量添加</string>
 	<string name="from_file">从文件</string>
+	<string name="can_not_recognize_any_note">无法识别出任何词条！</string>
+	<string name="charset">编码：</string>
+	<string name="file_path">文件路径：</string>
+	<string name="create_notes_from_file">从文件添加词条</string>
+	<string name="file_not_exists">文件不存在！</string>
 
 </resources>

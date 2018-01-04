@@ -1,0 +1,51 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:padding="16dp">
+	
+	
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/file_path"
+		android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+	
+	<EditText
+		android:id="@+id/et_path"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="8dp"
+		android:inputType="textMultiLine"
+		android:maxLines="4"
+		android:singleLine="false"
+		tools:text="/sdcard/ZKLRussian/notes.txt">
+	</EditText>
+	
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="end"
+		android:layout_marginTop="8dp"
+		android:orientation="horizontal">
+		
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+			android:text="@string/charset"/>
+		
+		<Spinner
+			android:id="@+id/sp_charset"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:padding="8dp"/>
+		
+	</LinearLayout>
+	
+
+</LinearLayout>

@@ -106,6 +106,10 @@
 	<string name="format_hint">слово1\nword1\n\nслово2\nword2\n\nслово3\nword3\n</string>
 	<string name="from_file">from file</string>
 	<string name="can_not_recognize_any_note">Can not recognize any note!</string>
+	<string name="charset">Charset:</string>
+	<string name="file_path">File path:</string>
+	<string name="create_notes_from_file">Create Notes from file</string>
+	<string name="file_not_exists">file not exists!</string>
 
 
 </resources>

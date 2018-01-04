@@ -1,0 +1,53 @@
+package com.zkl.memruss.ui
+
+import android.app.AlertDialog
+import android.app.Dialog
+import android.os.Bundle
+import android.support.v4.app.DialogFragment
+import android.support.v4.app.Fragment
+import android.view.View
+import android.widget.SimpleAdapter
+import com.zkl.memruss.R
+import com.zkl.memruss.control.note.NoteContentTextParser
+import com.zkl.memruss.control.note.NotebookCompactor
+import kotlinx.android.synthetic.main.dialog_note_create_from_file.view.*
+import java.io.File
+import java.nio.charset.Charset
+
+class NoteCreateFromFileDialog : DialogFragment() {
+	
+	interface NotesFileSelectedListener {
+		fun onNotesFileSelected(file: File, charset: Charset)
+	}
+	
+	companion object {
+		fun <T> newInstance(deletedListener: T?): NoteCreateFromFileDialog
+			where T : NotesFileSelectedListener, T : Fragment
+			= NoteCreateFromFileDialog::class.java.newInstance().apply {
+			setTargetFragment(deletedListener, 0)
+		}
+	}
+	
+	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+		val defaultPath = NotebookCompactor.defaultImportDir.resolve("notes.${NoteContentTextParser.fileExtension}").path
+		val charsets = arrayOf("GBK", "UTF8", "Unicode", "ASCII")
+			.mapNotNull { if (Charset.isSupported(it)) Charset.forName(it) else null }
+		
+		val view = View.inflate(context, R.layout.dialog_note_create_from_file, null)
+		view.et_path.setText(defaultPath)
+		view.sp_charset.adapter = SimpleAdapter(context,
+			charsets.map { mapOf("name" to it.name()) },R.layout.adapter_charset,
+			arrayOf("name"), intArrayOf(R.id.tv_charset))
+		
+		return AlertDialog.Builder(context)
+			.setTitle(R.string.create_notes_from_file)
+			.setView(view)
+			.setPositiveButton(R.string.ok) { dialog, which ->
+				val file = File(view.et_path.text.toString())
+				val charset = charsets[view.sp_charset.selectedItemPosition]
+				(targetFragment as? NotesFileSelectedListener)?.onNotesFileSelected(file, charset)
+			}
+			.setNegativeButton(R.string.cancel,null)
+			.create()
+	}
+}

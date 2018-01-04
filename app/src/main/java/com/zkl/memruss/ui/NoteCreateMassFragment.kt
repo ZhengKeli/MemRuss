@@ -14,10 +14,13 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.support.v4.toast
+import java.io.File
+import java.nio.charset.Charset
 import java.util.concurrent.ArrayBlockingQueue
 
 class NoteCreateMassFragment : NotebookHoldingFragment(),
-	NoteConflictDialog.ConflictSolvedListener {
+	NoteConflictDialog.ConflictSolvedListener,
+	NoteCreateFromFileDialog.NotesFileSelectedListener{
 	
 	companion object {
 		fun newInstance(notebookKey: NotebookKey)
@@ -32,7 +35,7 @@ class NoteCreateMassFragment : NotebookHoldingFragment(),
 		super.onViewCreated(view, savedInstanceState)
 		
 		b_fromFile.setOnClickListener {
-			//todo
+			NoteCreateFromFileDialog.newInstance(this).show(fragmentManager)
 		}
 		
 		b_ok.setOnClickListener {
@@ -60,11 +63,18 @@ class NoteCreateMassFragment : NotebookHoldingFragment(),
 		}
 	}
 	
+	override fun onNotesFileSelected(file: File, charset: Charset) {
+		if (!file.exists()) toast(R.string.file_not_exists)
+		else launch(CommonPool){
+			val string = file.readText(charset)
+			launch(UI){ et_contents.setText(string) }
+		}
+	}
+	
 	private val conflictSolutionChan = ArrayBlockingQueue<ConflictSolution?>(1)
 	override fun onConflictSolved(solution: ConflictSolution?) {
 		conflictSolutionChan.put(solution)
 	}
-	
 	
 }
 

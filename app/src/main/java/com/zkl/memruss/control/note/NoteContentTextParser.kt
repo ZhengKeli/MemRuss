@@ -4,6 +4,7 @@ import com.zkl.memruss.control.tools.silence
 import com.zkl.memruss.core.note.NoteContent
 import com.zkl.memruss.core.note.QuestionContent
 import java.io.File
+import java.nio.charset.Charset
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -11,9 +12,8 @@ object NoteContentTextParser {
 	
 	val fileExtension = "txt"
 	
-	fun parse(file: File): List<NoteContent> {
-		silence { return Scanner(file, "UTF8").parseNoteContents() }
-		silence { return Scanner(file, "GBK").parseNoteContents() }
+	fun parse(file: File, charset: Charset): List<NoteContent> {
+		silence { return Scanner(file, charset.name()).parseNoteContents() }
 		return emptyList()
 	}
 	
