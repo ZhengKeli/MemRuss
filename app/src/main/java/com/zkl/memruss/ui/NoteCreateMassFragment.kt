@@ -66,7 +66,7 @@ class NoteCreateMassFragment : NotebookHoldingFragment(),
 	override fun onNotesFileSelected(file: File, charset: Charset) {
 		if (!file.exists()) toast(R.string.file_not_exists)
 		else launch(CommonPool){
-			val string = file.readText(charset)
+			val string = file.readText(charset).trimStart('\uFEFF') //utf8编码可能带BOM头，要去掉
 			launch(UI){ et_contents.setText(string) }
 		}
 	}
