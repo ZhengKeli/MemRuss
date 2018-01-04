@@ -4,7 +4,6 @@
 	<string name="delete">删除</string>
 	<string name="answer_colon">答案：</string>
 	<string name="question_colon">问题：</string>
-	<string name="Notebook">单词本</string>
 	<string name="create_question_note">创建新的问答词条</string>
 	<string name="edit">编辑</string>
 	<string name="Note_create">新词条</string>
@@ -15,8 +14,8 @@
 	<string name="count_Notes_in_all">共%1$d个词条</string>
 	<string name="add">添加</string>
 	<string name="menu">菜单</string>
-	<string name="note_deletion_ConfirmMessage">你确定要删除这个词条吗？</string>
-	<string name="note_deletion_ConfirmTitle">删除确认</string>
+	<string name="note_delete_ConfirmMessage">你确定要删除这个词条吗？</string>
+	<string name="note_delete_ConfirmTitle">删除确认</string>
 	<string name="import_Notebook">导入单词本</string>
 	<string name="merge_Notebook">合并单词本</string>
 	<string name="create_Notebook">新建单词本</string>
@@ -42,7 +41,7 @@
 	<string name="override">覆盖</string>
 	<string name="export_Notebook">导出单词本</string>
 	<string name="delete_Notebook">删除单词本</string>
-	<string name="notebook_deletion_ConfirmMessage">你确定要删除这个单词本吗？</string>
+	<string name="notebook_delete_ConfirmMessage">你确定要删除这个单词本吗？</string>
 	<string name="error">出错了！</string>
 	<string name="new_notebook">新单词本</string>
 	<string name="new_notebook_name">新单词本名称：</string>
@@ -54,7 +53,6 @@
 	<string name="no_sdcard_read_permission">我没有读取SD卡的权限呐！</string>
 	<string name="import_succeed">导入成功！</string>
 	<string name="import_failed">导入失败！</string>
-	<string name="import_from_file">从文件导入：</string>
 	<string name="no_notebook_yet">还没有单词本……</string>
 	<string name="daily_newWords_SettingTitle">每天的新单词数：%1$d</string>
 	<string name="or_import">或者：</string>
@@ -62,15 +60,13 @@
 	<string name="drop_memory_plan_ConfirmTitle">删除确认</string>
 	<string name="drop_memory_plan_ConfirmMessage">删除学习计划会重置所有词条的学习进度，你确定要删除吗？</string>
 	<string name="drop_memory_plan_Drop">删除</string>
-	<string name="notebook_deletion_ConfirmTitle">删除确认</string>
+	<string name="notebook_delete_ConfirmTitle">删除确认</string>
 	<string name="choose_merge_mainBody">选择一本单词本作为合并的“主体”：</string>
 	<string name="choose_merge_attachment">选择要被并入的另一本单词本：</string>
 	<string name="keep_memory_progress">保留学习进度</string>
 	<string name="delete_after_merge">合并后删除</string>
 	<string name="merge">合并</string>
 	<string name="only_one_notebook">只有一本单词本诶</string>
-	<string name="merged_book_name">合并后的单词本的名称：</string>
-	<string name="merged_notebook">合并的单词本</string>
 	<string name="merging_notebooks">正在合并单词本……</string>
 	<string name="remain_old">保留原有的</string>
 	<string name="merge_succeed">合并成功！</string>
@@ -99,6 +95,7 @@
 	<string name="charset">编码：</string>
 	<string name="file_path">文件路径：</string>
 	<string name="create_notes_from_file">从文件添加词条</string>
-	<string name="file_not_exists">文件不存在！</string>
+	<string name="file_not_exists">文件不存在</string>
+	<string name="MemRuss">忆俄</string>
 
 </resources>

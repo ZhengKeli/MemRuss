@@ -29,8 +29,8 @@ class NotebookDeleteDialog : DialogFragment() {
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		return AlertDialog.Builder(context)
-			.setTitle(R.string.notebook_deletion_ConfirmTitle)
-			.setMessage(R.string.notebook_deletion_ConfirmMessage)
+			.setTitle(R.string.notebook_delete_ConfirmTitle)
+			.setMessage(R.string.notebook_delete_ConfirmMessage)
 			.setNegativeButton(R.string.cancel, null)
 			.setPositiveButton(R.string.ok) { _, _ ->
 				val notebookBrief = arguments.getSerializable(arg_notebookBrief) as NotebookBrief

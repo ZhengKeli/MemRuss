@@ -1,115 +1,139 @@
 <resources>
-	<string name="MemRuss" translatable="false">MemRuss</string>
-	<string name="Notebook">Notebook</string>
 	
-	<string name="question_colon">question:</string>
-	<string name="answer_colon">answer:</string>
-	<string name="create_question_note">Create question note:</string>
-	<string name="delete">delete</string>
-	<string name="view">view</string>
+	<!--basic-->
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
-	<string name="note_deletion_ConfirmTitle">Confirm deletion</string>
-	<string name="note_deletion_ConfirmMessage">Are you sure to delete this Note?</string>
-	<string name="edit">edit</string>
+	<string name="back">back</string>
+	<string name="menu">menu</string>
 	
+	<string name="add">add</string>
+	<string name="edit">edit</string>
+	<string name="view">view</string>
+	<string name="delete">delete</string>
+	
+	<string name="error">Error!</string>
+	<string name="file_path">File path:</string>
+	<string name="file_not_exists">file not exists!</string>
+	
+	
+	<!--basic UI-->
+	<string name="MemRuss">MemRuss</string>
+	<string name="night_mode_off">Night Mode off</string>
+	<string name="night_mode_on">Night Mode on</string>
+	<string name="update_logs">Update logs</string>
+	<string name="no_sdcard_write_permission">I don\'t have the permission to write the SD card!</string>
+	<string name="no_sdcard_read_permission">I don\'t have the permission to read the SD card!</string>
+	
+	
+	<!--NotebookShelf-->
+	<string name="NotebookShelf">Notebook Shelf</string>
+	
+	<string name="no_notebook_yet">No any notebook yet.</string>
+	<string name="create_Notebook">Create Notebook</string>
+	<string name="new_notebook">new notebook</string>
+	<string name="new_notebook_name">Name of the new Notebook</string>
+	
+	<string name="rename_Notebook">Rename Notebook</string>
+	<string name="notebook_new_name">New name of the Notebook</string>
+	
+	<string name="export_Notebook">Export Notebook</string>
+	<string name="export_to_file">Export to file:</string>
+	<string name="export_succeed">Export succeed!</string>
+	<string name="export_failed">Export failed!</string>
+	
+	<string name="import_Notebook">Import Notebook</string>
+	<string name="or_import">Or:</string>
+	<string name="import_succeed">Import succeed!</string>
+	<string name="import_failed">Import failed!</string>
+	
+	<string name="delete_Notebook">Delete Notebook</string>
+	<string name="notebook_delete_ConfirmTitle">Confirm deletion</string>
+	<string name="notebook_delete_ConfirmMessage">Are you sure to delete this Notebook?</string>
+	
+	<string name="merge_Notebook">Merge Notebook</string>
+	<string name="merge">Merge</string>
+	<string name="only_one_notebook">There is only one notebook!</string>
+	<string name="choose_merge_mainBody">Choose a notebook to be the "main body" during the merge:</string>
+	<string name="choose_merge_attachment">Choose another notebook to merge into the "main body":</string>
+	<string name="delete_after_merge">delete after merge</string>
+	<string name="keep_memory_progress">keep memory progress</string>
+	<string name="merging_notebooks">Merging notebooks..</string>
+	<string name="merge_succeed">Merge succeed!</string>
+	
+	<string name="upgrade_succeed">Upgrade succeed!</string>
+	<string name="notebook_upgrade_ConfirmTitle">Confirm upgrade</string>
+	<string name="notebook_upgrade_ConfirmMessage">This Notebook file is in an old version. The functions may be limited.
+		Do you want to import it into the latest version?</string>
+	
+	
+	<!--Notebook-->
+	<string name="read_only">(read only)</string>
+	<string name="count_Notes_in_all">%1$d Notes in All</string>
+	
+	<string name="need_review">There are %1$d words to review!</string>
+	<string name="go_to_review">Go to review</string>
+	
+	<string name="type_to_search">type to search</string>
+	<string name="found_nothing">found nothing</string>
+	
+	
+	<!--Note-->
 	<string name="Note_view_id">Note@%1$d</string>
 	<string name="Note_view_info">
 		memory progress:%1$s\nmemory load:%2$s\nreview time:%3$s
 	</string>
-	<string name="Note_create">New Note</string>
-	<string name="Note_edit_id">Edit Note@%1$d</string>
-	<string name="Note_review_remainCount">Remain %1$d Notes to review</string>
-	<string name="Note_review_noMore">No more words need to be reviewed</string>
-	<string name="back">back</string>
 	
+	<string name="Note_create">New Note</string>
+	<string name="create_question_note">Create question note:</string>
+	<string name="question_colon">question:</string>
+	<string name="answer_colon">answer:</string>
 	<string name="answer">answer</string>
 	<string name="question">question</string>
 	
-	<string name="count_Notes_in_all">%1$d Notes in All</string>
-	<string name="menu">menu</string>
-	<string name="add">add</string>
-	<string name="import_Notebook">Import Notebook</string>
-	<string name="merge_Notebook">Merge Notebook</string>
-	<string name="create_Notebook">Create Notebook</string>
-	<string name="export_Notebook">Export Notebook</string>
-	<string name="delete_Notebook">Delete Notebook</string>
-	<string name="rename_Notebook">Rename Notebook</string>
-	<string name="notebook_deletion_ConfirmTitle">Confirm deletion</string>
-	<string name="notebook_deletion_ConfirmMessage">Are you sure to delete this Notebook?</string>
-	<string name="show">show</string>
-	<string name="remembered">remembered</string>
-	<string name="forgot">forgot</string>
+	<string name="mass">Mass</string>
+	<string name="mass_creation">Mass creation</string>
+	<string name="format_hint">слово1\nword1\n\nслово2\nword2\n\nслово3\nword3\n</string>
+	<string name="from_file">from file</string>
+	<string name="create_notes_from_file">Create Notes from file</string>
+	<string name="charset">Charset:</string>
+	<string name="can_not_recognize_any_note">Can not recognize any note!</string>
 	
+	<string name="Note_edit_id">Edit Note@%1$d</string>
+	<string name="question_should_not_be_blank">The question should not be blank!</string>
+	<string name="answer_should_not_be_blank">The answer should not be blank!</string>
+	
+	<string name="Note_review_remainCount">Remain %1$d Notes to review</string>
+	<string name="show">show</string>
+	<string name="forgot">forgot</string>
+	<string name="remembered">remembered</string>
+	<string name="Note_review_noMore">No more words need to be reviewed</string>
+	
+	<string name="note_delete_ConfirmTitle">Confirm deletion</string>
+	<string name="note_delete_ConfirmMessage">Are you sure to delete this Note?</string>
+	
+	<string name="there_are_conflicted_notes">There are conflicted Note(s)</string>
+	<string name="adding_note">Adding Note:</string>
+	<string name="modifying_note">Modifying Note:</string>
+	<string name="conflict_note">Conflict Note</string>
+	<string name="reset_memory_progress">Reset Memory Progress</string>
+	<string name="cover_memory_progress">Cover Memory Progress</string>
+	<string name="remain_old">Remain old</string>
+	<string name="override">Override</string>
+	
+	
+	<!--memoryPlan-->
 	<string name="MemoryPlan">Memory Plan</string>
 	<string name="make_MemoryPlan">Make Memory Plan</string>
+	
+	<string name="memory_plan_statistics">
+		There\'re %1$d words in total\nThere\'re %2$d words in plan\nThere\'re %3$d words not in plan
+	</string>
+	
 	<string name="daily_reviews_SettingTitle">Daily reviews: %1$d</string>
 	<string name="daily_newWords_SettingTitle">Daily new words: %1$d</string>
 	<string name="drop_memory_plan">Drop the memory plan</string>
 	<string name="drop_memory_plan_ConfirmTitle">Confirm the dropping</string>
 	<string name="drop_memory_plan_ConfirmMessage">Dropping the memory plan will reset the progress of all the Notes. Ary you sure to drop it?</string>
 	<string name="drop_memory_plan_Drop">Drop</string>
-	
-	
-	<string name="go_to_review">Go to review</string>
-	<string name="need_review">There are %1$d words to review!</string>
-	<string name="NotebookShelf">Notebook Shelf</string>
-	<string name="found_nothing">found nothing</string>
-	<string name="type_to_search">type to search</string>
-	<string name="there_are_conflicted_notes">There are conflicted Note(s)</string>
-	<string name="reset_memory_progress">Reset Memory Progress</string>
-	<string name="cover_memory_progress">Cover Memory Progress</string>
-	<string name="override">Override</string>
-	<string name="error">Error!</string>
-	<string name="new_notebook">new notebook</string>
-	<string name="new_notebook_name">Name of the new Notebook</string>
-	<string name="notebook_new_name">New name of the Notebook</string>
-	<string name="export_to_file">Export to file:</string>
-	<string name="export_succeed">Export succeed!</string>
-	<string name="export_failed">Export failed!</string>
-	<string name="import_from_file">Import from file:</string>
-	<string name="import_succeed">Import succeed!</string>
-	<string name="import_failed">Import failed!</string>
-	<string name="no_sdcard_write_permission">I don\'t have the permission to write the SD card!</string>
-	<string name="no_sdcard_read_permission">I don\'t have the permission to read the SD card!</string>
-	<string name="no_notebook_yet">No any notebook yet.</string>
-	<string name="or_import">Or:</string>
-	<string name="choose_merge_mainBody">Choose a notebook to be the "main body" during the merge:</string>
-	<string name="choose_merge_attachment">Choose another notebook to merge into the "main body":</string>
-	<string name="keep_memory_progress">keep memory progress</string>
-	<string name="delete_after_merge">delete after merge</string>
-	<string name="merge">Merge</string>
-	<string name="only_one_notebook">There is only one notebook!</string>
-	<string name="merged_book_name">Name of the merged Notebook:</string>
-	<string name="merged_notebook">merged notebook</string>
-	<string name="merging_notebooks">Merging notebooks..</string>
-	<string name="remain_old">Remain old</string>
-	<string name="merge_succeed">Merge succeed!</string>
-	<string name="adding_note">Adding Note:</string>
-	<string name="modifying_note">Modifying Note:</string>
-	<string name="conflict_note">Conflict Note</string>
-	<string name="read_only">(read only)</string>
-	<string name="notebook_upgrade_ConfirmTitle">Confirm upgrade</string>
-	<string name="notebook_upgrade_ConfirmMessage">This Notebook file is in an old version. The functions may be limited.
-		Do you want to import it into the latest version?</string>
-	<string name="upgrade_succeed">Upgrade succeed!</string>
-	<string name="night_mode_off">Night Mode off</string>
-	<string name="night_mode_on">Night Mode on</string>
-	<string name="question_should_not_be_blank">The question should not be blank!</string>
-	<string name="answer_should_not_be_blank">The answer should not be blank!</string>
-	<string name="update_logs">Update logs</string>
-	<string name="memory_plan_statistics">
-		There\'re %1$d words in total\nThere\'re %2$d words in plan\nThere\'re %3$d words not in plan
-	</string>
-	<string name="mass">Mass</string>
-	<string name="mass_creation">Mass creation</string>
-	<string name="format_hint">слово1\nword1\n\nслово2\nword2\n\nслово3\nword3\n</string>
-	<string name="from_file">from file</string>
-	<string name="can_not_recognize_any_note">Can not recognize any note!</string>
-	<string name="charset">Charset:</string>
-	<string name="file_path">File path:</string>
-	<string name="create_notes_from_file">Create Notes from file</string>
-	<string name="file_not_exists">file not exists!</string>
-
 
 </resources>

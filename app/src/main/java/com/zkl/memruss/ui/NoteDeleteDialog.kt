@@ -23,8 +23,8 @@ class NoteDeleteDialog : NoteHoldingDialog() {
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		return AlertDialog.Builder(context)
-			.setTitle(R.string.note_deletion_ConfirmTitle)
-			.setMessage(R.string.note_deletion_ConfirmMessage)
+			.setTitle(R.string.note_delete_ConfirmTitle)
+			.setMessage(R.string.note_delete_ConfirmMessage)
 			.setNegativeButton(R.string.cancel, null)
 			.setPositiveButton(R.string.ok) { _, _ ->
 				mutableNotebook.deleteNote(noteId)
