@@ -30,21 +30,21 @@ class NoteCreateFromFileDialog : DialogFragment() {
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		val defaultPath = NotebookCompactor.defaultImportDir.resolve("notes.${NoteContentTextParser.fileExtension}").path
-		val charsets = arrayOf("GBK", "UTF8", "Unicode", "ASCII")
-			.mapNotNull { if (Charset.isSupported(it)) Charset.forName(it) else null }
+		val charsets = arrayOf("ANSI/GBK" to "GBK", "UTF-8" to "UTF-8", "UTF-16/Unicode" to "UTF-16", "ASCII" to "ASCII")
+			.mapNotNull { if (Charset.isSupported(it.second)) it.first to Charset.forName(it.second) else null }
 		
 		val view = View.inflate(context, R.layout.dialog_note_create_from_file, null)
 		view.et_path.setText(defaultPath)
 		view.sp_charset.adapter = SimpleAdapter(context,
-			charsets.map { mapOf("name" to it.name()) },R.layout.adapter_charset,
+			charsets.map { mapOf("name" to it.first) },R.layout.adapter_charset,
 			arrayOf("name"), intArrayOf(R.id.tv_charset))
 		
 		return AlertDialog.Builder(context)
 			.setTitle(R.string.create_notes_from_file)
 			.setView(view)
-			.setPositiveButton(R.string.ok) { dialog, which ->
+			.setPositiveButton(R.string.ok) { _, _ ->
 				val file = File(view.et_path.text.toString())
-				val charset = charsets[view.sp_charset.selectedItemPosition]
+				val charset = charsets[view.sp_charset.selectedItemPosition].second
 				(targetFragment as? NotesFileSelectedListener)?.onNotesFileSelected(file, charset)
 			}
 			.setNegativeButton(R.string.cancel,null)
