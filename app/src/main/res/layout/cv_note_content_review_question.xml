@@ -14,7 +14,7 @@
 		
 		android:gravity="top|start"
 		
-		android:padding="16dp"
+		android:padding="8dp"
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		
 		android:textSize="36sp"
@@ -28,18 +28,18 @@
 		
 		android:layout_width="0dp"
 		android:layout_height="0dp"
+		android:padding="8dp"
+		android:layout_marginTop="8dp"
 		
 		android:gravity="top|start"
-		android:padding="16dp"
-		
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:textSize="24sp"
+		android:textSize="20sp"
 		app:layout_constraintBottom_toTopOf="@+id/cl_resultBar"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintHorizontal_bias="0.0"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/tv_question"
-		tools:text="tv_answer"/>
+		tools:text="单词"/>
 	
 	<Button
 		android:id="@+id/b_show"

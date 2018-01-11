@@ -17,7 +17,7 @@
 		
 		android:maxLines="3"
 		android:nextFocusForward="@+id/et_answer"
-		android:padding="16dp"
+		android:padding="8dp"
 		
 		android:singleLine="false"
 		android:textAppearance="?android:attr/textAppearanceLarge"
@@ -33,13 +33,14 @@
 		
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:padding="16dp"
-		android:gravity="top|start"
+		android:padding="8dp"
+		android:layout_marginTop="8dp"
 		
+		android:gravity="top|start"
 		android:inputType="textMultiLine"
 		android:maxLines="4"
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:textSize="24sp"
+		android:textSize="20sp"
 		
 		android:hint="@string/answer"
 		tools:text="tv_answer"/>

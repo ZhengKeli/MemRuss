@@ -10,10 +10,9 @@
 		
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:padding="8dp"
 		
 		android:gravity="top|start"
-		android:padding="16dp"
-		
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		android:textSize="36sp"
 		
@@ -24,13 +23,13 @@
 		
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:padding="8dp"
+		android:layout_marginTop="8dp"
 		
 		android:gravity="top|start"
-		android:padding="16dp"
-		
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:textSize="24sp"
+		android:textSize="20sp"
 		
-		tools:text="tv_answer"/>
+		tools:text="单词"/>
 
 </LinearLayout>
