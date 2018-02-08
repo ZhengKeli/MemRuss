@@ -29,9 +29,6 @@ class NoteMenuDialog : NoteHoldingDialog(),NoteDeleteDialog.NoteDeletedListener 
 			}
 		)
 		if (notebookKey.mutable) itemPairs.addAll(arrayOf(
-			getString(R.string.view) to {
-				NoteViewFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
-			},
 			getString(R.string.edit) to {
 				NoteEditFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
 			},
