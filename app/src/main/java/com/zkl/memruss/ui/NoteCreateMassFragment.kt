@@ -21,7 +21,7 @@ import java.nio.charset.Charset
 import java.util.concurrent.ArrayBlockingQueue
 
 class NoteCreateMassFragment : NotebookHoldingFragment(),
-	NoteConflictDialog.ConflictSolvedListener,
+	NoteConflictDialog.DialogResultedListener,
 	NoteCreateFromFileDialog.NotesFileSelectedListener{
 	
 	companion object {
@@ -55,7 +55,7 @@ class NoteCreateMassFragment : NotebookHoldingFragment(),
 						NoteConflictDialog.newInstance(notebookKey, situation,
 							false, this@NoteCreateMassFragment).show(fragmentManager)
 					}
-					conflictSolutionChan.take() ?: ConflictSolution(false, false)
+					conflictDialogResultChan.take().solution ?: ConflictSolution(false, false)
 				}
 				launch(UI) { fragmentManager.popBackStack() }
 			}
@@ -83,9 +83,9 @@ class NoteCreateMassFragment : NotebookHoldingFragment(),
 		
 	}
 	
-	private val conflictSolutionChan = ArrayBlockingQueue<ConflictSolution?>(1)
-	override fun onConflictSolved(solution: ConflictSolution?) {
-		conflictSolutionChan.put(solution)
+	private val conflictDialogResultChan = ArrayBlockingQueue<NoteConflictDialog.DialogResult>(1)
+	override fun onDialogResulted(result: NoteConflictDialog.DialogResult) {
+		conflictDialogResultChan.put(result)
 	}
 	
 }

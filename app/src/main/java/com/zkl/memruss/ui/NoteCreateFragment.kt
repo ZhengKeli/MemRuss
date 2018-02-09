@@ -17,7 +17,7 @@ import kotlinx.coroutines.experimental.launch
 import java.util.concurrent.ArrayBlockingQueue
 
 class NoteCreateFragment : NotebookHoldingFragment(),
-	NoteConflictDialog.ConflictSolvedListener {
+	NoteConflictDialog.DialogResultedListener {
 	
 	companion object {
 		fun newInstance(notebookKey: NotebookKey)
@@ -42,7 +42,7 @@ class NoteCreateFragment : NotebookHoldingFragment(),
 		b_ok.setOnClickListener {
 			val content = noteContentEditHolder?.applyChange() ?: return@setOnClickListener
 			launch(CommonPool) {
-				var committed = true
+				var canceled = true
 				mutableNotebook.addNote(content) { conflictNoteId, newContent ->
 					val situation = NoteConflictDialog.ConflictSituation(
 						true, conflictNoteId, newContent, false)
@@ -50,11 +50,11 @@ class NoteCreateFragment : NotebookHoldingFragment(),
 						NoteConflictDialog.newInstance(notebookKey, situation,
 							true, this@NoteCreateFragment).show(fragmentManager)
 					}
-					val solution = conflictSolutionChan.take()
-					if (solution == null) committed = false
-					solution ?: ConflictSolution(false, false)
+					val result = conflictDialogResultChan.take()
+					canceled = result.canceled
+					result.solution ?: ConflictSolution(false, false)
 				}
-				if (committed) launch(UI) { fragmentManager.popBackStack() }
+				if (!canceled) launch(UI) { fragmentManager.popBackStack() }
 			}
 		}
 		b_cancel.setOnClickListener {
@@ -67,9 +67,9 @@ class NoteCreateFragment : NotebookHoldingFragment(),
 		noteContentEditHolder?.requestFocus()
 	}
 	
-	private val conflictSolutionChan = ArrayBlockingQueue<ConflictSolution?>(1)
-	override fun onConflictSolved(solution: ConflictSolution?) {
-		conflictSolutionChan.put(solution)
+	private val conflictDialogResultChan = ArrayBlockingQueue<NoteConflictDialog.DialogResult>(1)
+	override fun onDialogResulted(result: NoteConflictDialog.DialogResult) {
+		conflictDialogResultChan.put(result)
 	}
 	
 	//noteContent

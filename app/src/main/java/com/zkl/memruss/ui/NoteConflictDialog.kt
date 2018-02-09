@@ -17,19 +17,26 @@ import java.io.Serializable
 class NoteConflictDialog : NotebookHoldingDialog() {
 	
 	data class ConflictSituation(
-		val isAdding: Boolean, val conflictNoteId: Long,
-		val newContent: NoteContent, val hasNewMemoryState: Boolean) : Serializable
+		val isAdding: Boolean,
+		val conflictNoteId: Long,
+		val newContent: NoteContent,
+		val hasNewMemoryState: Boolean
+	) : Serializable
 	
-	interface ConflictSolvedListener {
-		fun onConflictSolved(solution: ConflictSolution?)
+	data class DialogResult(
+		val canceled: Boolean,
+		val solution: ConflictSolution?
+	)
+	
+	interface DialogResultedListener {
+		fun onDialogResulted(result: DialogResult)
 	}
 	
 	companion object {
 		private val arg_conflictSituation = "conflictSituation"
 		private val arg_cancelable = "cancelable"
 		fun <T> newInstance(notebookKey: NotebookKey, situation: ConflictSituation, cancelable: Boolean, solvedListener: T)
-			where T : ConflictSolvedListener, T : Fragment
-			= NoteConflictDialog::class.java.newInstance(notebookKey).apply {
+			where T : DialogResultedListener, T : Fragment = NoteConflictDialog::class.java.newInstance(notebookKey).apply {
 			arguments += bundleOf(
 				arg_conflictSituation to situation,
 				arg_cancelable to cancelable
@@ -52,8 +59,8 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 		dialogBuilder.setTitle(R.string.there_are_conflicted_notes)
 		
 		view.tv_newContent.setText(if (situation.isAdding) R.string.adding_note else R.string.modifying_note)
-		view.fl_newContent.addView(situation.newContent.newItemHolderOrThrow(context,view.fl_newContent).view)
-		view.fl_conflictContent.addView(conflictNote.content.newItemHolderOrThrow(context,view.fl_newContent).view)
+		view.fl_newContent.addView(situation.newContent.newItemHolderOrThrow(context, view.fl_newContent).view)
+		view.fl_conflictContent.addView(conflictNote.content.newItemHolderOrThrow(context, view.fl_newContent).view)
 		
 		if (conflictNote.isLearning) {
 			view.cb_coverProgress.visibility = View.VISIBLE
@@ -85,13 +92,13 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 	}
 	
 	private fun makeCallback(override: Boolean, resetProgress: Boolean) {
-		(targetFragment as? ConflictSolvedListener)
-			?.onConflictSolved(ConflictSolution(override, resetProgress))
+		(targetFragment as? DialogResultedListener)
+			?.onDialogResulted(DialogResult(false, ConflictSolution(override, resetProgress)))
 	}
 	
 	private fun makeNullCallback() {
-		(targetFragment as? ConflictSolvedListener)
-			?.onConflictSolved(null)
+		(targetFragment as? DialogResultedListener)
+			?.onDialogResulted(DialogResult(true, null))
 	}
 	
 }

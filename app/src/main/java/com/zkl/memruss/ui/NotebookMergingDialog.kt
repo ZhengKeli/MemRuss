@@ -26,7 +26,7 @@ import java.io.Serializable
 import java.util.concurrent.ArrayBlockingQueue
 
 class NotebookMergingDialog : DialogFragment(),
-	NoteConflictDialog.ConflictSolvedListener {
+	NoteConflictDialog.DialogResultedListener {
 	
 	data class MergeRequest(val mainBodyKey: NotebookKey, val attachmentKey: NotebookKey,
 	                        val keepProgress: Boolean, val deleteOld: Boolean) : Serializable
@@ -86,7 +86,7 @@ class NotebookMergingDialog : DialogFragment(),
 						NoteConflictDialog.newInstance(mergeRequest.mainBodyKey, situation, false,
 							this@NotebookMergingDialog).show(fragmentManager)
 					}
-					conflictSolutionChan.take()?: ConflictSolution(false, false)
+					conflictDialogResultChan.take().solution?: ConflictSolution(false, false)
 				}
 				onProgress(index + 1, notesToAdd.size)
 			}
@@ -107,9 +107,9 @@ class NotebookMergingDialog : DialogFragment(),
 		}
 	}
 	
-	private val conflictSolutionChan = ArrayBlockingQueue<ConflictSolution?>(1)
-	override fun onConflictSolved(solution: ConflictSolution?) {
-		conflictSolutionChan.put(solution)
+	private val conflictDialogResultChan = ArrayBlockingQueue<NoteConflictDialog.DialogResult>(1)
+	override fun onDialogResulted(result: NoteConflictDialog.DialogResult) {
+		conflictDialogResultChan.put(result)
 	}
 	
 	override fun onDismiss(dialog: DialogInterface?) {
