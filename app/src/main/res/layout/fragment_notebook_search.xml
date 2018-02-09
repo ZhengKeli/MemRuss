@@ -15,13 +15,12 @@
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:background="?attr/colorPrimary"
-		android:iconifiedByDefault="false"
+		
 		android:padding="8dp"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent">
 	</SearchView>
-	
 	
 	<TextView
 		android:id="@+id/tv_foundNothing"

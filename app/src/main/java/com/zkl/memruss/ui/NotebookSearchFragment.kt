@@ -30,16 +30,18 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 				searchText(query)
 				return true
 			}
-			
 			override fun onQueryTextChange(newText: String): Boolean {
 				searchText(newText)
 				return true
 			}
-			
 			fun searchText(text: String) {
 				searcher.post(text.trim())
 			}
 		})
+		sv_search.setOnCloseListener {
+			fragmentManager.popBackStack()
+			false
+		}
 		
 		lv_notes.adapter = object : NoteListAdapter() {
 			override fun getCount() = searchResult.size
@@ -83,7 +85,6 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 			
 			return result
 		}
-		
 		override fun onDone(request: String, result: List<Note>) {}
 		override fun onAllDone(lastRequest: String, lastResult: List<Note>) {
 			val requestEmpty = lastRequest.isEmpty()
