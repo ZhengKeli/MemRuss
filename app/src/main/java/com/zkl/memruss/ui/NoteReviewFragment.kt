@@ -12,13 +12,11 @@ import kotlinx.android.synthetic.main.fragment_note_review.*
 class NoteReviewFragment : NoteHoldingFragment() {
 	
 	companion object {
-		fun newInstance(notebookKey: NotebookKey, noteId: Long = -1L)
-			= NoteReviewFragment::class.java.newInstance(notebookKey, noteId)
+		fun newInstance(notebookKey: NotebookKey, noteId: Long = -1L) = NoteReviewFragment::class.java.newInstance(notebookKey, noteId)
 	}
 	
 	//view
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_note_review, container, false)
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = inflater.inflate(R.layout.fragment_note_review, container, false)
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
@@ -63,7 +61,8 @@ class NoteReviewFragment : NoteHoldingFragment() {
 	}
 	
 	private fun jumpToNextNote() {
-		val nextNote = notebook.selectNeedReviewNotes(System.currentTimeMillis()).firstOrNull()
+		val asc = Math.random() > 0.5
+		val nextNote = notebook.selectNeedReviewNotes(System.currentTimeMillis(), asc).firstOrNull()
 		if (nextNote != null) {
 			this.noteId = nextNote.id
 			updateNoteContent()

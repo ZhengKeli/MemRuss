@@ -273,12 +273,18 @@ object MemoryAlgorithm {
 	 */
 	val arg_pu: Double = 2.0
 	
+	/**
+	 * 偏移参数
+	 * progress为0时的间隔时间就是它
+	 */
+	val arg_z:Double = 10*1000.0
+	
 	
 	//函数
 	
 	fun computeReviewInterval(progress: Double): Long {
 		val random = 1.0 + (Math.random() * 2.0 - 1.0) * arg_ran
-		return (arg_k * Math.pow(progress, arg_ex) * 1000.0 * 3600.0 * random).toLong()
+		return (arg_z + arg_k * Math.pow(progress, arg_ex) * 1000.0 * 3600.0 * random).toLong()
 	}
 	
 	fun computeLoad(reviewInterval: Long): Double {
