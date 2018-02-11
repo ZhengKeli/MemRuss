@@ -1,5 +1,6 @@
 package com.zkl.memruss
 
+import com.zkl.memruss.core.note.base.MemoryAlgorithm
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
