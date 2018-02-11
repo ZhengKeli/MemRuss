@@ -60,6 +60,7 @@ class NoteEditFragment : NoteHoldingFragment(),
 						NoteConflictDialog.newInstance(notebookKey, situation,
 							true, this@NoteEditFragment).show(fragmentManager)
 					}
+					
 					val result = conflictDialogResultChan.take()
 					canceled = result.canceled
 					result.solution ?: ConflictSolution(false, false)

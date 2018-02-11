@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.zkl.memruss.R
 import com.zkl.memruss.control.note.NotebookKey
+import com.zkl.memruss.core.note.base.getNextNeedReviewNote
 import kotlinx.android.synthetic.main.fragment_note_review.*
 
 
@@ -61,8 +62,7 @@ class NoteReviewFragment : NoteHoldingFragment() {
 	}
 	
 	private fun jumpToNextNote() {
-		val asc = Math.random() > 0.5
-		val nextNote = notebook.selectNeedReviewNotes(System.currentTimeMillis(), asc).firstOrNull()
+		val nextNote = notebook.getNextNeedReviewNote()
 		if (nextNote != null) {
 			this.noteId = nextNote.id
 			updateNoteContent()

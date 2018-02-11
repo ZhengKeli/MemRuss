@@ -10,6 +10,7 @@ import com.zkl.memruss.core.note.ConflictSolution
 import com.zkl.memruss.core.note.NoteContent
 import com.zkl.memruss.core.note.QuestionContent
 import com.zkl.memruss.core.note.addNote
+import com.zkl.memruss.ui.NoteConflictDialog.ConflictSituation
 import kotlinx.android.synthetic.main.fragment_note_create.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -42,14 +43,14 @@ class NoteCreateFragment : NotebookHoldingFragment(),
 		b_ok.setOnClickListener {
 			val content = noteContentEditHolder?.applyChange() ?: return@setOnClickListener
 			launch(CommonPool) {
-				var canceled = true
+				var canceled = false
 				mutableNotebook.addNote(content) { conflictNoteId, newContent ->
-					val situation = NoteConflictDialog.ConflictSituation(
-						true, conflictNoteId, newContent, false)
+					val situation = ConflictSituation(true, conflictNoteId, newContent, false)
 					launch(UI) {
 						NoteConflictDialog.newInstance(notebookKey, situation,
 							true, this@NoteCreateFragment).show(fragmentManager)
 					}
+					
 					val result = conflictDialogResultChan.take()
 					canceled = result.canceled
 					result.solution ?: ConflictSolution(false, false)

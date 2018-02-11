@@ -46,6 +46,8 @@ interface MemoryNotebook<Note : MemoryNote<*>> : BaseNotebook<Note> {
 	
 }
 
+val MemoryNotebook<*>.isLearning get() = memoryState.status == NotebookMemoryStatus.LEARNING
+
 interface MutableMemoryNotebook<Content : BaseContent, Note : MemoryNote<Content>> : MemoryNotebook<Note>,
 	MutableBaseNotebook<Content, Note> {
 	
@@ -118,8 +120,6 @@ interface MemoryNote<out Content : BaseContent> : BaseNote<Content> {
 	
 }
 
-val MemoryNotebook<*>.isLearning get() = memoryState.status == NotebookMemoryStatus.LEARNING
-
 val MemoryNote<*>.isLearning get() = memoryState.status == NoteMemoryStatus.LEARNING
 
 
@@ -180,11 +180,9 @@ data class NotebookMemoryState(
 
 ) {
 	companion object {
-		val infantState
-			= NotebookMemoryState(NotebookMemoryStatus.INFANT, -1L, -1L)
+		val infantState = NotebookMemoryState(NotebookMemoryStatus.INFANT, -1L, -1L)
 		
-		fun beginningState(nowTime: Long = System.currentTimeMillis())
-			= NotebookMemoryState(NotebookMemoryStatus.LEARNING, nowTime, nowTime)
+		fun beginningState(nowTime: Long = System.currentTimeMillis()) = NotebookMemoryState(NotebookMemoryStatus.LEARNING, nowTime, nowTime)
 	}
 }
 
@@ -228,13 +226,12 @@ data class NoteMemoryState(
 
 ) {
 	companion object {
-		fun infantState()
-			= NoteMemoryState(NoteMemoryStatus.INFANT, 0.0, 0.0, -1L)
+		fun infantState() = NoteMemoryState(NoteMemoryStatus.INFANT, 0.0, 0.0, -1L)
 		
-		fun beginningState(nowTime: Long = System.currentTimeMillis())
-			= NoteMemoryState(NoteMemoryStatus.LEARNING, 0.0, MemoryAlgorithm.maxSingleLoad, nowTime)
+		fun beginningState(nowTime: Long = System.currentTimeMillis()) = NoteMemoryState(NoteMemoryStatus.LEARNING, 0.0, MemoryAlgorithm.maxSingleLoad, nowTime)
 	}
 }
+
 
 object MemoryAlgorithm {
 	
@@ -277,7 +274,7 @@ object MemoryAlgorithm {
 	 * 偏移参数
 	 * progress为0时的间隔时间就是它
 	 */
-	val arg_z:Double = 10*1000.0
+	val arg_z: Double = 10 * 1000.0
 	
 	
 	//函数
@@ -305,4 +302,9 @@ fun NoteMemoryState.getNextReviewTime(learned: Boolean, nowTime: Long = System.c
 		reviewTime = nextReviewTime,
 		load = nextLoad
 	)
+}
+
+fun MemoryNotebook<*>.getNextNeedReviewNote(): MemoryNote<*>? {
+	val asc = Math.random() > 0.5
+	return selectNeedReviewNotes(System.currentTimeMillis(), asc).firstOrNull()
 }
