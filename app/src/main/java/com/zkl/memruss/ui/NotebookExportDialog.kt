@@ -35,7 +35,7 @@ class NotebookExportDialog : DialogFragment() {
 		val view = View.inflate(context, R.layout.dialog_notebook_export, null)
 		
 		val brief = arguments[arg_notebookBrief] as NotebookBrief
-		val format = SimpleDateFormat("MMdd", Locale.getDefault())
+		val format = SimpleDateFormat("YYYY-MM-dd", Locale.getDefault())
 		val targetFileName = brief.bookName + "-" + format.format(Date()) + "." + MutableNotebook3Compactor.fileExtension
 		val targetFile = NotebookCompactor.defaultExportDir.resolve(targetFileName)
 		view.et_path.setText(targetFile.path)
