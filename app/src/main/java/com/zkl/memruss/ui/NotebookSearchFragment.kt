@@ -15,8 +15,7 @@ import kotlinx.android.synthetic.main.fragment_notebook_search.*
 class NotebookSearchFragment : NotebookHoldingFragment() {
 	
 	companion object {
-		fun newInstance(notebookKey: NotebookKey)
-			= NotebookSearchFragment::class.java.newInstance(notebookKey)
+		fun newInstance(notebookKey: NotebookKey) = NotebookSearchFragment::class.java.newInstance(notebookKey)
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
@@ -25,23 +24,25 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		sv_search.isIconified = false
+		sv_search.setOnCloseListener {
+			fragmentManager.popBackStack()
+			true
+		}
 		sv_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 			override fun onQueryTextSubmit(query: String): Boolean {
 				searchText(query)
 				return true
 			}
+			
 			override fun onQueryTextChange(newText: String): Boolean {
 				searchText(newText)
 				return true
 			}
+			
 			fun searchText(text: String) {
 				searcher.post(text.trim())
 			}
 		})
-		sv_search.setOnCloseListener {
-			fragmentManager.popBackStack()
-			false
-		}
 		
 		lv_notes.adapter = object : NoteListAdapter() {
 			override fun getCount() = searchResult.size
@@ -71,6 +72,7 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 			
 			var isDone = false
 			pb_searching.postDelayed({
+				if (!this@NotebookSearchFragment.isVisible) return@postDelayed
 				pb_searching.visibility = if (!isDone) View.VISIBLE else View.GONE
 			}, 500)
 			
