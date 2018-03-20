@@ -14,11 +14,14 @@ class AutoExpandBuffer<T>(val sectionSize: Int = 128, val paddingSize: Int = sec
 	
 	override val size get() = bufferSize
 	override fun get(index: Int) = buffer[index / sectionSize][index % sectionSize]
-	@Synchronized fun getSizeAndExpand(): Int {
+	@Synchronized
+	fun getSizeAndExpand(): Int {
 		while (bufferSize < paddingSize && bufferSize < sourceSize) expandBuffer()
 		return bufferSize
 	}
-	@Synchronized fun getAndExpand(index: Int): T {
+	
+	@Synchronized
+	fun getAndExpand(index: Int): T {
 		while (bufferSize <= index + paddingSize && bufferSize < sourceSize) expandBuffer()
 		return get(index)
 	}
@@ -32,8 +35,9 @@ class AutoExpandBuffer<T>(val sectionSize: Int = 128, val paddingSize: Int = sec
 	}
 	
 	private val buffer = LinkedList<List<T>>()
-	private var bufferSize:Int = 0
-	@Synchronized fun expandBuffer(): Boolean {
+	private var bufferSize: Int = 0
+	@Synchronized
+	fun expandBuffer(): Boolean {
 		val requireSize = Math.min(sectionSize, sourceSize - bufferSize)
 		if (requireSize <= 0) return false
 		
@@ -44,7 +48,9 @@ class AutoExpandBuffer<T>(val sectionSize: Int = 128, val paddingSize: Int = sec
 		bufferSize += requireSize
 		return true
 	}
-	@Synchronized fun clearBuffer() {
+	
+	@Synchronized
+	fun clearBuffer() {
 		buffer.clear()
 		bufferSize = 0
 	}
@@ -52,19 +58,21 @@ class AutoExpandBuffer<T>(val sectionSize: Int = 128, val paddingSize: Int = sec
 }
 
 abstract class PendingWorker<in Request : Any, Result> {
-	private var pendingRequest: Request? = null
-	
 	private val lock = ReentrantLock(true)
-	private var isSearching = false
+	private var pendingRequest: Request? = null
+	private var workingThread: Thread? = null
 	
 	fun post(request: Request) {
 		lock.withLock {
 			pendingRequest = request
-			if (!isSearching) {
-				startThread()
-				isSearching = true
+			if (workingThread == null) {
+				workingThread = startThread()
 			}
 		}
+	}
+	
+	fun join() {
+		workingThread?.join()
 	}
 	
 	private fun startThread(): Thread {
@@ -72,15 +80,12 @@ abstract class PendingWorker<in Request : Any, Result> {
 			var lastRequest: Request? = null
 			var lastResult: Result? = null
 			while (true) {
-				var nullableRequest: Request? = null
-				lock.withLock {
-					nullableRequest = pendingRequest
+				val request = lock.withLock {
+					val nextRequest = pendingRequest
 					pendingRequest = null
-					if (nullableRequest == null) {
-						isSearching = false
-					}
-				}
-				val request = nullableRequest ?: break
+					if (nextRequest == null) workingThread = null
+					nextRequest
+				} ?: break
 				val result = onWork(request)
 				onDone(request, result)
 				lastRequest = request
@@ -109,6 +114,7 @@ class AutoIndexMap<T> {
 		sparseArray.put(key, value)
 		return key
 	}
+	
 	fun get(key: Int): T? = sparseArray.get(key)
 	fun remove(key: Int): T? {
 		val re = sparseArray.get(key)
@@ -118,7 +124,7 @@ class AutoIndexMap<T> {
 	
 }
 
-fun EditText.showSoftInput(forced:Boolean = false) {
+fun EditText.showSoftInput(forced: Boolean = false) {
 	context.inputMethodManager
 		.showSoftInput(this,
 			if (forced) InputMethodManager.SHOW_FORCED
