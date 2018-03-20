@@ -14,6 +14,9 @@ object AppVersion {
 //			"- 优化了笔记本夹的跳转机制？\n", //todo
 //			"- 加了设置界面？\n", //todo
 		
+		"version alpha-27:\n2018-3-21\n" +
+			"小更新，修复了搜索界面快速返回会崩溃的bug\n"
+		,
 		"version alpha-26:\n2018-2-11\n" +
 			"- 优化了一些UI\n" +
 			"- 修复了一些bug\n" +
