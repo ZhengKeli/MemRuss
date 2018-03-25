@@ -27,22 +27,12 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="8dp"
+		android:gravity="center"
 		android:text="@string/type_to_search"
 		android:visibility="visible"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/sv_search"/>
-	
-	<ProgressBar
-		android:id="@+id/pb_searching"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="8dp"
-		android:visibility="gone"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/sv_search"
-		tools:visibility="visible"/>
 	
 	<ListView
 		android:id="@+id/lv_notes"
@@ -56,6 +46,17 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/sv_search"/>
+	
+	<ProgressBar
+		android:id="@+id/pb_searching"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:visibility="gone"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/sv_search"
+		tools:visibility="visible"/>
 
 
 </android.support.constraint.ConstraintLayout>
