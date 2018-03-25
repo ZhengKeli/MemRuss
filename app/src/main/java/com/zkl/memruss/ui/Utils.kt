@@ -6,9 +6,6 @@ import android.widget.EditText
 import org.jetbrains.anko.inputMethodManager
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.thread
-import kotlin.concurrent.withLock
 
 class AutoExpandBuffer<T>(val sectionSize: Int = 128, val paddingSize: Int = sectionSize / 4) : AbstractList<T>() {
 	
@@ -54,54 +51,6 @@ class AutoExpandBuffer<T>(val sectionSize: Int = 128, val paddingSize: Int = sec
 		buffer.clear()
 		bufferSize = 0
 	}
-	
-}
-
-abstract class PendingWorker<in Request : Any, Result> {
-	private val lock = ReentrantLock(true)
-	private var pendingRequest: Request? = null
-	private var workingThread: Thread? = null
-	
-	fun post(request: Request) {
-		lock.withLock {
-			pendingRequest = request
-			if (workingThread == null) {
-				workingThread = startThread()
-			}
-		}
-	}
-	
-	fun join() {
-		workingThread?.join()
-	}
-	
-	private fun startThread(): Thread {
-		return thread {
-			var lastRequest: Request? = null
-			var lastResult: Result? = null
-			while (true) {
-				val request = lock.withLock {
-					val nextRequest = pendingRequest
-					pendingRequest = null
-					if (nextRequest == null) workingThread = null
-					nextRequest
-				} ?: break
-				val result = onWork(request)
-				onDone(request, result)
-				lastRequest = request
-				lastResult = result
-			}
-			if (lastRequest != null && lastResult != null) {
-				onAllDone(lastRequest, lastResult)
-			}
-		}
-	}
-	
-	abstract fun onWork(request: Request): Result
-	
-	abstract fun onDone(request: Request, result: Result)
-	
-	abstract fun onAllDone(lastRequest: Request, lastResult: Result)
 	
 }
 
