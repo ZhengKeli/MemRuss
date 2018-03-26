@@ -59,9 +59,11 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 		val oldJob = searchJob
 		searchJob = launch(CommonPool) {
 			oldJob?.cancelAndJoin()
-			val searchingUI = launch(UI + coroutineContext) ui@{
+			
+			val searchingUI = launch(coroutineContext + UI) ui@{
 				if (!isVisible) return@ui
-				lv_notes.isEnabled = false
+				tv_foundNothing.visibility = View.GONE
+				lv_notes.visibility = View.GONE
 				
 				delay(500)
 				
@@ -70,31 +72,33 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 			}
 			
 			val result =
-				if (searchText.isEmpty()) emptyList<Note>()
-				else async {
-					delay(100)
+				if (searchText.isEmpty()) emptyList()
+				else async(coroutineContext + CommonPool) {
+					delay(200)
 					notebook.selectByKeyword(searchText)
 				}.await()
 			
 			searchingUI.cancel()
-			launch(UI + coroutineContext) ui@{
+			launch(coroutineContext + UI) ui@{
 				if (!isVisible) return@ui
 				
-				lv_notes.isEnabled = true
-				pb_searching.visibility = View.GONE
-				
-				if (result.isEmpty()) {
-					tv_foundNothing.visibility = View.VISIBLE
-					tv_foundNothing.text =
-						if (searchText.isEmpty()) getString(R.string.type_to_search)
-						else getString(R.string.found_nothing)
-				} else {
-					tv_foundNothing.visibility = View.GONE
+				tv_foundNothing.run {
+					if (result.isEmpty()) {
+						visibility = View.VISIBLE
+						text =
+							if (!searchText.isEmpty()) getString(R.string.found_nothing)
+							else getString(R.string.type_to_search)
+					} else {
+						visibility = View.GONE
+					}
 				}
+				pb_searching.visibility = View.GONE
 				
 				searchResult = result
 				(lv_notes.adapter as BaseAdapter).notifyDataSetChanged()
+				lv_notes.visibility = View.VISIBLE
 			}
+			
 		}
 	}
 	
