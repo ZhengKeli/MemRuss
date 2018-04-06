@@ -3,9 +3,11 @@ package com.zkl.memruss.ui
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.view.View
 import com.zkl.memruss.R
+import com.zkl.memruss.control.myApp
 import com.zkl.memruss.control.note.NotebookKey
 import com.zkl.memruss.core.note.ConflictSolution
 import com.zkl.memruss.core.note.NoteContent
@@ -14,7 +16,7 @@ import kotlinx.android.synthetic.main.dialog_note_conflict.view.*
 import org.jetbrains.anko.bundleOf
 import java.io.Serializable
 
-class NoteConflictDialog : NotebookHoldingDialog() {
+class NoteConflictDialog : DialogFragment() {
 	
 	data class ConflictSituation(
 		val isAdding: Boolean,
@@ -33,13 +35,13 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 	}
 	
 	companion object {
-		private val arg_conflictSituation = "conflictSituation"
-		private val arg_cancelable = "cancelable"
+		private const val argName_ConflictSituation = "conflictSituation"
+		private const val argName_cancelable = "cancelable"
 		fun <T> newInstance(notebookKey: NotebookKey, situation: ConflictSituation, cancelable: Boolean, solvedListener: T)
 			where T : DialogResultedListener, T : Fragment = NoteConflictDialog::class.java.newInstance(notebookKey).apply {
 			arguments += bundleOf(
-				arg_conflictSituation to situation,
-				arg_cancelable to cancelable
+				argName_ConflictSituation to situation,
+				argName_cancelable to cancelable
 			)
 			setTargetFragment(solvedListener, 0)
 		}
@@ -48,8 +50,9 @@ class NoteConflictDialog : NotebookHoldingDialog() {
 	override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
 		
 		//prepare data
-		val situation = arguments.getSerializable(arg_conflictSituation) as ConflictSituation
-		val cancelable = arguments.getBoolean(arg_cancelable, false)
+		val notebook = myApp.notebookShelf.restoreNotebook(argNotebookKey)
+		val situation = arguments.getSerializable(argName_ConflictSituation) as ConflictSituation
+		val cancelable = arguments.getBoolean(argName_cancelable, false)
 		val conflictNote = notebook.getNote(situation.conflictNoteId)
 		
 		//prepare views

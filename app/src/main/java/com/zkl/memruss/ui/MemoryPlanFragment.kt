@@ -1,24 +1,26 @@
 package com.zkl.memruss.ui
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import com.zkl.memruss.R
+import com.zkl.memruss.control.myApp
 import com.zkl.memruss.control.note.NotebookKey
+import com.zkl.memruss.core.note.MutableNotebook
 import com.zkl.memruss.core.note.base.MemoryPlan
 import com.zkl.memruss.core.note.base.NotebookMemoryStatus.INFANT
 import com.zkl.memruss.core.note.base.NotebookMemoryStatus.LEARNING
 import kotlinx.android.synthetic.main.fragment_memory_plan.*
 import kotlin.math.roundToInt
 
-class MemoryPlanFragment : NotebookHoldingFragment(),
+class MemoryPlanFragment : Fragment(),
 	MemoryPlanDropDialog.MemoryPlanDroppedListener {
 	
 	companion object {
-		fun newInstance(notebookKey: NotebookKey)
-			= MemoryPlanFragment::class.java.newInstance(notebookKey)
+		fun newInstance(notebookKey: NotebookKey) = MemoryPlanFragment::class.java.newInstance(notebookKey)
 	}
 	
 	private val dailyReviewsRange = 0..500
@@ -26,15 +28,21 @@ class MemoryPlanFragment : NotebookHoldingFragment(),
 	private fun SeekBar.getValueInRange(range: IntRange): Int {
 		return range.run { start + (endInclusive - start) * progress / max }
 	}
+	
 	private fun SeekBar.setValueInRange(range: IntRange, value: Int) {
 		progress = range.run { max * (value - start) / (endInclusive - start) }
 	}
 	
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_memory_plan, container, false)
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+		return inflater.inflate(R.layout.fragment_memory_plan, container, false)
+	}
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		
+		val notebookKey = argNotebookKey
+		val notebook = myApp.notebookShelf.restoreNotebook(notebookKey)
+		val mutableNotebook = notebook as MutableNotebook
 		
 		val memoryState = notebook.memoryState
 		val memoryPlan = notebook.memoryPlan ?: MemoryPlan.default
@@ -44,7 +52,7 @@ class MemoryPlanFragment : NotebookHoldingFragment(),
 			LEARNING -> getString(R.string.MemoryPlan)
 		}
 		
-		if(memoryState.status == INFANT){
+		if (memoryState.status == INFANT) {
 			tv_info.visibility = View.GONE
 		} else {
 			val countTotal = notebook.noteCount
@@ -71,17 +79,16 @@ class MemoryPlanFragment : NotebookHoldingFragment(),
 		sb_dailyNewWords.setValueInRange(dailyNewWordsRange, Math.round(memoryPlan.dailyNewWords).toInt())
 		sb_dailyNewWords.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 			override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-				tv_dailyNewWords.text = getString(R.string.daily_newWords_SettingTitle,seekBar.getValueInRange(dailyNewWordsRange))
+				tv_dailyNewWords.text = getString(R.string.daily_newWords_SettingTitle, seekBar.getValueInRange(dailyNewWordsRange))
 			}
 			
 			override fun onStartTrackingTouch(seekBar: SeekBar) {}
 			override fun onStopTrackingTouch(seekBar: SeekBar) {}
 		})
 		
-		if(memoryState.status== INFANT){
+		if (memoryState.status == INFANT) {
 			b_dropMemoryPlan.visibility = View.GONE
-		}
-		else {
+		} else {
 			b_dropMemoryPlan.setOnClickListener {
 				MemoryPlanDropDialog.newInstance(notebookKey, this).show(fragmentManager)
 			}

@@ -1,8 +1,8 @@
 package com.zkl.memruss.control.note
 
-import com.zkl.memruss.control.tools.silence
 import com.zkl.memruss.core.note.NoteContent
 import com.zkl.memruss.core.note.QuestionContent
+import com.zkl.memruss.utils.tryOrNull
 import java.io.File
 import java.nio.charset.Charset
 import java.util.*
@@ -13,11 +13,11 @@ object NoteContentTextParser {
 	val fileExtension = "txt"
 	
 	fun parse(file: File, charset: Charset): List<NoteContent> {
-		return silence { Scanner(file, charset.name()).parseNoteContents() } ?: emptyList()
+		return tryOrNull { Scanner(file, charset.name()).parseNoteContents() } ?: emptyList()
 	}
 	
 	fun parse(string: String): List<NoteContent> {
-		silence { return Scanner(string).parseNoteContents() }
+		tryOrNull { return Scanner(string).parseNoteContents() }
 		return emptyList()
 	}
 	

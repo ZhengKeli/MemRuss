@@ -2,19 +2,22 @@ package com.zkl.memruss.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.SearchView
 import com.zkl.memruss.R
+import com.zkl.memruss.control.myApp
 import com.zkl.memruss.control.note.NotebookKey
 import com.zkl.memruss.core.note.Note
+import com.zkl.memruss.core.note.Notebook
 import kotlinx.android.synthetic.main.fragment_notebook_search.*
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
 
-class NotebookSearchFragment : NotebookHoldingFragment() {
+class NotebookSearchFragment : Fragment() {
 	
 	companion object {
 		fun newInstance(notebookKey: NotebookKey) = NotebookSearchFragment::class.java.newInstance(notebookKey)
@@ -26,6 +29,10 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		
+		notebookKey = argNotebookKey
+		notebook = myApp.notebookShelf.restoreNotebook(notebookKey)
+		
 		sv_search.isIconified = false
 		sv_search.setOnCloseListener {
 			fragmentManager.popBackStack()
@@ -52,6 +59,9 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 	}
 	
 	
+	lateinit var notebookKey: NotebookKey
+	lateinit var notebook: Notebook
+	
 	//search
 	private var searchJob: Job? = null
 	private var searchResult: List<Note> = emptyList()
@@ -71,7 +81,7 @@ class NotebookSearchFragment : NotebookHoldingFragment() {
 				pb_searching.visibility = View.VISIBLE
 			}
 			
-			val result =
+			val result: List<Note> =
 				if (searchText.isEmpty()) emptyList()
 				else async(coroutineContext + CommonPool) {
 					delay(200)

@@ -1,15 +1,14 @@
 package com.zkl.memruss.ui
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.zkl.memruss.R
+import com.zkl.memruss.control.myApp
 import com.zkl.memruss.control.note.NotebookKey
-import com.zkl.memruss.core.note.ConflictSolution
-import com.zkl.memruss.core.note.NoteContent
-import com.zkl.memruss.core.note.QuestionContent
-import com.zkl.memruss.core.note.addNote
+import com.zkl.memruss.core.note.*
 import com.zkl.memruss.ui.NoteConflictDialog.ConflictSituation
 import kotlinx.android.synthetic.main.fragment_note_create.*
 import kotlinx.coroutines.experimental.CommonPool
@@ -17,20 +16,24 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import java.util.concurrent.ArrayBlockingQueue
 
-class NoteCreateFragment : NotebookHoldingFragment(),
+class NoteCreateFragment : Fragment(),
 	NoteConflictDialog.DialogResultedListener {
 	
 	companion object {
-		fun newInstance(notebookKey: NotebookKey)
-			= NoteCreateFragment::class.java.newInstance(notebookKey)
+		fun newInstance(notebookKey: NotebookKey) = NoteCreateFragment::class.java.newInstance(notebookKey)
 	}
 	
 	//view
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_note_create, container, false)
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+		return inflater.inflate(R.layout.fragment_note_create, container, false)
+	}
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		
+		val notebookKey = argNotebookKey
+		val notebook = myApp.notebookShelf.restoreNotebook(notebookKey)
+		val mutableNotebook = notebook as MutableNotebook
 		
 		b_mass.setOnClickListener {
 			fragmentManager.popBackStack()
@@ -75,12 +78,13 @@ class NoteCreateFragment : NotebookHoldingFragment(),
 	
 	//noteContent
 	private var noteContentEditHolder: NoteContentEditHolder? = null
+	
 	private fun updateNoteContent(noteContent: NoteContent) {
 		val oldHolder = noteContentEditHolder
 		if (oldHolder?.isCompatible(noteContent) == true) {
 			oldHolder.noteContent = noteContent
 		} else {
-			val holder = noteContent.newEditHolderOrThrow(context,fl_noteContent)
+			val holder = noteContent.newEditHolderOrThrow(context, fl_noteContent)
 			fl_noteContent.removeAllViews()
 			fl_noteContent.addView(holder.view)
 			noteContentEditHolder = holder

@@ -2,13 +2,16 @@ package com.zkl.memruss.ui
 
 import android.Manifest
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.zkl.memruss.R
+import com.zkl.memruss.control.myApp
 import com.zkl.memruss.control.note.NoteContentTextParser
 import com.zkl.memruss.control.note.NotebookKey
 import com.zkl.memruss.core.note.ConflictSolution
+import com.zkl.memruss.core.note.MutableNotebook
 import com.zkl.memruss.core.note.addNotes
 import kotlinx.android.synthetic.main.fragment_note_create_mass.*
 import kotlinx.coroutines.experimental.CommonPool
@@ -20,7 +23,7 @@ import java.io.File
 import java.nio.charset.Charset
 import java.util.concurrent.ArrayBlockingQueue
 
-class NoteCreateMassFragment : NotebookHoldingFragment(),
+class NoteCreateMassFragment : Fragment(),
 	NoteConflictDialog.DialogResultedListener,
 	NoteCreateFromFileDialog.NotesFileSelectedListener{
 	
@@ -35,6 +38,9 @@ class NoteCreateMassFragment : NotebookHoldingFragment(),
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		
+		val notebookKey = argNotebookKey
+		val mutableNotebook = myApp.notebookShelf.restoreNotebook(notebookKey) as MutableNotebook
 		
 		b_fromFile.setOnClickListener {
 			NoteCreateFromFileDialog.newInstance(this).show(fragmentManager)

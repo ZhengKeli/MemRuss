@@ -1,48 +1,56 @@
 package com.zkl.memruss.ui
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.zkl.memruss.R
+import com.zkl.memruss.control.myApp
 import com.zkl.memruss.control.note.NotebookKey
+import com.zkl.memruss.core.note.NoteContent
+import com.zkl.memruss.core.note.base.getNoteOrNull
 import com.zkl.memruss.core.note.base.isLearning
 import kotlinx.android.synthetic.main.fragment_note_view.*
 import kotlin.math.abs
 
 
-class NoteViewFragment : NoteHoldingFragment() {
+class NoteViewFragment : Fragment() {
 	
 	companion object {
-		fun newInstance(notebookKey: NotebookKey, noteId: Long)
-			= NoteViewFragment::class.java.newInstance(notebookKey, noteId)
+		fun newInstance(notebookKey: NotebookKey, noteId: Long): NoteViewFragment {
+			return NoteViewFragment::class.java.newInstance(notebookKey, noteId)
+		}
 	}
 	
 	//view
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_note_view, container, false)
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+		return inflater.inflate(R.layout.fragment_note_view, container, false)
+	}
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		
-		//刷新缓存的词条
-		if (tryLoadNote() == null) {
-			fragmentManager.popBackStack()
-			return
-		}
+		//read note
+		val notebookKey = argNotebookKey
+		val noteId = argNoteId
+		val notebook = myApp.notebookShelf.restoreNotebook(notebookKey)
+		val note = notebook.getNoteOrNull(noteId) ?: kotlin.run { fragmentManager.popBackStack(); return }
 		
+		
+		//setup views
 		tv_title.text = getString(R.string.Note_view_id, noteId)
 		
 		if (note.isLearning) {
 			val memoryState = note.memoryState
 			val progressText = memoryState.progress.let { progress ->
-				val percent = (100*progress/20).toInt()
+				val percent = (100 * progress / 20).toInt()
 				"$percent%"
 			}
-			val loadText = memoryState.load.let { load->
+			val loadText = memoryState.load.let { load ->
 				"%.2f".format(load)
 			}
-			val reviewTimeText = (note.memoryState.reviewTime - System.currentTimeMillis()).let { ms->
+			val reviewTimeText = (note.memoryState.reviewTime - System.currentTimeMillis()).let { ms ->
 				val hour = ms / (3600 * 1000)
 				val min = abs(ms / (1000 * 60) % 60)
 				if (min == 0L) "$hour"
@@ -60,14 +68,13 @@ class NoteViewFragment : NoteHoldingFragment() {
 		}
 		
 		noteContentViewHolder = null
-		updateNoteContent()
+		updateNoteContent(note.content)
 	}
 	
 	//noteContent
 	private var noteContentViewHolder: NoteContentViewHolder? = null
 	
-	private fun updateNoteContent() {
-		val noteContent = note.content
+	private fun updateNoteContent(noteContent: NoteContent) {
 		val oldHolder = noteContentViewHolder
 		if (oldHolder?.isCompatible(noteContent) == true) {
 			oldHolder.noteContent = noteContent
@@ -79,7 +86,4 @@ class NoteViewFragment : NoteHoldingFragment() {
 		}
 	}
 	
-	
 }
-
-

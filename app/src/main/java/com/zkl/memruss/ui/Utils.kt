@@ -1,11 +1,17 @@
 package com.zkl.memruss.ui
 
+import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.util.SparseArray
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.zkl.memruss.control.note.NotebookKey
+import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.inputMethodManager
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 class AutoExpandBuffer<T>(val sectionSize: Int = 128, val paddingSize: Int = sectionSize / 4) : AbstractList<T>() {
 	
@@ -79,4 +85,40 @@ fun EditText.showSoftInput(forced: Boolean = false) {
 			if (forced) InputMethodManager.SHOW_FORCED
 			else InputMethodManager.SHOW_IMPLICIT
 		)
+}
+
+//bundle extensions
+internal operator fun Bundle?.plus(bundle: Bundle): Bundle = (this ?: Bundle()).apply { putAll(bundle) }
+
+// fragment arguments
+private const val argName_notebookKey = "notebookKey"
+private const val argName_noteId = "noteId"
+var Fragment.argNotebookKey: NotebookKey by object : ReadWriteProperty<Fragment, NotebookKey> {
+	
+	override fun getValue(thisRef: Fragment, property: KProperty<*>): NotebookKey {
+		return thisRef.arguments.getSerializable(argName_notebookKey) as NotebookKey
+	}
+	
+	override fun setValue(thisRef: Fragment, property: KProperty<*>, value: NotebookKey) {
+		thisRef.arguments += bundleOf(argName_notebookKey to value)
+	}
+	
+}
+var Fragment.argNoteId: Long by object : ReadWriteProperty<Fragment, Long> {
+	
+	override fun getValue(thisRef: Fragment, property: KProperty<*>): Long {
+		return thisRef.arguments.getLong(argName_noteId)
+	}
+	
+	override fun setValue(thisRef: Fragment, property: KProperty<*>, value: Long) {
+		thisRef.arguments += bundleOf(argName_noteId to value)
+	}
+}
+
+fun <T : Fragment> Class<T>.newInstance(notebookKey: NotebookKey): T {
+	return newInstance().apply { argNotebookKey = notebookKey }
+}
+
+fun <T : Fragment> Class<T>.newInstance(notebookKey: NotebookKey, noteId: Long): T {
+	return newInstance(notebookKey).apply { argNoteId = noteId }
 }

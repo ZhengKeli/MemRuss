@@ -1,14 +1,18 @@
 package com.zkl.memruss.ui
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.zkl.memruss.R
+import com.zkl.memruss.control.myApp
 import com.zkl.memruss.control.note.NotebookKey
 import com.zkl.memruss.core.note.ConflictSolution
+import com.zkl.memruss.core.note.MutableNotebook
 import com.zkl.memruss.core.note.NoteContent
 import com.zkl.memruss.core.note.base.NoteMemoryState
+import com.zkl.memruss.core.note.base.getNoteOrNull
 import com.zkl.memruss.core.note.base.isLearning
 import com.zkl.memruss.core.note.modifyNoteContent
 import kotlinx.android.synthetic.main.fragment_note_edit.*
@@ -17,34 +21,38 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import java.util.concurrent.ArrayBlockingQueue
 
-class NoteEditFragment : NoteHoldingFragment(),
+class NoteEditFragment : Fragment(),
 	NoteDeleteDialog.NoteDeletedListener,
 	NoteConflictDialog.DialogResultedListener {
 	
 	companion object {
-		fun newInstance(notebookKey: NotebookKey, noteId: Long)
-			= NoteEditFragment::class.java.newInstance(notebookKey, noteId)
+		fun newInstance(notebookKey: NotebookKey, noteId: Long): NoteEditFragment {
+			return NoteEditFragment::class.java.newInstance(notebookKey, noteId)
+		}
 	}
 	
 	//view
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
-		= inflater.inflate(R.layout.fragment_note_edit, container, false)
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+		return inflater.inflate(R.layout.fragment_note_edit, container, false)
+	}
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		
-		if (tryLoadNote() == null) {
-			fragmentManager.popBackStack()
-			return
-		}
+		//read note
+		val notebookKey = argNotebookKey
+		val noteId = argNoteId
+		val mutableNotebook = myApp.notebookShelf.restoreNotebook(notebookKey) as MutableNotebook
+		val note = mutableNotebook.getNoteOrNull(noteId) ?: kotlin.run { fragmentManager.popBackStack(); return }
 		
+		//setup views
 		tv_title.text = getString(R.string.Note_edit_id, noteId)
 		b_delete.setOnClickListener {
-			NoteDeleteDialog.newInstance(notebookKey, noteId,this).show(fragmentManager)
+			NoteDeleteDialog.newInstance(notebookKey, noteId, this).show(fragmentManager)
 		}
 		
 		noteContentEditHolder = null
-		updateNoteContent()
+		updateNoteContent(note.content)
 		
 		if (note.isLearning) cb_resetProgress.visibility = View.VISIBLE
 		else cb_resetProgress.run { visibility = View.GONE; isChecked = false }
@@ -93,12 +101,13 @@ class NoteEditFragment : NoteHoldingFragment(),
 	
 	//noteContent
 	private var noteContentEditHolder: NoteContentEditHolder? = null
-	private fun updateNoteContent(noteContent: NoteContent = note.content) {
+	
+	private fun updateNoteContent(noteContent: NoteContent) {
 		val oldHolder = noteContentEditHolder
 		if (oldHolder?.isCompatible(noteContent) == true) {
 			oldHolder.noteContent = noteContent
 		} else {
-			val holder = noteContent.newEditHolderOrThrow(context,fl_noteContent)
+			val holder = noteContent.newEditHolderOrThrow(context, fl_noteContent)
 			fl_noteContent.removeAllViews()
 			fl_noteContent.addView(holder.view)
 			noteContentEditHolder = holder

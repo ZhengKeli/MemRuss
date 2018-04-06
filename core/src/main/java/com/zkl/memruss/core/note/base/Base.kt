@@ -153,6 +153,15 @@ class NoteIdNotFoundException(
 ) : NotebookException(message)
 
 class NoteTypeNotSupportedException(
-	typeTag:String,
+	typeTag: String,
 	message: String? = "The note with typeTag \"$typeTag\" is not supported! "
-): NotebookException(message)
+) : NotebookException(message)
+
+
+fun <Note : BaseNote<*>> BaseNotebook<Note>.getNoteOrNull(noteId: Long): Note? {
+	return try {
+		getNote(noteId)
+	} catch (e: NoteIdNotFoundException) {
+		null
+	}
+}

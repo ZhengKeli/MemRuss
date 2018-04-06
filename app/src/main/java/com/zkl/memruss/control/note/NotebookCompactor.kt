@@ -2,10 +2,10 @@ package com.zkl.memruss.control.note
 
 import android.database.sqlite.SQLiteDatabase
 import android.os.Environment
-import com.zkl.memruss.control.tools.silence
 import com.zkl.memruss.core.note.MutableNotebook
 import com.zkl.memruss.core.note.Notebook
 import com.zkl.memruss.core.note.base.isLearning
+import com.zkl.memruss.utils.tryOrNull
 import java.io.File
 
 interface NotebookCompactor {
@@ -20,7 +20,7 @@ interface NotebookCompactor {
 	fun createNotebook(file: File, notebookName: String): MutableNotebook?
 	
 	fun createNotebookOrNull(file: File, notebookName: String): MutableNotebook?
-		= silence { createNotebook(file, notebookName) }
+		= tryOrNull { createNotebook(file, notebookName) }
 	
 	fun createNotebookOrThrow(file: File, notebookName: String): MutableNotebook
 		= createNotebook(file, notebookName) ?: throw NotCreatableException(file)
@@ -29,7 +29,7 @@ interface NotebookCompactor {
 	fun loadReadOnlyNotebook(file: File): Notebook?
 	
 	fun loadReadOnlyNotebookOrNull(file: File): Notebook?
-		= silence { loadReadOnlyNotebook(file) }
+		= tryOrNull { loadReadOnlyNotebook(file) }
 	
 	fun loadReadOnlyNotebookOrThrow(file: File): Notebook
 		= loadReadOnlyNotebook(file) ?: throw FileNotCompatibleException(file)
@@ -38,7 +38,7 @@ interface NotebookCompactor {
 	fun loadMutableNotebook(file: File): MutableNotebook?
 	
 	fun loadMutableNotebookOrNull(file: File): MutableNotebook?
-		= silence { loadMutableNotebook(file) }
+		= tryOrNull { loadMutableNotebook(file) }
 	
 	fun loadMutableNotebookOrThrow(file: File): MutableNotebook
 		= loadMutableNotebook(file) ?: throw FileNotCompatibleException(file)
@@ -56,7 +56,7 @@ interface NotebookCompactor {
 		}
 	}
 	
-	fun loadBriefOrNull(file: File): NotebookBrief? = silence { loadBrief(file) }
+	fun loadBriefOrNull(file: File): NotebookBrief? = tryOrNull { loadBrief(file) }
 	
 	fun deleteNotebook(file: File): Boolean
 	

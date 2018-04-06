@@ -2,26 +2,30 @@ package com.zkl.memruss.ui
 
 import android.app.Dialog
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import com.zkl.memruss.R
 import com.zkl.memruss.control.note.NotebookKey
 
-class NoteMenuDialog : NoteHoldingDialog(),NoteDeleteDialog.NoteDeletedListener {
+class NoteMenuDialog : DialogFragment(),
+	NoteDeleteDialog.NoteDeletedListener {
 	
 	interface NoteListChangedListener {
 		fun onNoteListChanged()
 	}
 	
 	companion object {
-		fun <T>newInstance(notebookKey: NotebookKey, noteId: Long, changedListener: T?)
-			where T : NoteListChangedListener, T : Fragment
-			= NoteMenuDialog::class.java.newInstance(notebookKey, noteId).apply {
-			setTargetFragment(changedListener,0)
+		fun <T> newInstance(notebookKey: NotebookKey, noteId: Long, changedListener: T?)
+			where T : NoteListChangedListener, T : Fragment = NoteMenuDialog::class.java.newInstance(notebookKey, noteId).apply {
+			setTargetFragment(changedListener, 0)
 		}
 	}
 	
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+		
+		val notebookKey = argNotebookKey
+		val noteId = argNoteId
 		
 		val itemPairs = arrayListOf(
 			getString(R.string.view) to {
