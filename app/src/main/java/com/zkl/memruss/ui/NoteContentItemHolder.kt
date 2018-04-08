@@ -21,7 +21,7 @@ interface NoteContentItemHolder {
 abstract class NoteListAdapter : BaseAdapter() {
 	abstract override fun getCount(): Int
 	abstract override fun getItem(position: Int): Note
-	override fun getItemId(position: Int): Long = 0L
+	override fun getItemId(position: Int): Long = getItem(position).id
 	
 	abstract val context: Context
 	override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -32,7 +32,7 @@ abstract class NoteListAdapter : BaseAdapter() {
 			return oldHolder.view
 		} else {
 			val holder = noteContent.newItemHolderOrThrow(context, parent)
-			return holder.view.also { it.tag=holder }
+			return holder.view.also { it.tag = holder }
 		}
 	}
 }
@@ -44,11 +44,14 @@ private val typedNoteContentItemHolders = hashMapOf<String, (Context, ViewGroup?
 	QuestionContent::class.simpleName!! to ::QuestionContentItemHolder
 )
 
-fun NoteContent.newItemHolder(context: Context, container: ViewGroup? = null)
-	= typedNoteContentItemHolders[typeTag]?.invoke(context, container)?.also { it.noteContent=this }
+fun NoteContent.newItemHolder(context: Context, container: ViewGroup? = null): NoteContentItemHolder? {
+	return typedNoteContentItemHolders[typeTag]?.invoke(context, container)?.also { it.noteContent = this }
+}
 
-fun NoteContent.newItemHolderOrThrow(context: Context, container: ViewGroup? = null)
-	= newItemHolder(context, container) ?: throw NoteTypeNotSupportedException(typeTag)
+fun NoteContent.newItemHolderOrThrow(context: Context, container: ViewGroup? = null): NoteContentItemHolder {
+	return newItemHolder(context, container)
+		?: throw NoteTypeNotSupportedException(typeTag)
+}
 
 
 //typed holders class
@@ -77,8 +80,7 @@ class QuestionContentItemHolder(context: Context, container: ViewGroup? = null) 
 			this.questionContent = value as QuestionContent
 		}
 	
-	override fun isCompatible(noteContent: NoteContent)
-		= noteContent is QuestionContent
+	override fun isCompatible(noteContent: NoteContent) = noteContent is QuestionContent
 	
 }
 
