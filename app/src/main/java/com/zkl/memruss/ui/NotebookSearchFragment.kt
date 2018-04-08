@@ -17,10 +17,13 @@ import kotlinx.android.synthetic.main.fragment_notebook_search.*
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
 
-class NotebookSearchFragment : Fragment() {
+class NotebookSearchFragment : Fragment(),
+	NoteMenuDialog.NoteListChangedListener {
 	
 	companion object {
-		fun newInstance(notebookKey: NotebookKey) = NotebookSearchFragment::class.java.newInstance(notebookKey)
+		fun newInstance(notebookKey: NotebookKey): NotebookSearchFragment {
+			return NotebookSearchFragment::class.java.newInstance(notebookKey)
+		}
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -51,13 +54,18 @@ class NotebookSearchFragment : Fragment() {
 			override fun getItem(position: Int): Note = searchResult[position]
 			override val context: Context get() = activity
 		}
-		lv_notes.setOnItemClickListener { _, _, position, _ ->
-			val note = searchResult[position]
-			val fragment = NoteViewFragment.newInstance(notebookKey, note.id)
-			fragment.jump(fragmentManager)
+		lv_notes.setOnItemClickListener { _, _, _, noteId ->
+			NoteViewFragment.newInstance(notebookKey, noteId).jump(fragmentManager)
+		}
+		lv_notes.setOnItemLongClickListener { _, _, _, noteId ->
+			NoteMenuDialog.newInstance(notebookKey, noteId, this).show(fragmentManager)
+			true
 		}
 	}
 	
+	override fun onNoteListChanged() {
+		search(sv_search.query.toString())
+	}
 	
 	lateinit var notebookKey: NotebookKey
 	lateinit var notebook: Notebook
