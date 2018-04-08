@@ -237,9 +237,9 @@ object MemoryAlgorithm {
 	
 	//规定
 	
-	val progressUnit: Double = 1.0
+	const val progressUnit: Double = 1.0
 	
-	val maxSingleLoad: Double = 5.0
+	const val maxSingleLoad: Double = 5.0
 	
 	
 	//参数
@@ -248,33 +248,33 @@ object MemoryAlgorithm {
 	 * 记忆曲线线性因子 k
 	 * 与复习时间间隔成正比
 	 */
-	val arg_k: Double = 1.0
+	const val arg_k: Double = 1.0
 	
 	/**
 	 * 记忆曲线指数因子 a
 	 * exp(a)与复习时间间隔成正比
 	 */
-	val arg_ex: Double = 2.0
+	const val arg_ex: Double = 2.0
 	
 	/**
 	 * 随机乱序参数，
 	 * 复习时间间隔将以该参数的规模上下随机浮动：
 	 * ΔT ∈ ΔT * (1.0 ± arg_ran)
 	 */
-	val arg_ran: Double = 0.07
+	const val arg_ran: Double = 0.07
 	
 	/**
 	 * 惩罚参数
 	 * 当某个词没记住时要加倍减少工作进度，
 	 * 该参数表示该倍数
 	 */
-	val arg_pu: Double = 2.0
+	const val arg_pu: Double = 2.0
 	
 	/**
 	 * 偏移参数
 	 * progress为0时的间隔时间就是它
 	 */
-	val arg_z: Double = 10 * 1000.0
+	const val arg_z: Double = 10 * 1000.0
 	
 	
 	//函数
@@ -294,7 +294,9 @@ fun NoteMemoryState.getNextReviewTime(learned: Boolean, nowTime: Long = System.c
 	val nextProgress =
 		if (learned) progress + MemoryAlgorithm.progressUnit
 		else (progress - MemoryAlgorithm.progressUnit * MemoryAlgorithm.arg_pu).coerceAtLeast(0.0)
-	val reviewInterval = MemoryAlgorithm.computeReviewInterval(nextProgress)
+	val reviewInterval =
+		if (learned) MemoryAlgorithm.computeReviewInterval(nextProgress)
+		else MemoryAlgorithm.computeReviewInterval(0.0)
 	val nextReviewTime = nowTime + reviewInterval
 	val nextLoad = MemoryAlgorithm.computeLoad(reviewInterval)
 	return copy(
