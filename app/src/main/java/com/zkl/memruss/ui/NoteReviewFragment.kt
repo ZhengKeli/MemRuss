@@ -30,13 +30,12 @@ class NoteReviewFragment : Fragment() {
 	
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		
-		b_view.setOnClickListener {
-			NoteViewFragment.newInstance(argNotebookKey, argNoteId).jumpFade(fragmentManager)
-		}
-		
 		updateViews()
-		
+	}
+	
+	override fun onDestroyView() {
+		super.onDestroyView()
+		noteContentReviewHolder = null
 	}
 	
 	private fun updateViews() {
@@ -49,6 +48,10 @@ class NoteReviewFragment : Fragment() {
 		val remainCount = mutableNotebook.countNeedReviewNotes(System.currentTimeMillis())
 		tv_title.text = getString(R.string.Note_review_remainCount, remainCount)
 		
+		b_view.setOnClickListener {
+			NoteViewFragment.newInstance(notebookKey, noteId).jumpFade(fragmentManager)
+		}
+		
 		updateNoteContent(note.content) { result ->
 			//apply changes of memory progress
 			val newMemory = result.updateNoteMemory(note.memoryState)
@@ -59,21 +62,6 @@ class NoteReviewFragment : Fragment() {
 			jumpToNextNote()
 		}
 		
-	}
-	
-	private var noteContentReviewHolder: NoteContentReviewHolder? = null
-	private fun updateNoteContent(noteContent: NoteContent, onResult: ((ReviewResult) -> Unit)?) {
-		val oldHolder = noteContentReviewHolder
-		if (oldHolder?.isCompatible(noteContent) == true) {
-			oldHolder.noteContent = noteContent
-			oldHolder.onResultListener = onResult
-		} else {
-			val holder = noteContent.newReviewHolderOrThrow(context, fl_noteContent)
-			holder.onResultListener = onResult
-			fl_noteContent.removeAllViews()
-			fl_noteContent.addView(holder.view)
-			noteContentReviewHolder = holder
-		}
 	}
 	
 	private fun jumpToNextNote() {
@@ -88,6 +76,18 @@ class NoteReviewFragment : Fragment() {
 			NoteReviewFinishedFragment.newInstance().jump(fragmentManager)
 		}
 	}
+	
+	private var noteContentReviewHolder: NoteContentReviewHolder? = null
+	private fun updateNoteContent(noteContent: NoteContent, onResult: ((ReviewResult) -> Unit)?) {
+		val newHolder = noteContentReviewHolder?.takeIf { it.isCompatible(noteContent) }
+			?: noteContent.newReviewHolderOrThrow(context, fl_noteContent).also {
+				fl_noteContent.removeAllViews()
+				fl_noteContent.addView(it.view)
+				noteContentReviewHolder = it
+			}
+		newHolder.noteContent = noteContent
+		newHolder.onResultListener = onResult
+	}
+	
 }
-
 
